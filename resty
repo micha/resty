@@ -1,4 +1,3 @@
-
 function resty() {
   local RESTY_HOST=`cat ${HOME}/.restyrc 2>/dev/null`
   local method="$1"; shift
@@ -47,18 +46,3 @@ function PUT() {
 function DELETE() {
   resty DELETE "$@"
 }
-
-case "$1" in
-  --pretty=*)
-    if [ "${1##*=}" == "on" ]; then
-      echo yes
-      export RESTY_PRETTY=1
-    else
-      echo no
-      export RESTY_PRETTY=0
-    fi
-    ;;
-  *)
-    export RESTY_HOST="$1"
-    ;;
-esac
