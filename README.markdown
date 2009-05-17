@@ -22,6 +22,15 @@ Make some HTTP requests.
       DELETE /blogs/2
       POST /blogs.json '{"title": "new post", "body": "This is the new new."}'
 
+Usage
+-----
+
+      resty <hostname>        # sets the remote host
+      GET <path> [curl args]     
+      DELETE <path> [curl args]   
+      PUT <path> <data> [curl args]
+      POST <path> <data> [curl args]
+
 Options
 -------
 
