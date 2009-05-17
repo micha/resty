@@ -1,21 +1,21 @@
 Introduction
 ============
 
- * Put the `resty` script in your path somewhere.
+Put the `resty` script in your path somewhere.
 
       mv resty ~/bin/
 
- * Source the script before using it (you can put this line in your
-   `~/.bashrc` file if you want).
+Source the script before using it (you can put this line in your
+`~/.bashrc` file if you want).
 
       . ~/bin/resty
 
- * Set the REST host to which you will be making your requests (you
-   can do this whenever you want to change hosts, anytime).
+Set the REST host to which you will be making your requests (you
+can do this whenever you want to change hosts, anytime).
 
       resty http://127.0.0.1/data
 
- * Make some HTTP requests.
+Make some HTTP requests.
 
       GET /blogs.json
       PUT /blogs/2.json '{"title": "updated post", "body": "This is the new."}'
