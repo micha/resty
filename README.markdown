@@ -32,6 +32,14 @@ For example:
 
       GET /blogs.json -H "Range: items=1"
 
+POST/PUT Requests Using Data From Stdin
+---------------------------------------
+
+To send the request body from a file rather than as a commandline argument
+you need to specify `@-` in place of the data on the command line, like this:
+
+      PUT /blogs/5.json @- < /tmp/t
+
 JSON Pretty-Printing
 --------------------
 
