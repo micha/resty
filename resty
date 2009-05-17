@@ -1,3 +1,4 @@
+
 function resty() {
   local RESTY_HOST=`cat ${HOME}/.restyrc 2>/dev/null`
   local method="$1"; shift
@@ -25,8 +26,11 @@ function resty() {
     http://*)
       echo "$method" > ${HOME}/.restyrc
       ;;
+    [0-9]*)
+      echo "resty: curl returned error $method" 1>&2
+      ;;
     *)
-      echo "resty: curl: returned error $method" 1>&2
+      cat ${HOME}/.restyrc 2>/dev/null
       ;;
   esac
 }
