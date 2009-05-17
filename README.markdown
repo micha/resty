@@ -49,6 +49,10 @@ you need to specify `@-` in place of the data on the command line, like this:
 
       PUT /blogs/5.json @- < /tmp/t
 
+Or, interestingly:
+
+      GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
+
 JSON Pretty-Printing
 --------------------
 
