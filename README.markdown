@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Put the `resty` script in your path somewhere.
+You have `curl`, right? Okay. Put the `resty` script in your path somewhere.
 
       mv resty ~/bin/
 
