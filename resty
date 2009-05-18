@@ -17,7 +17,7 @@ function resty() {
       ;;
     POST|PUT)
       data="$1"; shift
-      res=$(curl -s -L -f -H "$accp" -X $method -d "$data" "$@" \
+      res=$(curl -s -L -f -H "$accp" -X $method --data-binary "$data" "$@" \
         "${RESTY_HOST}$path")
       ret=$?
       [ "$ret" != "0" ] && resty $ret
