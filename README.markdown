@@ -1,5 +1,5 @@
 Quick Start
------------
+===========
 
 You have `curl`, right? Okay. Put the `resty` script in your path somewhere.
 
@@ -23,7 +23,7 @@ Make some HTTP requests.
       POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
 
 Usage
------
+=====
 
       resty                             # prints the current request URI base
       resty <remote>                    # sets the base request URI
@@ -33,7 +33,7 @@ Usage
       POST <path> <data> [curl args]    # does POST request
 
 Request URI Base
-----------------
+================
 
 The request URI base is what the eventual URI to which the requests will be
 made is based on. Specifically, it is a URI that may contain the `*` character
@@ -54,7 +54,7 @@ If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
 POST/PUT Requests and Data
---------------------------
+==========================
 
 Normally you would probably want to provide the request body data right on
 the command line like this:
@@ -76,7 +76,7 @@ Or, interestingly, as a filter pipeline:
       GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
 
 Options
--------
+=======
 
 Anything after the required arguments (2 of them in the case of the GET and
 DELETE methods, and 3 in the case of PUT and POST) are passed on to `curl`.
@@ -92,7 +92,7 @@ Some useful options to try:
   * **-H \<header\>** add request header (can use more than one)
 
 JSON Pretty-Printing
---------------------
+====================
 
 The included `pp` script will pretty-print JSON for you. You just need to
 install the JSON perl module from CPAN.
