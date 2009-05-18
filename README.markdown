@@ -68,7 +68,7 @@ Some useful options to try:
 
   * **-v** verbose output, shows HTTP headers and status on stderr
   * **-i** response headers on stderr
-  * **-H <header>** add request header (can use more than one)
+  * **-H \<header\>** add request header (can use more than one)
 
 JSON Pretty-Printing
 --------------------
