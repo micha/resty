@@ -6,7 +6,10 @@ function resty() {
   local data
   local res
 
-  [ -z "$method" ] && cat ${HOME}/.restyrc
+  if [ -z "$method" ]; then
+    cat ${HOME}/.restyrc 2>/dev/null
+    return
+  fi
 
   uri="${host//\*/$uri}"
 
