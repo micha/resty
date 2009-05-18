@@ -18,18 +18,36 @@ can do this whenever you want to change hosts, anytime).
 Make some HTTP requests.
 
       GET /blogs.json
-      PUT /blogs/2.json '{"title": "updated post", "body": "This is the new."}'
+      PUT /blogs/2.json '{"title" : "updated post", "body" : "This is the new."}'
       DELETE /blogs/2
-      POST /blogs.json '{"title": "new post", "body": "This is the new new."}'
+      POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
 
 Usage
 -----
 
-      resty <hostname>        # sets the remote host
-      GET <path> [curl args]     
-      DELETE <path> [curl args]   
-      PUT <path> <data> [curl args]
-      POST <path> <data> [curl args]
+      resty                             # prints the current remote host
+      resty <hostname>                  # sets the remote host
+      GET <path> [curl args]            # does the GET request 
+      DELETE <path> [curl args]         # does DELETE request 
+      PUT <path> <data> [curl args]     # does PUT request
+      POST <path> <data> [curl args]    # does POST request
+
+POST/PUT Requests Using Data From Stdin
+---------------------------------------
+
+Normally you would probably want to provide the request body data right on
+the command line like this:
+
+      PUT /blogs/5.json '{"title" : "hello", "body" : "this is it"}'
+
+But sometimes you will want to send the request body from a file via stdin
+instead. To do that you can specify `@-` in place of the data, like this:
+
+      PUT /blogs/5.json @- < /tmp/t
+
+Or, interestingly:
+
+      GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
 
 Options
 -------
@@ -40,18 +58,6 @@ DELETE methods, and 3 in the case of PUT and POST) are passed on to `curl`.
 For example:
 
       GET /blogs.json -H "Range: items=1"
-
-POST/PUT Requests Using Data From Stdin
----------------------------------------
-
-To send the request body from a file rather than as a commandline argument
-you need to specify `@-` in place of the data on the command line, like this:
-
-      PUT /blogs/5.json @- < /tmp/t
-
-Or, interestingly:
-
-      GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
 
 JSON Pretty-Printing
 --------------------
