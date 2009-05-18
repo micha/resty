@@ -1,8 +1,3 @@
-Resty
-=====
-
-_Really simple comand line REST interface that you can use with pipes!_
-
 Quick Start
 -----------
 
