@@ -79,7 +79,7 @@ Options
 =======
 
 Anything after the required arguments (2 of them in the case of the GET and
-DELETE methods, and 3 in the case of PUT and POST) are passed on to `curl`.
+DELETE methods, and 3 in the case of PUT and POST) is passed on to `curl`.
 
 For example:
 
