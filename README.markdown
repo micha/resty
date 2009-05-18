@@ -85,7 +85,7 @@ For example:
 
       GET /blogs.json -H "Range: items=1"
 
-### Some useful options to try: ###
+Some useful options to try:
 
   * **-v** verbose output, shows HTTP headers and status on stderr
   * **-i** response headers on stderr

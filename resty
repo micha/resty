@@ -1,4 +1,3 @@
-
 function resty() {
   local host=`cat ${HOME}/.restyrc 2>/dev/null`
   local method="$1"; shift
