@@ -13,7 +13,7 @@ Source the script before using it (you can put this line in your
 Set the REST host to which you will be making your requests (you
 can do this whenever you want to change hosts, anytime).
 
-      resty http://127.0.0.1/data
+      resty http://127.0.0.1:8080/data
 
 Make some HTTP requests.
 
