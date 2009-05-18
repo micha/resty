@@ -1,9 +1,11 @@
 Quick Start
 ===========
 
-You have `curl`, right? Okay. Source the script before using it (you can 
-put this line in your `~/.bashrc` file if you want, or just paste the
-contents in there).
+You have `curl`, right? Okay. 
+
+Source the script before using it. (You can put this line in your `~/.bashrc`
+file if you want, or just paste the contents of the `resty` script right in
+there. Either way works.)
 
       . resty
 
