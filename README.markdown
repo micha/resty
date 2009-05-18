@@ -32,8 +32,8 @@ Usage
       PUT <path> <data> [curl args]     # does PUT request
       POST <path> <data> [curl args]    # does POST request
 
-POST/PUT Requests Using Data From Stdin
----------------------------------------
+POST/PUT Requests and Data
+--------------------------
 
 Normally you would probably want to provide the request body data right on
 the command line like this:
@@ -48,7 +48,7 @@ do that you can specify `@<file>` in place of the data, like this:
 Also, you can pipe the data in via stdin, if you want to, by replacing the
 filename with `-`, like this:
 
-      PUT /blogs/5.json @-
+      PUT /blogs/5.json @- < /tmp/t
 
 Or, interestingly, as a filter pipeline:
 
