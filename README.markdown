@@ -26,10 +26,10 @@ Usage
 
       resty                             # prints the current request URI base
       resty <remote>                    # sets the base request URI
-      GET <path> [curl args]            # does the GET request 
-      DELETE <path> [curl args]         # does DELETE request 
-      PUT <path> <data> [curl args]     # does PUT request
-      POST <path> <data> [curl args]    # does POST request
+      GET <path> [curl opts]            # does the GET request 
+      DELETE <path> [curl opts]         # does DELETE request 
+      PUT <path> <data> [curl opts]     # does PUT request
+      POST <path> <data> [curl opts]    # does POST request
 
 Request URI Base
 ================
