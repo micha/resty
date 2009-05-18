@@ -32,7 +32,7 @@ Usage
       PUT <path> <data> [curl args]     # does PUT request
       POST <path> <data> [curl args]    # does POST request
 
-Request URI base
+Request URI Base
 ----------------
 
 The request URI base is what the eventual URI to which the requests will be
