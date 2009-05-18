@@ -1,7 +1,10 @@
 Resty
 =====
 
-### _Really simple comand line REST interface that you can use with pipes!_ ###
+_Really simple comand line REST interface that you can use with pipes!_
+
+Quick Start
+-----------
 
 You have `curl`, right? Okay. Put the `resty` script in your path somewhere.
 
