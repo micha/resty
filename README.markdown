@@ -40,12 +40,17 @@ the command line like this:
 
       PUT /blogs/5.json '{"title" : "hello", "body" : "this is it"}'
 
-But sometimes you will want to send the request body from a file via stdin
-instead. To do that you can specify `@-` in place of the data, like this:
+But sometimes you will want to send the request body from a file instead. To
+do that you can specify `@<file>` in place of the data, like this:
 
-      PUT /blogs/5.json @- < /tmp/t
+      PUT /blogs/5.json @/tmp/t
 
-Or, interestingly:
+Also, you can pipe the data in via stdin, if you want to, by replacing the
+filename with `-`, like this:
+
+      PUT /blogs/5.json @-
+
+Or, interestingly, as a filter pipeline:
 
       GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
 
