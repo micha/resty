@@ -25,8 +25,8 @@ Make some HTTP requests.
 Usage
 -----
 
-      resty                             # prints the current remote host
-      resty <hostname>                  # sets the remote host
+      resty                             # prints the current request URI base
+      resty <remote>                    # sets the base request URI
       GET <path> [curl args]            # does the GET request 
       DELETE <path> [curl args]         # does DELETE request 
       PUT <path> <data> [curl args]     # does PUT request
