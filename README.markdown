@@ -32,6 +32,27 @@ Usage
       PUT <path> <data> [curl args]     # does PUT request
       POST <path> <data> [curl args]    # does POST request
 
+Request URI base
+----------------
+
+The request URI base is what the eventual URI to which the requests will be
+made is based on. Specifically, it is a URI that may contain the `*` character
+one or more times. The `*` will be replaced with the `path` parameter in the
+`GET`, `POST`, `PUT`, or `DELETE` request as described above.
+
+For example:
+
+      resty http://127.0.0.1:8080/data*.json
+
+and then
+
+      GET /5
+
+would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
+
+If no `*` character is specified when setting the base URI, it's just added
+onto the end for you automatically.
+
 POST/PUT Requests and Data
 --------------------------
 

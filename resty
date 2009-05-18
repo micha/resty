@@ -1,15 +1,17 @@
 
 function resty() {
-  local RESTY_HOST=`cat ${HOME}/.restyrc 2>/dev/null`
+  local host=`cat ${HOME}/.restyrc 2>/dev/null`
   local method="$1"; shift
-  local path="$1"; shift
+  local uri="$1"; shift;
   local acpt="Accept: application/json";
   local data
   local res
 
+  uri="${host//\*/$uri}"
+
   case "$method" in
     GET|DELETE)
-      res=$(curl -s -L -f -H "$accp" -X $method "$@" "${RESTY_HOST}$path")
+      res=$(curl -s -L -f -H "$accp" -X $method "$@" "$uri")
       ret=$?
       [ "$ret" != "0" ] && resty $ret
       echo "$res"
@@ -18,12 +20,13 @@ function resty() {
     POST|PUT)
       data="$1"; shift
       res=$(curl -s -L -f -H "$accp" -X $method --data-binary "$data" "$@" \
-        "${RESTY_HOST}$path")
+            "$uri")
       ret=$?
       [ "$ret" != "0" ] && resty $ret
       return $ret
       ;;
     http://*)
+      echo "$method" |grep -q '\*' || method="${method}*"
       echo "$method" > ${HOME}/.restyrc
       ;;
     [0-9]*)
