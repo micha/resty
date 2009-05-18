@@ -42,7 +42,7 @@ one or more times. The `*` will be replaced with the `path` parameter in the
 
 For example:
 
-      resty http://127.0.0.1:8080/data*.json
+      resty 'http://127.0.0.1:8080/data*.json'
 
 and then
 
