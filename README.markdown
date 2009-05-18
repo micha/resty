@@ -77,14 +77,16 @@ Or, interestingly, as a filter pipeline:
 Options
 =======
 
-Anything after the required arguments (2 of them in the case of the GET and
-DELETE methods, and 3 in the case of PUT and POST) is passed on to `curl`.
+Anything after the required arguments is passed on to `curl`.
 
 For example:
 
       GET /blogs.json -H "Range: items=1"
 
-Some useful options to try:
+The `-H "Range: items=1"` arguments will be passed to `curl` for you. This
+makes it possible to do some more complex operations when necessary.
+
+Here are some useful options to try:
 
   * **-v** verbose output, shows HTTP headers and status on stderr
   * **-u \<username:password\>** HTTP basic authentication
