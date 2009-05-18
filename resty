@@ -25,7 +25,7 @@ function resty() {
       [ "$ret" != "0" ] && resty $ret
       return $ret
       ;;
-    http://*)
+    http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
       echo "$method" > ${HOME}/.restyrc
       ;;
