@@ -18,7 +18,7 @@ function resty() {
       res=$(curl -s -L -f -H "$accp" -X $method "$@" "$uri")
       ret=$?
       [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
-      echo "$res"
+      [ -n "$res" ] && echo "$res"
       return $ret
       ;;
     POST|PUT)
@@ -27,7 +27,7 @@ function resty() {
             "$uri")
       ret=$?
       [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
-      echo "$res"
+      [ -n "$res" ] && echo "$res"
       return $ret
       ;;
     http://*|https://*)
