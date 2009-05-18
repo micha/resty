@@ -1,14 +1,11 @@
 Quick Start
 ===========
 
-You have `curl`, right? Okay. Put the `resty` script in your path somewhere.
+You have `curl`, right? Okay. Source the script before using it (you can 
+put this line in your `~/.bashrc` file if you want, or just paste the
+contents in there).
 
-      mv resty ~/bin/
-
-Source the script before using it (you can put this line in your
-`~/.bashrc` file if you want).
-
-      . ~/bin/resty
+      . resty
 
 Set the REST host to which you will be making your requests (you
 can do this whenever you want to change hosts, anytime).
