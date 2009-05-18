@@ -6,13 +6,15 @@ function resty() {
   local data
   local res
 
+  [ -z "$method" ] && cat ${HOME}/.restyrc
+
   uri="${host//\*/$uri}"
 
   case "$method" in
     GET|DELETE)
       res=$(curl -s -L -f -H "$accp" -X $method "$@" "$uri")
       ret=$?
-      [ "$ret" != "0" ] && resty $ret
+      [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
       echo "$res"
       return $ret
       ;;
@@ -21,18 +23,17 @@ function resty() {
       res=$(curl -s -L -f -H "$accp" -X $method --data-binary "$data" "$@" \
             "$uri")
       ret=$?
-      [ "$ret" != "0" ] && resty $ret
+      [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
+      echo "$res"
       return $ret
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
       echo "$method" > ${HOME}/.restyrc
       ;;
-    [0-9]*)
-      echo "resty: curl returned error $method" 1>&2
-      ;;
     *)
-      cat ${HOME}/.restyrc 2>/dev/null
+      echo "resty: not sure what you want to do here" 1>&2
+      return 1
       ;;
   esac
 }
