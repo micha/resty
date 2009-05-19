@@ -35,8 +35,7 @@ function resty() {
       echo "$method" > ${HOME}/.restyrc
       ;;
     *)
-      echo "resty: not sure what you want to do here" 1>&2
-      return 1
+      resty "http://$method"
       ;;
   esac
 }
