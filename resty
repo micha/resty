@@ -1,7 +1,7 @@
 function resty() {
   local host=`cat ${HOME}/.restyrc 2>/dev/null`
-  local method="$1"; shift
-  local uri="$1"; shift;
+  local method="$1"; [[ $# > 0 ]] && shift
+  local uri="$1"; [[ $# > 0 ]] && shift;
   local accp="Accept: application/json";
   local data
   local res
@@ -22,7 +22,7 @@ function resty() {
       return $ret
       ;;
     POST|PUT)
-      data="$1"; shift
+      data="$1"; [[ $# > 0 ]] && shift
       res=$(curl -s -L -f -H "$accp" -X $method --data-binary "$data" "$@" \
             "$uri")
       ret=$?
