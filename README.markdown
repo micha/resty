@@ -93,6 +93,13 @@ Here are some useful options to try:
   * **-H \<header\>** add request header (this option can be added more than 
     once)
 
+Errors and Output
+=================
+
+For responses other than 2xx most HTTP servers will include HTML in the
+request body describing what went wrong.  Resty will process the HTML through
+`html2text` (if available), and dump it to stderr.
+
 Exit Status
 ===========
 
