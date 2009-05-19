@@ -97,8 +97,9 @@ Errors and Output
 =================
 
 For responses other than 2xx most HTTP servers will include HTML in the
-request body describing what went wrong.  Resty will process the HTML through
-`html2text` (if available), and dump it to stderr.
+response body describing what went wrong.  Resty will process the HTML with
+`html2text` (if available), and dump it to stderr. If the response was not
+HTML it should pass right through `html2text`, hopefully unmolested.
 
 Exit Status
 ===========
