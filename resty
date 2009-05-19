@@ -14,7 +14,8 @@ function resty() {
   fi
 
   for i in "$@"; do
-    [ "$i" == "-v" ] && verbose="yes"
+    ([ "$i" == "--verbose" ] || echo "$i" | grep -q '^-[a-zA-Z]*v[a-zA-Z]*$') \
+      && verbose="yes"
   done
 
   uri="${host//\*/$uri}"
