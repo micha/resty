@@ -93,6 +93,13 @@ Here are some useful options to try:
   * **-H \<header\>** add request header (this option can be added more than 
     once)
 
+Exit Status
+===========
+
+Successful requests (HTTP respose with 2xx status) return zero.
+Otherwise, the first digit of the response status is returned (i.e., 1 for
+1xx, 3 for 3xx, 4 for 4xx, etc.)
+
 JSON Pretty-Printing
 ====================
 

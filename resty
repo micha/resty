@@ -3,32 +3,50 @@ function resty() {
   local method="$1"; [[ $# > 0 ]] && shift
   local uri="$1"; [[ $# > 0 ]] && shift;
   local accp="Accept: application/json";
-  local data
-  local res
+  local h2t=html2text
+  local data res ret out err verbose
+
+  which html2text >/dev/null || h2t=cat
 
   if [ -z "$method" ]; then
     cat ${HOME}/.restyrc 2>/dev/null
     return
   fi
 
+  for i in "$@"; do
+    [ "$i" == "-v" ] && verbose="yes"
+  done
+
   uri="${host//\*/$uri}"
 
   case "$method" in
     GET|DELETE)
-      res=$(curl -s -L -f -H "$accp" -X $method "$@" "$uri")
-      ret=$?
-      [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
-      [ -n "$res" ] && echo "$res"
-      return $ret
+      res=$((curl -sLv -H "$accp" -X $method "$@" "$uri" | sed 's/^/. /') 2>&1)
+      out=$(echo "$res" |sed '/^[.] /s/^..//p; d')
+      err=$(echo "$res" |sed '/^[^\.] /p; d')
+      ret=$(echo "$err" |sed '/^< HTTP\/1\.1/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
+      [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
+      if [ "$ret" != "2" ]; then
+        [ -n "$out" ] && echo "$out" | $h2t 1>&2
+        return $ret
+      else
+        [ -n "$out" ] && echo "$out"
+      fi
       ;;
     POST|PUT)
       data="$1"; [[ $# > 0 ]] && shift
-      res=$(curl -s -L -f -H "$accp" -X $method --data-binary "$data" "$@" \
-            "$uri")
-      ret=$?
-      [ "$ret" != "0" ] && echo "resty: curl returned error $ret" 1>&2
-      [ -n "$res" ] && echo "$res"
-      return $ret
+      res=$((curl -sLv -H "$accp" -X $method --data-binary "$data" "$@" "$uri" \
+          | sed 's/^/. /') 2>&1)
+      out=$(echo "$res" |sed '/^[.] /s/^..//p; d')
+      err=$(echo "$res" |sed '/^[^\.] /p; d')
+      ret=$(echo "$err" |sed '/^< HTTP\/1\.1/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
+      [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
+      if [ "$ret" != "2" ]; then
+        [ -n "$out" ] && echo "$out" | $h2t 1>&2
+        return $ret
+      else
+        [ -n "$out" ] && echo "$out"
+      fi
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
