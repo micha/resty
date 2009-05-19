@@ -96,6 +96,10 @@ Here are some useful options to try:
 Errors and Output
 =================
 
+For successful 2xx responses, the response body is printed on stdout. You
+can pipe the output to stuff, process it, and then pipe it back to resty,
+if you want.
+
 For responses other than 2xx most HTTP servers will include HTML in the
 response body describing what went wrong.  Resty will process the HTML with
 `html2text` (if available), and dump it to stderr. If the response was not
