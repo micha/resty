@@ -6,7 +6,7 @@ function resty() {
   local h2t=html2text
   local data res ret out err verbose
 
-  which html2text >/dev/null || h2t=cat
+  which $h2t >/dev/null || h2t=cat
 
   if [ -z "$method" ]; then
     cat ${HOME}/.restyrc 2>/dev/null
