@@ -74,6 +74,18 @@ Or, interestingly, as a filter pipeline:
 
       GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
 
+Errors and Output
+=================
+
+For successful 2xx responses, the response body is printed on stdout. You
+can pipe the output to stuff, process it, and then pipe it back to resty,
+if you want.
+
+For responses other than 2xx most HTTP servers will include HTML in the
+response body describing what went wrong.  Resty will process the HTML with
+`html2text` (if available), and dump it to stderr. If the response was not
+HTML it should pass right through `html2text`, hopefully unmolested.
+
 Options
 =======
 
@@ -92,18 +104,6 @@ Here are some useful options to try:
   * **-u \<username:password\>** HTTP basic authentication
   * **-H \<header\>** add request header (this option can be added more than 
     once)
-
-Errors and Output
-=================
-
-For successful 2xx responses, the response body is printed on stdout. You
-can pipe the output to stuff, process it, and then pipe it back to resty,
-if you want.
-
-For responses other than 2xx most HTTP servers will include HTML in the
-response body describing what went wrong.  Resty will process the HTML with
-`html2text` (if available), and dump it to stderr. If the response was not
-HTML it should pass right through `html2text`, hopefully unmolested.
 
 Exit Status
 ===========
