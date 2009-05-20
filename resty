@@ -2,9 +2,8 @@ function resty() {
   local host=`cat ${HOME}/.restyrc 2>/dev/null`
   local method="$1"; [[ $# > 0 ]] && shift
   local uri="$1"; [[ $# > 0 ]] && shift;
-  local accp="Accept: application/json";
-  local h2t=html2text
-  local data res ret out err verbose
+  local accp="Accept: application/json" h2t=html2text \
+        data res ret out err verbose i
 
   which $h2t >/dev/null || h2t=cat
 
