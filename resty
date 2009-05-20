@@ -1,16 +1,13 @@
 function resty() {
-  local host=`cat ${HOME}/.restyrc 2>/dev/null`
-  local method="$1"; [[ $# > 0 ]] && shift
-  local uri="$1"; [[ $# > 0 ]] && shift;
-  local accp="Accept: application/json" h2t=html2text \
-        data res ret out err verbose i
+  local conf="${HOME}/.restyrc"
+  local host=`cat "$conf" 2>/dev/null`
+  local method="$1";          [[ $# > 0 ]] && shift
+  local uri="$1";             [[ $# > 0 ]] && shift;
+  local h2t=html2text;        which $h2t >/dev/null || h2t=cat
+  local accp="Accept: application/json"
+  local opt dat res ret out err verbose i
 
-  which $h2t >/dev/null || h2t=cat
-
-  if [ -z "$method" ]; then
-    cat ${HOME}/.restyrc 2>/dev/null
-    return
-  fi
+  [ -z "$method" ] && cat "$conf" 2>/dev/null && return
 
   for i in "$@"; do
     ([ "$i" == "--verbose" ] || echo "$i" | grep -q '^-[a-zA-Z]*v[a-zA-Z]*$') \
@@ -20,26 +17,16 @@ function resty() {
   uri="${host//\*/$uri}"
 
   case "$method" in
-    GET|DELETE)
-      res=$((curl -sLv -H "$accp" -X $method "$@" "$uri" | sed 's/^/. /') 2>&1)
-      out=$(echo "$res" |sed '/^[.] /s/^..//p; d')
-      err=$(echo "$res" |sed '/^[^.] /p; d')
-      ret=$(echo "$err" |sed '/^< HTTP\/1\.1/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
-      [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
-      if [ "$ret" != "2" ]; then
-        [ -n "$out" ] && echo "$out" | $h2t 1>&2
-        return $ret
-      else
-        [ -n "$out" ] && echo "$out"
-      fi
-      ;;
-    POST|PUT)
-      data="$1"; [[ $# > 0 ]] && shift
-      res=$((curl -sLv -H "$accp" -X $method --data-binary "$data" "$@" "$uri" \
-          | sed 's/^/. /') 2>&1)
-      out=$(echo "$res" |sed '/^[.] /s/^..//p; d')
-      err=$(echo "$res" |sed '/^[^\.] /p; d')
-      ret=$(echo "$err" |sed '/^< HTTP\/1\.1/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
+    GET|DELETE|POST|PUT)
+      [ "${method:0:1}" == "P" ] && opt="--data-binary" && dat="$1" \
+        && [[ $# > 0 ]] && shift
+      res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method "$@" "$uri" \
+        |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3-) \
+        |sed 's/^/ERR /' && echo) 2>&1)
+      out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
+      err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
+      ret=$(echo "$err" \
+        |sed '/^.*HTTP\/1\.1 [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
       [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
       if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" | $h2t 1>&2
@@ -50,7 +37,7 @@ function resty() {
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
-      echo "$method" > ${HOME}/.restyrc
+      echo "$method" > "$conf"
       ;;
     *)
       resty "http://$method"
