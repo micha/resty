@@ -1,3 +1,17 @@
+#
+# resty - tiny command line REST interface for bash
+#
+# Latest version:
+#   http://github.com/micha/resty/raw/master/resty
+#
+# Documentation:
+#   http://github.com/micha/resty/raw/master/README.markdown
+#
+# Author:
+#   Micha Niskin <micha@thinkminimo.com>
+#   Copyright 2009, no rights reserved.
+#
+
 function resty() {
   local conf="${HOME}/.restyrc"
   local host=`cat "$conf" 2>/dev/null`
