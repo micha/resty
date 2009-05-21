@@ -36,8 +36,9 @@ function resty() {
         |sed 's/^/ERR /' && echo) 2>&1)
       out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
       err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
-      ret=$(echo "$err" \
-        |sed '/^.*HTTP\/1\.1 [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d')
+      ret=$(echo "$err" |sed \
+        '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
+        | tail -n1)
       [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
       if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" | $h2t 1>&2
