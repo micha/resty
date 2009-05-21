@@ -1,11 +1,8 @@
 #
-# resty - tiny command line REST interface for bash
+# resty - A tiny command line REST interface for bash.
 #
-# Latest version:
-#   http://github.com/micha/resty/raw/master/resty
-#
-# Documentation:
-#   http://github.com/micha/resty/raw/master/README.markdown
+# Fork me on github:
+#   http://github.com/micha/resty
 #
 # Author:
 #   Micha Niskin <micha@thinkminimo.com>
