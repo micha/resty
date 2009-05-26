@@ -117,6 +117,14 @@ Otherwise, the first digit of the response status is returned (i.e., 1 for
 integer---it can't be greater than 254. If you want the exact status code
 you can always just pass the `-v` option to curl.
 
+Working With JSON
+=================
+
+[Jsawk](http://github.com/micha/jsawk) can be used to process and filter
+JSON data from and to resty, in a shell pipeline. This takes care of parsing
+the input JSON correctly, rather than using regexes and sed, awk, perl or
+the like, and prints the resulting output in correct JSON format, as well.
+
 JSON Pretty-Printing
 ====================
 
