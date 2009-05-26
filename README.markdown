@@ -124,14 +124,12 @@ JSON REST web services require some special tools to make them accessible
 and easily manipulated in the shell environment. The following are a few
 scripts that make dealing with JSON data easier.
 
-### Jsawk: Awk for JSON
-
 [Jsawk](http://github.com/micha/jsawk) can be used to process and filter
 JSON data from and to resty, in a shell pipeline. This takes care of parsing
 the input JSON correctly, rather than using regexes and sed, awk, perl or
 the like, and prints the resulting output in correct JSON format, as well.
 
-### JSON Pretty-Printing
+      GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles
 
 The included `pp` script will pretty-print JSON for you. You just need to
 install the JSON perl module from CPAN.
