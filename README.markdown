@@ -75,7 +75,7 @@ filename with `-`, like this:
 Or, interestingly, as a filter pipeline with 
 [jsawk](http://github.com/micha/jsawk):
 
-      GET /blogs/5.json | jsawk 'this.author = "Bob Smith"' | PUT /blogs/5.json @-
+      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT /blogs/5.json @-
 
 Errors and Output
 =================
