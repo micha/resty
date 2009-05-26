@@ -72,9 +72,10 @@ filename with `-`, like this:
 
       PUT /blogs/5.json @- < /tmp/t
 
-Or, interestingly, as a filter pipeline:
+Or, interestingly, as a filter pipeline with 
+[jsawk](http://github.com/micha/jsawk):
 
-      GET /blogs/5.json | sed 's/joe/bob/g' | PUT /blogs/5.json @-
+      GET /blogs/5.json | jsawk 'this.author = "Bob Smith"' | PUT /blogs/5.json @-
 
 Errors and Output
 =================
