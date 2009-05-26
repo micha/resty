@@ -130,7 +130,7 @@ scripts that make dealing with JSON data easier.
     awk, perl or the like, and prints the resulting output in correct JSON
     format, as well.
 
-      GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles
+    `GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles`
 
 The included `pp` script will pretty-print JSON for you. You just need to
 install the JSON perl module from CPAN.
