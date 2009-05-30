@@ -49,7 +49,7 @@ function resty() {
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
-      echo "$method" > "$conf"
+      (echo "$method" |tee "$conf") |cat 1>&2
       ;;
     *)
       resty "http://$method"
