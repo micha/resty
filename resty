@@ -16,10 +16,10 @@ function resty() {
   local host=`cat "$conf" 2>/dev/null`
   local method="$1";          [[ $# > 0 ]] && shift
   local uri=$( [ -n "$1" ] && [ "${1#/}" != "$1" ] && echo "$1" && shift );
-  local h2t=$((which lynx && echo lynx -stdin -dump) || which html2text \
-                                                     || which cat)
+  local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
+                || which html2text || which cat)
   local accp="Accept: application/json"
-  local opt dat res ret out err verbose i
+  local opt dat res ret out err verbose i d
 
   [ -z "$method" ] && cat "$conf" 2>/dev/null && return
 
@@ -46,12 +46,12 @@ function resty() {
         '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
         | tail -n1)
       [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
+      echo "$err" | grep -qi '^< \s*Content-Type:  *text/html' \
+        && d=$h2t || d=cat
       if [ "$ret" != "2" ]; then
-        [ -n "$out" ] && echo "$out" | $h2t 1>&2
+        [ -n "$out" ] && echo "$out" | $d 1>&2
         return $ret
       else
-        echo "$err" | grep -qi '^< \s*Content-Type:\s+text/html\s*$' \
-          && d=$h2t || d=cat
         [ -n "$out" ] && echo "$out" | $d
       fi
       ;;
