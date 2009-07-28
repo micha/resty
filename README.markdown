@@ -116,17 +116,14 @@ resty will try to process the response through either `lynx`, `html2text`,
 or, finally, `cat`, depending on which of those programs are available on
 your system.
 
-Options
-=======
-
-Get Raw Output (-Z option)
---------------------------
+Raw Output (-Z option)
+======================
 
 If you don't want resty to process the output through lynx or html2text you
 can use the `-Z` option, and get the raw output.
 
 Passing Command Line Options To Curl
-------------------------------------
+====================================
 
 Anything after the (optional) `path` and `data` arguments is passed on to 
 `curl`.
