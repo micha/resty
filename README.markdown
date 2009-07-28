@@ -28,10 +28,10 @@ Usage
 
       resty                             # prints the current request URI base
       resty <remote>                    # sets the base request URI
-      GET <path> [curl opts]            # does the GET request 
-      DELETE <path> [curl opts]         # does DELETE request 
-      PUT <path> [data] [curl opts]     # does PUT request
-      POST <path> [data] [curl opts]    # does POST request
+      GET [path] [curl opts]            # does the GET request 
+      DELETE [path] [curl opts]         # does DELETE request 
+      PUT [path] [data] [curl opts]     # does PUT request
+      POST [path] [data] [curl opts]    # does POST request
 
 Request URI Base
 ================
@@ -54,6 +54,15 @@ would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
+The Optional Path Parameter
+===========================
+
+The HTTP verbs (`GET`, `POST`, `PUT`, and `DELETE`) first argument is always
+an optional URI path. This path must always start with a `/` character. If
+the path parameter is not provided on the command line, resty will just use
+the last path it was provided with. This "last path" is stored in an
+environment variable (`$_resty`), so it isn't transferred between shells.
+
 POST/PUT Requests and Data
 ==========================
 
@@ -74,7 +83,9 @@ Or you can pipe the data from another program, like this:
 Or, interestingly, as a filter pipeline with 
 [jsawk](http://github.com/micha/jsawk):
 
-      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT /blogs/5.json
+      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT
+
+Notice how the `path` argument is omitted from the `PUT` command.
 
 Errors and Output
 =================
