@@ -1,5 +1,5 @@
 Resty
------
+=====
 
 Resty is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
