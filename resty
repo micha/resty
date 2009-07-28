@@ -15,12 +15,12 @@ function resty() {
   local conf="${HOME}/.restyrc"
   local host=`cat "$conf" 2>/dev/null`
   local method="$1";          [[ $# > 0 ]] && shift
-  local uri=$( [ -n "$1" ] && [ "${1#/}" != "$1" ] && echo "$1" && shift );
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
   local accp="Accept: application/json"
-  local opt dat res ret out err verbose i d
+  local uri opt dat res ret out err verbose raw i d
 
+  [ -n "$1" ] && [ "${1#/}" != "$1" ] && uri="$1" && shift
   [ -z "$method" ] && cat "$conf" 2>/dev/null && return
 
   for i in "$@"; do
@@ -34,8 +34,10 @@ function resty() {
   case "$method" in
     GET|DELETE|POST|PUT)
       dat=$( ( [ "${method#P}" != "$method" ] \
-        && ( ( [ -n "$1" ] && [ "${1#-}" == "$1" ] && echo "$1" && shift ) \
+        && ( ( [ -n "$1" ] && [ "${1#-}" == "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
+      [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
+      [ "$1" == "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"
       res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method "$@" "$uri" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
@@ -47,7 +49,7 @@ function resty() {
         | tail -n1)
       [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
       echo "$err" | grep -qi '^< \s*Content-Type:  *text/html' \
-        && d=$h2t || d=cat
+        && [ -z "$raw" ] && d=$h2t || d=cat
       if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" | $d 1>&2
         return $ret

@@ -41,12 +41,12 @@ Make some HTTP requests.
 Usage
 =====
 
-      resty                             # prints the current request URI base
-      resty <remote>                    # sets the base request URI
-      GET [path] [curl opts]            # does the GET request 
-      DELETE [path] [curl opts]         # does DELETE request 
-      PUT [path] [data] [curl opts]     # does PUT request
-      POST [path] [data] [curl opts]    # does POST request
+      resty                                   # prints current request URI base
+      resty <remote>                          # sets the base request URI
+      GET [path] [-Z] [curl opts]             # does the GET request 
+      DELETE [path] [-Z] [curl opts]          # does DELETE request 
+      PUT [path] [data] [-Z] [curl opts]      # does PUT request
+      POST [path] [data] [-Z] [curl opts]     # does POST request
 
 Request URI Base
 ================
@@ -118,6 +118,15 @@ your system.
 
 Options
 =======
+
+Get Raw Output (-Z option)
+--------------------------
+
+If you don't want resty to process the output through lynx or html2text you
+can use the `-Z` option, and get the raw output.
+
+Passing Command Line Options To Curl
+------------------------------------
 
 Anything after the (optional) `path` and `data` arguments is passed on to 
 `curl`.
