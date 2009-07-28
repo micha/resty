@@ -14,7 +14,8 @@ function resty() {
   local host=`cat "$conf" 2>/dev/null`
   local method="$1";          [[ $# > 0 ]] && shift
   local uri="$1";             [[ $# > 0 ]] && shift;
-  local h2t=html2text;        which $h2t >/dev/null || h2t=cat
+  local h2t=$((which lynx && echo lynx -stdin -dump) || which html2text \
+                                                     || which cat)
   local accp="Accept: application/json"
   local opt dat res ret out err verbose i
 
@@ -29,8 +30,10 @@ function resty() {
 
   case "$method" in
     GET|DELETE|POST|PUT)
-      [ "${method#P}" != "$method" ] && opt="--data-binary" && dat="$1" \
-        && [[ $# > 0 ]] && shift
+      dat=$( ( [ "${method#P}" != "$method" ] \
+        && ( ( [ -n "$1" ] && [ "${1#-}" == "$1" ] && echo "$1" && shift ) \
+        || echo "@-") ) || echo)
+      [ -n "$dat" ] && opt="--data-binary"
       res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method "$@" "$uri" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
@@ -44,7 +47,7 @@ function resty() {
         [ -n "$out" ] && echo "$out" | $h2t 1>&2
         return $ret
       else
-        [ -n "$out" ] && echo "$out"
+        [ -n "$out" ] && echo "$out" | $h2t
       fi
       ;;
     http://*|https://*)

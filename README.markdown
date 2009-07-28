@@ -30,8 +30,8 @@ Usage
       resty <remote>                    # sets the base request URI
       GET <path> [curl opts]            # does the GET request 
       DELETE <path> [curl opts]         # does DELETE request 
-      PUT <path> <data> [curl opts]     # does PUT request
-      POST <path> <data> [curl opts]    # does POST request
+      PUT <path> [data] [curl opts]     # does PUT request
+      POST <path> [data] [curl opts]    # does POST request
 
 Request URI Base
 ================
@@ -63,19 +63,18 @@ the command line like this:
       PUT /blogs/5.json '{"title" : "hello", "body" : "this is it"}'
 
 But sometimes you will want to send the request body from a file instead. To
-do that you can specify `@<file>` in place of the data, like this:
+do that you pipe in the contents of the file:
 
-      PUT /blogs/5.json @/tmp/t
+      PUT /blogs/5.json < /tmp/t
 
-Also, you can pipe the data in via stdin, if you want to, by replacing the
-filename with `-`, like this:
+Or you can pipe the data from another program, like this:
 
-      PUT /blogs/5.json @- < /tmp/t
+      myprog | PUT /blogs/5.json
 
 Or, interestingly, as a filter pipeline with 
 [jsawk](http://github.com/micha/jsawk):
 
-      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT /blogs/5.json @-
+      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT /blogs/5.json
 
 Errors and Output
 =================
