@@ -94,15 +94,18 @@ For successful 2xx responses, the response body is printed on stdout. You
 can pipe the output to stuff, process it, and then pipe it back to resty,
 if you want.
 
-For responses other than 2xx most HTTP servers will include HTML in the
-response body describing what went wrong.  Resty will process the HTML with
-`html2text` (if available), and dump it to stderr. If the response was not
-HTML it should pass right through `html2text`, hopefully unmolested.
+For responses other than 2xx the response body is dumped to stderr.
+
+In either case, if the content type of the response is `text/html`, then
+resty will try to process the response through either `lynx`, `html2text`,
+or, finally, `cat`, depending on which of those programs are available on
+your system.
 
 Options
 =======
 
-Anything after the required arguments is passed on to `curl`.
+Anything after the (optional) `path` and `data` arguments is passed on to 
+`curl`.
 
 For example:
 
@@ -110,6 +113,11 @@ For example:
 
 The `-H "Range: items=1"` argument will be passed to `curl` for you. This
 makes it possible to do some more complex operations when necessary.
+
+      POST -v -u user:test
+
+In this example the `path` and `data` arguments were left off, but `-v` and
+`-u user:test` will be passed through to `curl`, as you would expect.
 
 Here are some useful options to try:
 
