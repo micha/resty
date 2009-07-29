@@ -37,7 +37,6 @@ function resty() {
         && ( ( [ -n "$1" ] && [ "${1#-}" == "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
       if [ "${method#P}" != "$method" ] && [ "$1" == "-V" ]; then
-        shift
         tmpf=$(mktemp /tmp/resty.XXXXXX)
         cat > $tmpf
         (exec < /dev/tty; vi $tmpf)
