@@ -138,7 +138,7 @@ or, finally, `cat`, depending on which of those programs are available on
 your system.
 
 Raw Output (-Z option)
-======================
+----------------------
 
 If you don't want resty to process the output through lynx or html2text you
 can use the `-Z` option, and get the raw output.
