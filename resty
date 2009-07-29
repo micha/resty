@@ -18,7 +18,7 @@ function resty() {
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
   local accp="Accept: application/json"
-  local uri opt dat res ret out err verbose raw i d
+  local uri opt dat res ret out err verbose raw i d tmpf
 
   [ -n "$1" ] && [ "${1#/}" != "$1" ] && uri="$1" && shift
   [ -z "$method" ] && cat "$conf" 2>/dev/null && return
@@ -36,6 +36,14 @@ function resty() {
       dat=$( ( [ "${method#P}" != "$method" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" == "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
+      if [ "${method#P}" != "$method" ] && [ "$1" == "-V" ]; then
+        shift
+        tmpf=$(mktemp /tmp/resty.XXXXXX)
+        cat > $tmpf
+        (exec < /dev/tty; vi $tmpf)
+        dat=$(cat $tmpf)
+        rm -f $tmpf
+      fi
       [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
       [ "$1" == "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"

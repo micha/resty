@@ -45,8 +45,15 @@ Usage
       resty <remote>                          # sets the base request URI
       GET [path] [-Z] [curl opts]             # does the GET request 
       DELETE [path] [-Z] [curl opts]          # does DELETE request 
-      PUT [path] [data] [-Z] [curl opts]      # does PUT request
-      POST [path] [data] [-Z] [curl opts]     # does POST request
+      PUT [path] [data|-V] [-Z] [curl opts]   # does PUT request
+      POST [path] [data|-V] [-Z] [curl opts]  # does POST request
+
+      Options:
+
+      -V            Edit the input data interactively in 'vi'. (PUT and POST
+                    requests only, with data piped to stdin.)
+      -Z            Raw output. This disables any processing of HTML in the
+                    response.
 
 Request URI Base
 ================
@@ -101,6 +108,13 @@ Or, interestingly, as a filter pipeline with
       GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT
 
 Notice how the `path` argument is omitted from the `PUT` command.
+
+Edit PUT/POST Data In Vi
+------------------------
+
+With the `-V` options you can pipe data into `PUT` or `POST`, edit it in vi,
+save the data (using `:wq` in vi, as normal) and the resulting data is then
+PUT or POSTed. This is similar to the way `visudo` works, for example.
 
 Errors and Output
 =================
