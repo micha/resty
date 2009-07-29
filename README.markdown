@@ -8,6 +8,8 @@ Since it is implemented as functions in your own shell and not in its
 own command environment you have access to all the powerful shell tools,
 such as perl, awk, grep, sed, etc. You can use resty in pipelines
 to process data from REST services, and PUT or POST the data right back.
+You can even pipe the data in and then edit it interactively in vi prior to
+PUT or POST.
 
 Additionally, resty allows you to easily provide your own options to be
 passed on to curl, so even the most complex requests can be accomplished
