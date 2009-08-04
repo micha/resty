@@ -20,7 +20,8 @@ function resty() {
   local accp="Accept: application/json"
   local uri opt dat res ret out err verbose raw i d tmpf
 
-  [ -n "$1" ] && [ "${1#/}" != "$1" ] && uri="$1" && shift
+  [ -n "$1" ] && [ "${1#/}" != "$1" ] \
+    && uri=$(echo "$1"|sed 's/[\[]/%5B/g;s/[]]/%5D/g') && shift
   [ -z "$method" ] && cat "$conf" 2>/dev/null && return
 
   for i in "$@"; do
