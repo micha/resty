@@ -4,16 +4,19 @@ Resty
 Resty is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
-Since it is implemented as functions in your own shell and not in its
-own command environment you have access to all the powerful shell tools,
-such as perl, awk, grep, sed, etc. You can use resty in pipelines
-to process data from REST services, and PUT or POST the data right back.
-You can even pipe the data in and then edit it interactively in vi prior to
-PUT or POST.
+Since it is implemented as functions in your own shell and not in its own
+command environment you have access to all the powerful shell tools, such
+as perl, awk, grep, sed, etc. You can use resty in pipelines to process data
+from REST services, and PUT or POST the data right back.  You can even pipe
+the data in and then edit it interactively in your text editor prior to PUT 
+or POST.
 
-Additionally, resty allows you to easily provide your own options to be
-passed on to curl, so even the most complex requests can be accomplished
-with the minimum amount of command line pain.
+Cookies are supported automatically and stored in a file locally. Most of
+the arguments are remembered from one call to the next to save typing. It
+has pretty good defaults for most purposes. Additionally, resty allows you
+to easily provide your own options to be passed directly to curl, so even
+the most complex requests can be accomplished with the minimum amount of
+command line pain.
 
 Quick Start
 ===========
@@ -114,14 +117,15 @@ Notice how the `path` argument is omitted from the `PUT` command.
 Edit PUT/POST Data In Vi
 ------------------------
 
-With the `-V` options you can pipe data into `PUT` or `POST`, edit it in vi,
-save the data (using `:wq` in vi, as normal) and the resulting data is then
-PUT or POSTed. This is similar to the way `visudo` works, for example.
+With the `-V` options you can pipe data into `PUT` or `POST`, edit it in your
+editor, save the data (using `:wq` in vi, as normal) and the resulting data
+is then PUT or POSTed. This is similar to the way `visudo` works, for example.
 
       GET /blogs/2 | PUT -V
 
 This fetches the data and lets you edit it, and then does a PUT on the
-resource.
+resource. You can specify your preferred editor by setting the `EDITOR`
+environment variable. Defaults to `vi`.
 
 Errors and Output
 =================
