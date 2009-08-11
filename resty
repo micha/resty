@@ -9,28 +9,34 @@
 #   Copyright 2009, no rights reserved.
 #
 
-export _resty=""
+export _resty_host=""
+export _resty_uri=""
 
 function resty() {
-  local conf="${HOME}/.restyrc"
-  local host=`cat "$conf" 2>/dev/null`
+  local confdir="${HOME}/.resty"
+  local conf="${confdir}/host"
+  local cookies="$confdir/c"
   local method="$1";          [[ $# > 0 ]] && shift
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
   local accp="Accept: application/json"
-  local uri opt dat res ret out err verbose raw i d tmpf
+  local domain uri opt dat res ret out err verbose raw i d tmpf
 
+  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$conf")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && uri=$(echo "$1"|sed 's/[\[]/%5B/g;s/[]]/%5D/g') && shift
-  [ -z "$method" ] && cat "$conf" 2>/dev/null && return
 
   for i in "$@"; do
     ([ "$i" == "--verbose" ] || echo "$i" | grep -q '^-[a-zA-Z]*v[a-zA-Z]*$') \
       && verbose="yes"
   done
 
-  [ -n "$uri" ] && _resty=$uri
-  uri="${host//\*/$_resty}"
+  [ -z "$_resty_host" ] && _resty_host=$(cat "$conf" 2>/dev/null)
+  [ -z "$method" ] && echo "$_resty_host" && return
+  [ -n "$uri" ] && _resty_uri=$uri
+  domain=$(echo -n "$_resty_host" \
+    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
+  uri="${_resty_host//\*/$_resty_uri}"
 
   case "$method" in
     GET|DELETE|POST|PUT)
@@ -47,7 +53,8 @@ function resty() {
       [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
       [ "$1" == "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"
-      res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method "$@" "$uri" \
+      res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method \
+              -b "$cookies/$domain" -c "$cookies/$domain" "$@" "$uri" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
       out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
@@ -67,7 +74,7 @@ function resty() {
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
-      (echo "$method" |tee "$conf") |cat 1>&2
+      (echo "$method" |tee "$conf") |cat 1>&2 && _resty_host="$method"
       ;;
     *)
       resty "http://$method"
