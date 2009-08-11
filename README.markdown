@@ -31,8 +31,8 @@ there. Either way works.)
 
       . resty
 
-Set the REST host to which you will be making your requests (you
-can do this whenever you want to change hosts, anytime).
+Set the REST host to which you will be making your requests (you can do this
+whenever you want to change hosts, anytime).
 
       resty http://127.0.0.1:8080/data
 
@@ -155,7 +155,7 @@ Anything after the (optional) `path` and `data` arguments is passed on to
 
 For example:
 
-      GET /blogs.json -H "Range: items=1"
+      GET /blogs.json -H "Range: items=1-10"
 
 The `-H "Range: items=1"` argument will be passed to `curl` for you. This
 makes it possible to do some more complex operations when necessary.
