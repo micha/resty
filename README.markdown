@@ -168,6 +168,7 @@ In this example the `path` and `data` arguments were left off, but `-v` and
 Here are some useful options to try:
 
   * **-v** verbose output, shows HTTP headers and status on stderr
+  * **-j** junk session cookies (refresh cookie-based session)
   * **-u \<username:password\>** HTTP basic authentication
   * **-H \<header\>** add request header (this option can be added more than 
     once)
