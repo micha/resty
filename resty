@@ -19,6 +19,7 @@ function resty() {
   local method="$1";          [[ $# > 0 ]] && shift
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
+  local editor=$(which "$EDITOR" || which vim || echo "vi")
   local accp="Accept: application/json"
   local domain uri opt dat res ret out err verbose raw i d tmpf
 
@@ -46,7 +47,7 @@ function resty() {
       if [ "${method#P}" != "$method" ] && [ "$1" == "-V" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
         cat > $tmpf
-        (exec < /dev/tty; vi $tmpf)
+        (exec < /dev/tty; "$editor" $tmpf)
         dat=$(cat $tmpf)
         rm -f $tmpf
       fi
