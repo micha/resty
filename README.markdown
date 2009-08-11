@@ -157,7 +157,7 @@ For example:
 
       GET /blogs.json -H "Range: items=1-10"
 
-The `-H "Range: items=1"` argument will be passed to `curl` for you. This
+The `-H "Range: items=1-10"` argument will be passed to `curl` for you. This
 makes it possible to do some more complex operations when necessary.
 
       POST -v -u user:test
