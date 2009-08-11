@@ -117,15 +117,15 @@ Notice how the `path` argument is omitted from the `PUT` command.
 Edit PUT/POST Data In Vi
 ------------------------
 
-With the `-V` options you can pipe data into `PUT` or `POST`, edit it in your
-editor, save the data (using `:wq` in vi, as normal) and the resulting data
-is then PUT or POSTed. This is similar to the way `visudo` works, for example.
+With the `-V` options you can pipe data into `PUT` or `POST`, edit it in vi,
+save the data (using `:wq` in vi, as normal) and the resulting data is then
+PUT or POSTed. This is similar to the way `visudo` works, for example.
 
       GET /blogs/2 | PUT -V
 
 This fetches the data and lets you edit it, and then does a PUT on the
-resource. You can specify your preferred editor by setting the `EDITOR`
-environment variable. Defaults to `vi`.
+resource. If you don't like vi you can specify your preferred editor by
+setting the `EDITOR` environment variable.
 
 Errors and Output
 =================
