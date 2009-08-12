@@ -88,7 +88,7 @@ The HTTP verbs (`GET`, `POST`, `PUT`, and `DELETE`) first argument is always
 an optional URI path. This path must always start with a `/` character. If
 the path parameter is not provided on the command line, resty will just use
 the last path it was provided with. This "last path" is stored in an
-environment variable (`$_resty_uri`), so it isn't transferred between shells.
+environment variable (`$_resty_path`), so it isn't transferred between shells.
 
 POST/PUT Requests and Data
 ==========================
