@@ -25,7 +25,7 @@ function resty() {
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$conf")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && path=$(echo "$1"|sed 's/[\[]/%5B/g;s/[]]/%5D/g') && shift
+    && path=$(echo "$1"|sed 's/[\[]/%5B/g;s/[]]/%5D/g;s/[|]/%7C/g') && shift
 
   for i in "$@"; do
     ([ "$i" == "--verbose" ] || echo "$i" | grep -q '^-[a-zA-Z]*v[a-zA-Z]*$') \
