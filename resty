@@ -20,7 +20,6 @@ function resty() {
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
   local editor=$(which "$EDITOR" || which vim || echo "vi")
-  local accp="Accept: application/json"
   local domain path opt dat res ret out err verbose raw i d tmpf
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$conf")
@@ -54,7 +53,7 @@ function resty() {
       [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
       [ "$1" == "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"
-      res=$((((curl -sLv -H "$accp" $opt "$dat" -X $method \
+      res=$((((curl -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" "$@" "$path" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
