@@ -81,10 +81,15 @@ would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
-The URI base is recorded in an rc file (_~/.resty/host_) each time it's set,
+URI Base History
+----------------
+
+The URI base is saved to an rc file (_~/.resty/host_) each time it's set,
 and the last setting is saved in an environment variable (`$_resty_host`).
-In this way you can be making requests to different hosts using resty from
-separate terminals, and have a different URI base for each terminal.
+The URI base is read from the rc file when resty starts up, but only if the
+`$_resty_host` environment variable is not set.  In this way you can make
+requests to different hosts using resty from separate terminals, and have
+a different URI base for each terminal.
 
 If you want to see what the current URI base is, just run `resty` with no
 arguments. The URI base will be printed to stdout.
