@@ -90,6 +90,16 @@ the path parameter is not provided on the command line, resty will just use
 the last path it was provided with. This "last path" is stored in an
 environment variable (`$_resty_path`), so it isn't transferred between shells.
 
+URL Encoding Of Path Parameter
+------------------------------
+
+Resty will always [URL encode]
+(http://www.blooberry.com/indexdot/html/topics/urlencoding.htm) the path,
+except for slashes. (Slashes in path elements need to be manually encoded as
+`%2F`.) This means that the `?`, `=`, and `&` characters will be encoded, as
+well as some other problematic characters. See the query string howto below
+for the way to send query parameters in GET requests.
+
 POST/PUT Requests and Data
 ==========================
 
@@ -172,6 +182,20 @@ Here are some useful options to try:
   * **-u \<username:password\>** HTTP basic authentication
   * **-H \<header\>** add request header (this option can be added more than 
     once)
+  * **-d/-G** send query string parameters with a GET request (see below)
+
+Query Strings For GET Requests
+------------------------------
+
+Since the path parameter is URL encoded, the best way to send query
+parameters in GET requests is by using curl's commnand line arguments. For
+example, to make a GET request like `GET /Something?foo=bar&baz=baf` you
+would do:
+
+      GET /Something -d foo=bar -d baz=baf -G
+
+This sends the name/value pairs specified with the `-d` options as a query
+string in the URL.
 
 Per-Host Curl Configuration Files
 ---------------------------------
