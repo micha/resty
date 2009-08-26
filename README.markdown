@@ -214,9 +214,21 @@ string in the URL.
 Per-Host/Per-Method Curl Configuration Files
 --------------------------------------------
 
-If you find yourself using the same curl options over and over, you can save
-them in a file and resty will pass them to curl for you. Suppose you find
-yourself doing this all the time:
+Resty supports a per-host/per-method configuration file to help you with
+frequently used curl options. Each host (including the port) can have its
+own configuration file in the _~/.resty_ directory. The file format is
+
+      GET [arg] [arg] ...
+      PUT [arg] [arg] ...
+      POST [arg] [arg] ...
+      DELETE [arg] [arg] ...
+
+Where the `arg`s are curl command line arguments. Each line can specify
+arguments for that HTTP verb only, and all lines are optional.
+
+So, suppose you find yourself using the same curl options over and over. You
+can save them in a file and resty will pass them to curl for you. Say this
+is a frequent pattern for you:
 
       resty localhost:8080
       GET /Blah -H "Accept: application/json"
