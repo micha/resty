@@ -81,6 +81,14 @@ would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
+The URI base is recorded in an rc file (_~/.resty/host_) each time it's set,
+and the last setting is saved in an environment variable (`$_resty_host`).
+In this way you can be making requests to different hosts using resty from
+separate terminals, and have a different URI base for each terminal.
+
+If you want to see what the current URI base is, just run `resty` with no
+arguments. The URI base will be printed to stdout.
+
 The Optional Path Parameter
 ===========================
 
@@ -88,7 +96,9 @@ The HTTP verbs (`GET`, `POST`, `PUT`, and `DELETE`) first argument is always
 an optional URI path. This path must always start with a `/` character. If
 the path parameter is not provided on the command line, resty will just use
 the last path it was provided with. This "last path" is stored in an
-environment variable (`$_resty_path`), so it isn't transferred between shells.
+environment variable (`$_resty_path`), so each terminal basically has its
+own "last path".
+
 
 URL Encoding Of Path Parameter
 ------------------------------
