@@ -14,15 +14,15 @@ export _resty_path=""
 
 function resty() {
   local confdir="${HOME}/.resty"
-  local conf="${confdir}/host"
+  local host="${confdir}/host"
   local cookies="$confdir/c"
   local method="$1";          [[ $# > 0 ]] && shift
   local h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat)
   local editor=$(which "$EDITOR" || which vim || echo "vi")
-  local domain path opt dat res ret out err verbose raw i d tmpf
+  local domain path opt dat res ret out err verbose raw i d tmpf args2
 
-  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$conf")
+  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && path=$(echo "$1"|sed 's/[\[]/%5B/g;s/[]]/%5D/g;s/[|]/%7C/g') && shift
 
@@ -31,7 +31,7 @@ function resty() {
       && verbose="yes"
   done
 
-  [ -z "$_resty_host" ] && _resty_host=$(cat "$conf" 2>/dev/null)
+  [ -z "$_resty_host" ] && _resty_host=$(cat "$host" 2>/dev/null)
   [ -z "$method" ] && echo "$_resty_host" && return
   [ -n "$path" ] && _resty_path=$path
   domain=$(echo -n "$_resty_host" \
@@ -50,11 +50,13 @@ function resty() {
         dat=$(cat $tmpf)
         rm -f $tmpf
       fi
+      eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |grep $method |cut -b $((${#method}+2))-) )"
       [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
       [ "$1" == "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"
       res=$((((curl -sLv $opt "$dat" -X $method \
-              -b "$cookies/$domain" -c "$cookies/$domain" "$@" "$path" \
+              -b "$cookies/$domain" -c "$cookies/$domain" \
+              "${args2[@]}" "$@" "$path" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
       out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
@@ -74,7 +76,7 @@ function resty() {
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
-      (echo "$method" |tee "$conf") |cat 1>&2 && _resty_host="$method"
+      (echo "$method" |tee "$host") |cat 1>&2 && _resty_host="$method"
       ;;
     *)
       resty "http://$method"
