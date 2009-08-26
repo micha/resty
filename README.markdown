@@ -237,7 +237,16 @@ _~/.resty/localhost:8080_
 
 Then any GET or POST requests to localhost:8080 will have the specified 
 options prepended to the curl command line arguments, saving you from having
-to type them out each time. Sweet!
+to type them out each time, like this:
+
+      GET /Blah
+      GET /Other
+      ...
+      POST /Something
+      POST /SomethingElse
+      ...
+
+Sweet! Much better.
 
 Exit Status
 ===========
