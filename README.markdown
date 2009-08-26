@@ -227,8 +227,8 @@ yourself doing this all the time:
       POST /SomethingElse -H "Content-Type: text/plain" -u user:pass
       ...
 
-It's annoying to add the `-H` options to curl all the time. So create a file
-`~/.resty/localhost:8080`, like this:
+It's annoying to add the `-H` and `-u` options to curl all the time. So
+create a file _~/.resty/localhost:8080_, like this:
 
 _~/.resty/localhost:8080_
 
