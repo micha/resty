@@ -254,7 +254,7 @@ Exit Status
 Successful requests (HTTP respose with 2xx status) return zero.
 Otherwise, the first digit of the response status is returned (i.e., 1 for
 1xx, 3 for 3xx, 4 for 4xx, etc.) This is because the exit status is an 8 bit
-integer---it can't be greater than 254. If you want the exact status code
+integer---it can't be greater than 255. If you want the exact status code
 you can always just pass the `-v` option to curl.
 
 Working With JSON
