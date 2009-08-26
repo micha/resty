@@ -197,8 +197,8 @@ would do:
 This sends the name/value pairs specified with the `-d` options as a query
 string in the URL.
 
-Per-Host Curl Configuration Files
----------------------------------
+Per-Host/Per-Method Curl Configuration Files
+--------------------------------------------
 
 If you find yourself using the same curl options over and over, you can save
 them in a file and resty will pass them to curl for you. Suppose you find
