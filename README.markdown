@@ -202,10 +202,9 @@ Here are some useful options to try:
 Query Strings For GET Requests
 ------------------------------
 
-Since the path parameter is URL encoded, the best way to send query
-parameters in GET requests is by using curl's commnand line arguments. For
-example, to make a GET request like `GET /Something?foo=bar&baz=baf` you
-would do:
+Since the path parameter is URL encoded, the best way to send query parameters
+in GET requests is by using curl's commnand line arguments. For example,
+to make a GET request to `/Something?foo=bar&baz=baf` you would do:
 
       GET /Something -d foo=bar -d baz=baf -G
 
