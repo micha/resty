@@ -173,6 +173,33 @@ Here are some useful options to try:
   * **-H \<header\>** add request header (this option can be added more than 
     once)
 
+Per-Host Curl Configuration Files
+---------------------------------
+
+If you find yourself using the same curl options over and over, you can save
+them in a file and resty will pass them to curl for you. Suppose you find
+yourself doing this all the time:
+
+      resty localhost:8080
+      GET /Blah -H "Accept: application/json"
+      GET /Other -H "Accept: application/json"
+      ...
+      POST /Something -H "Content-Type: text/plain" -u user:pass
+      POST /SomethingElse -H "Content-Type: text/plain" -u user:pass
+      ...
+
+It's annoying to add the `-H` options to curl all the time. So create a file
+`~/.resty/localhost:8080`, like this:
+
+_~/.resty/localhost:8080_
+
+      GET -H "Accept: application/json"
+      POST -H "Content-Type: text/plain" -u user:pass
+
+Then any GET or POST requests to localhost:8080 will have the specified 
+options prepended to the curl command line arguments, saving you from having
+to type them out each time. Sweet!
+
 Exit Status
 ===========
 
