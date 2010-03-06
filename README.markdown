@@ -284,6 +284,7 @@ scripts that make dealing with JSON data easier.
     `GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles`
 
   * The included `pp` script will pretty-print JSON for you. You just need to
-    install the JSON perl module from CPAN.
+    install the JSON perl module from CPAN or you can use `pypp` if you have
+    python 2.6 installed.
 
     `GET /blogs.json |pp # pretty-prints the JSON output from resty`
