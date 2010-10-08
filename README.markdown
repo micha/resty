@@ -83,11 +83,12 @@ would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
-HTTPS URIs can be used, as well:
+HTTPS URIs
+----------
+
+HTTPS URIs can be used, as well. For example:
 
       resty 'https://example.com/doit'
-
-with the expected behavior.
 
 URI Base History
 ----------------
