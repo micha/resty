@@ -69,7 +69,7 @@ function resty() {
       echo "$err" | grep -qi '^< \s*Content-Type:  *text/html' \
         && [ -z "$raw" ] && d=$h2t || d=cat
       [ -n "$out" ] && out=$(echo "$out" |eval "$d")
-      [ "$d" = "$h2t" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+      [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
       if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" 1>&2
         return $ret
