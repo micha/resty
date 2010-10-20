@@ -48,6 +48,7 @@ Make some HTTP requests.
 Usage
 =====
 
+      source resty [-W] [remote]              # load functions into shell
       resty                                   # prints current request URI base
       resty <remote>                          # sets the base request URI
       GET [path] [-Z] [curl opts]             # does the GET request 
@@ -57,6 +58,7 @@ Usage
 
       Options:
 
+      -W            Don't write to history file (only when sourcing script).
       -V            Edit the input data interactively in 'vi'. (PUT and POST
                     requests only, with data piped to stdin.)
       -Z            Raw output. This disables any processing of HTML in the
@@ -276,6 +278,22 @@ Otherwise, the first digit of the response status is returned (i.e., 1 for
 1xx, 3 for 3xx, 4 for 4xx, etc.) This is because the exit status is an 8 bit
 integer---it can't be greater than 255. If you want the exact status code
 you can always just pass the `-v` option to curl.
+
+Using Resty In Shell Scripts
+============================
+
+Since resty creates the REST verb functions in the shell, when using it from a script you must `source` it before you use any of the functions. However, it's likely that you don't want it to be overwriting the resty host history file, and you will almost always want to set the URI base explicitly.
+
+      #!/usr/bin/env bash
+
+      # Load resty, don't write to the history file, and set the URI base
+      . /path/to/resty -W 'https://myhost.com/data*.json'
+
+      # GET the JSON list of users, set each of their 'disabled' properties
+      # to 'false', and PUT the modified JSON back
+      GET /users | jsawk 'this.disabled = false' | PUT
+
+Here the `-W` option was used when loading the script to prevent writing to the history file and an initial URI base was set at the same time. Then a JSON file was fetched, edited using [jsawk](http://github.com/micha/jsawk), and re-uploaded to the server.
 
 Working With JSON
 =================

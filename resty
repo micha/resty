@@ -11,6 +11,7 @@
 
 export _resty_host=""
 export _resty_path=""
+export _resty_nohistory=""
 
 function resty() {
   local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i d tmpf args2
@@ -79,7 +80,8 @@ function resty() {
       ;;
     http://*|https://*)
       echo "$method" |grep -q '\*' || method="${method}*"
-      (echo "$method" |tee "$host") |cat 1>&2 && _resty_host="$method"
+      (echo "$method" |tee "${_resty_nohistory:-$host}") |cat 1>&2 \
+        && _resty_host="$method"
       ;;
     *)
       resty "http://$method"
@@ -102,3 +104,7 @@ function PUT() {
 function DELETE() {
   resty DELETE "$@"
 }
+
+[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && shift
+
+resty "$@" >/dev/null 2>&1
