@@ -4,7 +4,7 @@ Resty
 Resty is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
-Since it is implemented as functions in your own shell and not in its own
+Since it is implemented as functions in your shell and not in its own separate
 command environment you have access to all the powerful shell tools, such
 as perl, awk, grep, sed, etc. You can use resty in pipelines to process data
 from REST services, and PUT or POST the data right back.  You can even pipe
