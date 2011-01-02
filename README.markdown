@@ -51,6 +51,7 @@ Usage
       source resty [-W] [remote]              # load functions into shell
       resty                                   # prints current request URI base
       resty <remote>                          # sets the base request URI
+      HEAD [path]                             # does HEAD request
       GET [path] [-Z] [curl opts]             # does the GET request 
       DELETE [path] [-Z] [curl opts]          # does DELETE request 
       PUT [path] [data|-V] [-Z] [curl opts]   # does PUT request
@@ -70,7 +71,7 @@ Request URI Base
 The request URI base is what the eventual URI to which the requests will be
 made is based on. Specifically, it is a URI that may contain the `*` character
 one or more times. The `*` will be replaced with the `path` parameter in the
-`GET`, `POST`, `PUT`, or `DELETE` request as described above.
+`HEAD`, `GET`, `POST`, `PUT`, or `DELETE` request as described above.
 
 For example:
 
@@ -108,7 +109,7 @@ arguments. The URI base will be printed to stdout.
 The Optional Path Parameter
 ===========================
 
-The HTTP verbs (`GET`, `POST`, `PUT`, and `DELETE`) first argument is always
+The HTTP verbs (`HEAD`, `GET`, `POST`, `PUT`, and `DELETE`) first argument is always
 an optional URI path. This path must always start with a `/` character. If
 the path parameter is not provided on the command line, resty will just use
 the last path it was provided with. This "last path" is stored in an
