@@ -51,13 +51,14 @@ Usage
       source resty [-W] [remote]              # load functions into shell
       resty                                   # prints current request URI base
       resty <remote>                          # sets the base request URI
-      HEAD [path] [curl opts]                 # does HEAD request
-      OPTIONS [path] [curl opts]              # does OPTIONS request
-      GET [path] [-Z] [curl opts]             # does GET request 
-      DELETE [path] [-Z] [curl opts]          # does DELETE request 
-      PUT [path] [data|-V] [-Z] [curl opts]   # does PUT request
-      POST [path] [data|-V] [-Z] [curl opts]  # does POST request
-      TRACE [path] [-Z] [curl opts]           # does TRACE request
+
+      HEAD [path] [curl opts]                 # HEAD request
+      OPTIONS [path] [curl opts]              # OPTIONS request
+      GET [path] [-Z] [curl opts]             # GET request 
+      DELETE [path] [-Z] [curl opts]          # DELETE request 
+      PUT [path] [data|-V] [-Z] [curl opts]   # PUT request
+      POST [path] [data|-V] [-Z] [curl opts]  # POST request
+      TRACE [path] [-Z] [curl opts]           # TRACE request
 
       Options:
 
