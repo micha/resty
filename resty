@@ -41,7 +41,7 @@ function resty() {
   _path="${_resty_host//\*/$_resty_path}"
 
   case "$method" in
-    GET|DELETE|POST|PUT)
+    HEAD|GET|DELETE|POST|PUT)
       dat=$( ( [ "${method#P}" != "$method" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
@@ -55,6 +55,7 @@ function resty() {
       [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
       [ "$1" = "-Z" ] && raw="yes" && shift
       [ -n "$dat" ] && opt="--data-binary"
+      [ "$method" = "HEAD" ] && method="GET" && opt="-I"
       eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
       res=$((((curl -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
@@ -87,6 +88,10 @@ function resty() {
       resty "http://$method"
       ;;
   esac
+}
+
+function HEAD() {
+  resty HEAD "$@"
 }
 
 function GET() {
