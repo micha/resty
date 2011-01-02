@@ -53,7 +53,7 @@ Usage
       resty <remote>                          # sets the base request URI
       HEAD [path] [curl opts]                 # does HEAD request
       OPTIONS [path] [curl opts]              # does OPTIONS request
-      GET [path] [-Z] [curl opts]             # does the GET request 
+      GET [path] [-Z] [curl opts]             # does GET request 
       DELETE [path] [-Z] [curl opts]          # does DELETE request 
       PUT [path] [data|-V] [-Z] [curl opts]   # does PUT request
       POST [path] [data|-V] [-Z] [curl opts]  # does POST request
