@@ -41,7 +41,7 @@ function resty() {
   _path="${_resty_host//\*/$_resty_path}"
 
   case "$method" in
-    HEAD|OPTIONS|GET|DELETE|POST|PUT)
+    HEAD|OPTIONS|GET|DELETE|POST|PUT|TRACE)
       dat=$( ( [ "${method#P}" != "$method" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
@@ -113,6 +113,10 @@ function PUT() {
 
 function DELETE() {
   resty DELETE "$@"
+}
+
+function TRACE() {
+  resty TRACE "$@"
 }
 
 [ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && shift
