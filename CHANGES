@@ -1,0 +1,8 @@
+Resty CHANGES
+=============
+
+Version 1.1 (2011-01-07)
+------------------------
+
+* Fixed bug where -V option required input on stdin, and would block waiting
+  for it.

@@ -53,9 +53,9 @@ function resty() {
       dat=$( ( [ "$hasdata" = "yes" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
         || echo "@-") ) || echo)
-      if [ "$hasdata" = "yes" ] && [ "$1" = "-V" ]; then
+      if [ "$hasdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
-        cat > $tmpf
+        [ -t 0 ] || cat > $tmpf
         (exec < /dev/tty; "$editor" $tmpf)
         dat=$(cat $tmpf)
         rm -f $tmpf
