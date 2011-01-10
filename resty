@@ -127,8 +127,6 @@ function TRACE() {
   resty TRACE "$@"
 }
 
-for i in "$@"; do
-  [ "$i" = "-W" ] && export _resty_nohistory="/dev/null"
-done
+[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && shift
 
 resty "$@" >/dev/null 2>&1
