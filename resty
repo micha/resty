@@ -32,7 +32,7 @@ function resty() {
   
   j=0
   for i in "$@"; do
-    ([ "$i" = "--verbose" ] || echo "$i" | grep -q '^-[a-zA-Z]*v[a-zA-Z]*$') \
+    ([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
       && verbose="yes" && continue
     [ "$i" = "-V" ] && vimedit="yes" && continue
     [ "$i" = "-Z" ] || [ "$method" = "HEAD" ] || [ "$method" = "OPTIONS" ] \
@@ -77,7 +77,7 @@ function resty() {
         '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
         | tail -n1)
       [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
-      echo "$err" | grep -qi '^< \s*Content-Type:  *text/html' \
+      echo "$err" | grep -i '^< \s*Content-Type:  *text/html' >/dev/null \
         && [ -z "$raw" ] && d=$h2t || d=cat
       [ -n "$out" ] && out=$(echo "$out" |eval "$d")
       [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
@@ -89,7 +89,7 @@ function resty() {
       fi
       ;;
     http://*|https://*)
-      echo "$method" |grep -q '\*' || method="${method}*"
+      echo "$method" |grep '\*' >/dev/null || method="${method}*"
       (echo "$method" |tee "${_resty_nohistory:-$host}") |cat 1>&2 \
         && _resty_host="$method"
       ;;
