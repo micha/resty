@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv='content-type' value='text/html;charset=utf8'>
+  <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
+  <title>resty(1) - command line REST client</title>
+  <style type='text/css' media='all'>
+  /* style: man */
+  body#manpage {margin:0}
+  .mp {max-width:100ex;padding:0 9ex 1ex 4ex}
+  .mp p,.mp pre,.mp ul,.mp ol,.mp dl {margin:0 0 20px 0}
+  .mp h2 {margin:10px 0 0 0}
+  .mp > p,.mp > pre,.mp > ul,.mp > ol,.mp > dl {margin-left:8ex}
+  .mp h3 {margin:0 0 0 4ex}
+  .mp dt {margin:0;clear:left}
+  .mp dt.flush {float:left;width:8ex}
+  .mp dd {margin:0 0 0 9ex}
+  .mp h1,.mp h2,.mp h3,.mp h4 {clear:left}
+  .mp pre {margin-bottom:20px}
+  .mp pre+h2,.mp pre+h3 {margin-top:22px}
+  .mp h2+pre,.mp h3+pre {margin-top:5px}
+  .mp img {display:block;margin:auto}
+  .mp h1.man-title {display:none}
+  .mp,.mp code,.mp pre,.mp tt,.mp kbd,.mp samp,.mp h3,.mp h4 {font-family:monospace;font-size:14px;line-height:1.42857142857143}
+  .mp h2 {font-size:16px;line-height:1.25}
+  .mp h1 {font-size:20px;line-height:2}
+  .mp {text-align:justify;background:#fff}
+  .mp,.mp code,.mp pre,.mp pre code,.mp tt,.mp kbd,.mp samp {color:#131211}
+  .mp h1,.mp h2,.mp h3,.mp h4 {color:#030201}
+  .mp u {text-decoration:underline}
+  .mp code,.mp strong,.mp b {font-weight:bold;color:#131211}
+  .mp em,.mp var {font-style:italic;color:#232221;text-decoration:none}
+  .mp a,.mp a:link,.mp a:hover,.mp a code,.mp a pre,.mp a tt,.mp a kbd,.mp a samp {color:#0000ff}
+  .mp b.man-ref {font-weight:normal;color:#434241}
+  .mp pre {padding:0 4ex}
+  .mp pre code {font-weight:normal;color:#434241}
+  .mp h2+pre,h3+pre {padding-left:0}
+  ol.man-decor,ol.man-decor li {margin:3px 0 10px 0;padding:0;float:left;width:33%;list-style-type:none;text-transform:uppercase;color:#999;letter-spacing:1px}
+  ol.man-decor {width:100%}
+  ol.man-decor li.tl {text-align:left}
+  ol.man-decor li.tc {text-align:center;letter-spacing:4px}
+  ol.man-decor li.tr {text-align:right;float:right}
+  </style>
+</head>
+<!--
+  The following styles are deprecated and will be removed at some point:
+  div#man, div#man ol.man, div#man ol.head, div#man ol.man.
+
+  The .man-page, .man-decor, .man-head, .man-foot, .man-title, and
+  .man-navigation should be used instead.
+-->
+<body id='manpage'>
+  <div class='mp' id='man'>
+
+  <div class='man-navigation' style='display:none'>
+    <a href="#NAME">NAME</a>
+    <a href="#SYNOPSIS">SYNOPSIS</a>
+    <a href="#DESCRIPTION">DESCRIPTION</a>
+    <a href="#OPTIONS">OPTIONS</a>
+    <a href="#CURL-OPTIONS">CURL OPTIONS</a>
+    <a href="#REQUEST-URI-BASE">REQUEST URI BASE</a>
+    <a href="#PATH-PARAMETER">PATH PARAMETER</a>
+    <a href="#RESPONSE-BODY">RESPONSE BODY</a>
+    <a href="#EXIT-STATUS">EXIT STATUS</a>
+    <a href="#PER-HOST-PER-METHOD-CONFIGURATION-FILES">PER-HOST, PER-METHOD CONFIGURATION FILES</a>
+    <a href="#EXAMPLES">EXAMPLES</a>
+    <a href="#FILES">FILES</a>
+    <a href="#ENVIRONMENT">ENVIRONMENT</a>
+    <a href="#BUGS">BUGS</a>
+    <a href="#COPYRIGHT">COPYRIGHT</a>
+    <a href="#SEE-ALSO">SEE ALSO</a>
+  </div>
+
+  <ol class='man-decor man-head man head'>
+    <li class='tl'>resty(1)</li>
+    <li class='tc'></li>
+    <li class='tr'>resty(1)</li>
+  </ol>
+
+  <h2 id="NAME">NAME</h2>
+<p class="man-name">
+  <code>resty</code> - <span class="man-whatis">command line REST client</span>
+</p>
+
+<h2 id="SYNOPSIS">SYNOPSIS</h2>
+
+<p><code>source</code> <code>resty</code> [<code>-W</code>] [<var>remote</var>]<br />
+<code>resty</code> [<var>remote</var>]<br />
+<code>HEAD</code> [<var>path</var>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>OPTIONS</code> [<var>path</var>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>GET</code> [<var>path</var>] [<code>-Z</code>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>DELETE</code> [<var>path</var>] [<code>-Z</code>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>PUT</code> [<var>path</var>] [<var>data</var><code>|-V</code>] [<code>-Z</code>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>POST</code> [<var>path</var>] [<var>data</var><code>|-V</code>] [<code>-Z</code>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br />
+<code>TRACE</code> [<var>path</var>] [<var>data</var><code>|-V</code>] [<code>-Z</code>] [<a href="#CURL-OPTIONS" title="CURL OPTIONS" data-bare-link="true">curl options</a>]<br /></p>
+
+<h2 id="DESCRIPTION">DESCRIPTION</h2>
+
+<p><strong>Resty</strong> is a command line REST client for the <a href="http://man.cx/bash(1)" class="man-ref">bash<span class="s">(1)</span></a> or <a href="http://man.cx/zsh(1)" class="man-ref">zsh<span class="s">(1)</span></a>
+shell. It is implemented as functions in the shell, and can be used in
+pipelines with <a href="http://man.cx/sed(1)" class="man-ref">sed<span class="s">(1)</span></a>, <a href="http://man.cx/awk(1)" class="man-ref">awk<span class="s">(1)</span></a>, <a href="http://man.cx/grep(1)" class="man-ref">grep<span class="s">(1)</span></a>, etc.</p>
+
+<p>The <strong>resty</strong> script contains the definitions for the <strong>resty</strong> function and
+functions for each of the REST verbs: HEAD, OPTIONS, GET, DELETE, PUT, POST,
+and TRACE. This script must be sourced from the shell before the functions can
+be used.</p>
+
+<p>The <strong>resty</strong> function is used to get or set the URI base, as described below
+under <a href="#REQUEST-URI-BASE" title="REQUEST URI BASE" data-bare-link="true">REQUEST URI BASE</a>. When no <var>remote</var> argument is specified, the URI base
+is printed to stdout. Otherwise, a new request URI base is set to <var>remote</var>, and
+the resulting URI base is printed to stdout.</p>
+
+<p>The REST verb functions are used to make HTTP requests. For PUT and POST
+requests data can be provided on the command line, stdin, or from a text editor.
+Response data is printed to stdout.</p>
+
+<h2 id="OPTIONS">OPTIONS</h2>
+
+<p>This option is used when sourcing the <strong>resty</strong> script, not with the
+<strong>resty</strong> or HTTP verb functions.</p>
+
+<dl>
+<dt class="flush"><code>-W</code></dt><dd>Don't write history file. This is handy when using <strong>resty</strong> in scripts,
+where the URI history file is not relevant.</dd>
+</dl>
+
+
+<p>These options are used with the <strong>resty</strong> and HTTP verb functions. They control
+how data is provided to HTTP requests, and how responses are formatted in the
+terminal.</p>
+
+<dl>
+<dt class="flush"><code>-V</code></dt><dd><p>Edit PUT/POST data interactively in a text editor. The editor used will be
+the one in the EDITOR environment variable, or <a href="http://man.cx/vim(1)" class="man-ref">vim<span class="s">(1)</span></a> otherwise.</p></dd>
+<dt class="flush"><code>-Z</code></dt><dd><p>Don't process HTML response with <a href="http://man.cx/lynx(1)" class="man-ref">lynx<span class="s">(1)</span></a> or <a href="http://man.cx/html2text(1)" class="man-ref">html2text<span class="s">(1)</span></a>, just send the raw
+response to stdout.</p></dd>
+</dl>
+
+
+<h2 id="CURL-OPTIONS">CURL OPTIONS</h2>
+
+<p>Options other than those listed above under <a href="#OPTIONS" title="OPTIONS" data-bare-link="true">OPTIONS</a> are passed directly to
+<strong>curl</strong>.</p>
+
+<h2 id="REQUEST-URI-BASE">REQUEST URI BASE</h2>
+
+<p>The request URI base is a template for the URIs to which requests will be made.
+It is a URI that may contain the <code>*</code> character (possibly more than once). Each
+instance of <code>*</code> is replaced with the <var>path</var> parameter in the HTTP request.</p>
+
+<p>If the protocol part of the URI is omitted when setting the URI base, the
+default <code>http</code> is used. Also, if no <code>*</code> is present one is appended to the end
+of the URI by default.</p>
+
+<h3 id="URI-Base-History">URI Base History</h3>
+
+<p>The URI base is saved to a text file (<em>~/.resty/host</em>) each time it is set,
+and the last setting is saved in an environment variable (<code>$_resty_host</code>). The
+<strong>resty</strong> function checks to determine whether the environment variable is set.
+If it is not, it reads the text file and sets the URI base accordingly. In this
+way each shell maintains its own URI base.</p>
+
+<h2 id="PATH-PARAMETER">PATH PARAMETER</h2>
+
+<p>The HTTP verb functions' first (optional) parameter is the <var>path</var>. The <var>path</var>
+must always start with a <code>/</code> character. The <var>path</var> is substituted for each
+instance of <code>*</code> in the URI base when a request is made.</p>
+
+<h3 id="Path-History">Path History</h3>
+
+<p>If no <var>path</var> is specified, then the last <var>path</var> specified will be used. This
+"last path" is stored in the <code>$_resty_path</code> environment variable.</p>
+
+<h3 id="Path-URL-Encoding-Query-Strings">Path URL Encoding &amp; Query Strings</h3>
+
+<p><strong>Resty</strong> encodes the path, except for the <code>/</code> character (<code>/</code> must be manually
+encoded, eg. <code>%2F</code>). Since this means that <code>?</code>, <code>=</code>, and <code>&amp;</code> characters will
+be URL encoded, as well as some other problematic characters, curl options
+must be used to send query parameters in requests. The <code>-d</code> and <code>-G</code> curl
+options provide this functionality.</p>
+
+<h2 id="RESPONSE-BODY">RESPONSE BODY</h2>
+
+<p>The body of the HTTP response is printed to stdout for all successful (HTTP 2xx
+status) requests. The body of all other responses is dumped to stderr.</p>
+
+<p>In either case, if the content-type of the response is <code>text/html</code> <strong>resty</strong>
+will attempt to filter the response body through one of <a href="http://man.cx/lynx(1)" class="man-ref">lynx<span class="s">(1)</span></a>, <a href="http://man.cx/html2text(1)" class="man-ref">html2text<span class="s">(1)</span></a>,
+or <a href="http://man.cx/cat(1)" class="man-ref">cat<span class="s">(1)</span></a>, in that order. This behavior can be disabled with the <code>-Z</code> option
+to get the raw response body.</p>
+
+<h2 id="EXIT-STATUS">EXIT STATUS</h2>
+
+<p>Successful requests (HTTP 2xx response status) exit with a status of zero.
+Otherwise, the first digit of the HTTP response status is returned. The <code>-v</code>
+curl option is available when the exact status is required.</p>
+
+<h2 id="PER-HOST-PER-METHOD-CONFIGURATION-FILES">PER-HOST, PER-METHOD CONFIGURATION FILES</h2>
+
+<p><strong>Resty</strong> supports per-host, per-method configuration files to help with
+frequently used curl options. Each host (optionally including the port) may
+have its own configuration file in the <em>~/.resty</em> directory. Each line of the
+file consists of an HTTP method followed by a number of curl options, exactly
+as they would appear on the command line.</p>
+
+<p>Then, when a request is made, <strong>resty</strong> checks to see if there is a config
+file named for that host/port. If there is one, it then checks the file to
+find the line corresponding to the request method. If such a line exists
+then the rest of the line is passed to curl as options.</p>
+
+<dl>
+<dt class="flush"><code>Ex:</code></dt><dd><p>Sometimes the server setup requires curl options to be specified on
+every request. This can get to be extremely cumbersome and tedious
+after a while. Suppose your case requires many requests of this form:</p>
+
+<p>$ resty example.com:8080<br />
+http://example.com:8080*<br />
+$ GET / -H 'Accept:application/json' -u mylogin:secretpasswd<br />
+... response ...<br />
+$ DELETE /other/path/ -H 'Accept:application/json' -u mylogin:secretpasswd<br />
+... response ...<br /></p>
+
+<p>By making a per-host configuration file in your <em>~/.resty/</em> directory
+you can have these boilerplate options added automatically for each
+request. Create the file <em>~/.resty/example.com:8080</em> with the following
+contents:</p>
+
+<p>GET -H 'Accept:application/json' -u mylogin:secretpasswd<br />
+DELETE -H 'Accept:application/json' -u mylogin:secretpasswd<br /></p>
+
+<p>Now all GET and DELETE requests to this host and port will have those
+options automatically applied.</p></dd>
+</dl>
+
+
+<h2 id="EXAMPLES">EXAMPLES</h2>
+
+<p>Here are a few examples to get things started. First, a simple, common case.
+The first command loads the resty functions into the shell:</p>
+
+<pre><code>$ . resty
+</code></pre>
+
+<p>Then the request URI base is set:</p>
+
+<pre><code>$ resty example.com
+http://example.com*
+</code></pre>
+
+<p>Next, a GET request is made on http://example.com/, and the response body
+is printed (response body HTML processed by lynx):</p>
+
+<pre><code>$ GET /
+                            Hello, World!
+
+  This is a test!
+</code></pre>
+
+<p>Here the same URI is fetched with another GET request, but this time the
+raw response body printed:</p>
+
+<pre><code>$ GET / -Z
+&lt;html&gt;
+  &lt;body&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+    &lt;p&gt;This is a test.&lt;/p&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>You can also use "pipelines" to filter resources. Here a notional RESTful
+database is queried, and a record updated:</p>
+
+<pre><code>$ GET /data/1
+{ "id" : 1, "foo" : "bar" }
+$ GET /data/1 | sed 's/bar/baz/' | PUT
+{ "id" : 1, "foo" : "baz" }
+</code></pre>
+
+<p>Notice how the PUT command did not require a <var>path</var> parameter. The <var>path</var>
+simply defaults to the last used <var>path</var>, which in this case is '/data/1'.</p>
+
+<p>Here a new record is added with a POST request:</p>
+
+<pre><code>$ POST /data/ '{ "foo" : "bar" }'
+{ "id" : 13, "foo" : "bar" }
+</code></pre>
+
+<p>Or POST using data piped to stdin:</p>
+
+<pre><code>$ GET /data/13 | sed 's/bar/baz/' | POST /data/
+{ "id" : 42, "foo" : "baz" }
+</code></pre>
+
+<p>Or the record could be crafted using a text editor:</p>
+
+<pre><code>$ GET /data/13 | POST /data -V
+... edit /data/13 in vim ...
+{ "id" : 43, "foo" : "baf" }
+</code></pre>
+
+<p>Query strings are escaped in the <var>path</var> parameter, so curl options are used:</p>
+
+<pre><code>$ GET /data/1 -d arg1=foo -d arg2=bar -G
+</code></pre>
+
+<p>HTTP basic authentication (<code>-u</code> curl option):</p>
+
+<pre><code>$ POST /data/ -u user:pass &lt; datafile
+</code></pre>
+
+<p>See the headers on stderr with the request body on stdout (<code>-v</code> curl option):</p>
+
+<pre><code>$ GET / -v
+* About to connect() to example.com port 80 (#0)
+*   Trying 192.168.5.101... connected
+* Connected to thinkminimo.com (192.168.5.101) port 80 (#0)
+&gt; GET / HTTP/1.1
+&gt; User-Agent: curl/7.21.0 (x86_64-apple-darwin10.2.0) libcurl/7.21.0 OpenSSL/0.9.8o zlib/1.2.5 libidn/1.19
+&gt; Host: example.com:80
+&gt; Accept:a #0 to host example.com left intact
+* Closing connection #0
+                            Hello, World!
+
+  This is a test.
+</code></pre>
+
+<h2 id="FILES">FILES</h2>
+
+<dl>
+<dt><code>~/.resty/</code></dt><dd><p>Directory containing <strong>resty</strong> configuration files.</p></dd>
+<dt><code>~/.resty/host</code></dt><dd><p>Request URI base history file.</p></dd>
+<dt><code>~/.resty/c</code></dt><dd><p>Cookie storage directory.</p></dd>
+<dt><code>~/.resty/&lt;host>[:&lt;port>]</code></dt><dd><p>Per-host options configuration files.</p></dd>
+</dl>
+
+
+<h2 id="ENVIRONMENT">ENVIRONMENT</h2>
+
+<dl>
+<dt><code>_resty_host</code></dt><dd><p>Last setting for request URI base.</p></dd>
+<dt><code>_resty_path</code></dt><dd><p>Last request <var>path</var> parameter. Used when no <var>path</var> parameter is specified.</p></dd>
+<dt class="flush"><code>EDITOR</code></dt><dd><p>Used to determine which text editor to use for editing PUT/POST request
+body.</p></dd>
+</dl>
+
+
+<h2 id="BUGS">BUGS</h2>
+
+<p>Please report bugs here: <a href="http://github.com/micha/resty/issues" data-bare-link="true">http://github.com/micha/resty/issues</a>.</p>
+
+<h2 id="COPYRIGHT">COPYRIGHT</h2>
+
+<p>Copyright (C) 2009 Micha Niskin <a href="http://github.com/micha" data-bare-link="true">http://github.com/micha</a>, no rights reserved.</p>
+
+<h2 id="SEE-ALSO">SEE ALSO</h2>
+
+<p><a href="http://man.cx/awk(1)" class="man-ref">awk<span class="s">(1)</span></a>, <a href="http://man.cx/bash(1)" class="man-ref">bash<span class="s">(1)</span></a>, <a href="http://man.cx/cat(1)" class="man-ref">cat<span class="s">(1)</span></a>, <a href="http://man.cx/grep(1)" class="man-ref">grep<span class="s">(1)</span></a>, <a href="http://man.cx/html2text(1)" class="man-ref">html2text<span class="s">(1)</span></a>, <a href="http://man.cx/lynx(1)" class="man-ref">lynx<span class="s">(1)</span></a>, <a href="http://man.cx/sed(1)" class="man-ref">sed<span class="s">(1)</span></a>, <a href="http://man.cx/vim(1)" class="man-ref">vim<span class="s">(1)</span></a>, <a href="http://man.cx/zsh(1)" class="man-ref">zsh<span class="s">(1)</span></a></p>
+
+
+  <ol class='man-decor man-foot man foot'>
+    <li class='tl'></li>
+    <li class='tc'>January 2011</li>
+    <li class='tr'>resty(1)</li>
+  </ol>
+
+  </div>
+</body>
+</html>
