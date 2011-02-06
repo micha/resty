@@ -1,6 +1,14 @@
 Resty CHANGES
 =============
 
+Version 1.2 (2011-02-06)
+------------------------
+
+* Data is now optional in PUT and POST requests. If the input is not a
+  terminal and no data is specified on the command line, resty won't wait
+  for data on stdin anymore. If you like this behavior you can always do
+  something like `cat | POST /Somewhere` to get the old behavior.
+
 Version 1.1 (2011-01-07)
 ------------------------
 
