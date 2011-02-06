@@ -52,7 +52,7 @@ function resty() {
     HEAD|OPTIONS|GET|DELETE|POST|PUT|TRACE)
       dat=$( ( [ "$hasdata" = "yes" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
-        || echo "@-") ) || echo)
+        || [ ! -t 0 ] && echo "@-") ) || echo)
       if [ "$hasdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
         [ -t 0 ] || cat > $tmpf
