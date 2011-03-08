@@ -14,7 +14,8 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 hasdata vimedit curlopt
+  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 hasdata vimedit
+  local -a curlopt
 
   confdir="${HOME}/.resty"
   host="${confdir}/host"
