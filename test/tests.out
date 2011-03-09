@@ -1,4 +1,4 @@
-GET a life/ HTTP/1.1
+GET / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: localhost:9090
 Accept: */*
