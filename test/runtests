@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+TEST=$1
+PORT=${2:-9090}
+
+. ../resty -W localhost:$PORT
+
+( while true; do
+  gnetcat -l -w 1 -p $PORT -e 'while read -t 1 a; do echo "$a"; done' localhost || break
+done )&
+
+. $TEST
+
+wait
