@@ -1,3 +1,18 @@
 GET /
 
+PUT / 'here is some data'
+
+POST / 'here is some data'
+
+DELETE /
+
+TRACE / 'here is some data'
+
+OPTIONS /
+
+
 POST /Test -d foo=bar -G
+
+POST /Test '{foo: "bar"}'
+
+POST /Test -u "user:secret" -H "Accept: application/json"
