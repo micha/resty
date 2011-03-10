@@ -1,18 +1,16 @@
+# basic test requests
 GET /
-
 PUT / 'here is some data'
-
 POST / 'here is some data'
-
 DELETE /
-
 TRACE / 'here is some data'
-
 OPTIONS /
 
-
+# POST with data sent in query string
 POST /Test -d foo=bar -G
 
+# POST with data sent in message body
 POST /Test '{foo: "bar"}'
 
-POST /Test -u "user:secret" -H "Accept: application/json"
+# POST with extra header and basic auth, data in message body
+POST /Test -u "user:secret" -H "Accept: application/json" < Makefile

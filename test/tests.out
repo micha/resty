@@ -55,4 +55,12 @@ Authorization: Basic dXNlcjpzZWNyZXQ=
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: localhost:9090
 Accept: application/json
+Content-Length: 111
+Content-Type: application/x-www-form-urlencoded
 
+test:
+./runtests tests > tests.tmp 2>&1
+diff tests.out tests.tmp
+
+record:
+./runtests tests > tests.out 2>&1
