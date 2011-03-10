@@ -300,8 +300,8 @@ Since resty creates the REST verb functions in the shell, when using it from a s
 
 Here the `-W` option was used when loading the script to prevent writing to the history file and an initial URI base was set at the same time. Then a JSON file was fetched, edited using [jsawk](http://github.com/micha/jsawk), and re-uploaded to the server.
 
-Working With JSON
-=================
+Working With JSON or XML Data
+=============================
 
 JSON REST web services require some special tools to make them accessible
 and easily manipulated in the shell environment. The following are a few
@@ -320,3 +320,18 @@ scripts that make dealing with JSON data easier.
     python 2.6 installed.
 
     `GET /blogs.json |pp # pretty-prints the JSON output from resty`
+
+  * Another way to format JSON output:
+
+    $ echo '{"json":"obj"}' | python -mjson.tool
+    {
+      "json": "obj"
+    }
+
+  * The `tidy` tool can be used to format HTML/XML:
+
+    $ ~$ echo "<test><deep>value</deep></test>" | tidy -xml -q -i
+    <test>
+      <deep>value</deep>
+    </test>
+
