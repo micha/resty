@@ -1,6 +1,17 @@
 Resty CHANGES
 =============
 
+Version 1.4 (2011-03-08)
+------------------------
+
+* Finalized bug fix for zsh users.
+
+Version 1.3 (2011-03-04)
+------------------------
+
+* Attempted bug fix for zsh users that prevented options from being passed
+  correctly to curl.
+
 Version 1.2 (2011-02-06)
 ------------------------
 
