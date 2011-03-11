@@ -1,66 +1,486 @@
+== TEST 1 [REQUEST] ============================================================
 GET / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 
+== TEST 2 [REQUEST] ============================================================
 PUT / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
+== TEST 3 [REQUEST] ============================================================
 POST / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
+== TEST 4 [REQUEST] ============================================================
 DELETE / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 
+== TEST 5 [REQUEST] ============================================================
 TRACE / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
+== TEST 6 [REQUEST] ============================================================
 OPTIONS / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 
+== TEST 7 [REQUEST] ============================================================
+GET / HTTP/1.1
+User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+Host: 127.0.0.1:9090
+Accept: */*
+
+== TEST 8 [REQUEST] ============================================================
+* <url> malformed
+* About to connect() to 127.0.0.1 port 9090 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+> Host: 127.0.0.1:9090
+> Accept: */*
+> 
+{ [data not shown]
+* Connection #0 to host 127.0.0.1 left intact
+* Closing connection #0
+GET / HTTP/1.1
+User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+Host: 127.0.0.1:9090
+Accept: */*
+
+== TEST 9 [REQUEST] ============================================================
 POST /Test?foo=bar HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 
+== TEST 10 [REQUEST] ===========================================================
 POST /Test HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 15
 Content-Type: application/x-www-form-urlencoded
 
 {foo: "bar"}
+== TEST 11 [REQUEST] ===========================================================
 POST /Test HTTP/1.1
 Authorization: Basic dXNlcjpzZWNyZXQ=
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
-Host: localhost:9090
+Host: 127.0.0.1:9090
 Accept: application/json
-Content-Length: 111
+Content-Length: 160
 Content-Type: application/x-www-form-urlencoded
 
 test:
-./runtests tests > tests.tmp 2>&1
-diff tests.out tests.tmp
+./runtests tests html-simple.resp > tests.tmp 2>&1
+diff tests.out tests.tmp |tee tests.log
 
 record:
-./runtests tests > tests.out 2>&1
+./runtests tests html-simple.resp > tests.out 2>&1
+== TEST 1 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 2 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 3 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 4 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 5 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 6 [OUTPUT] =============================================================
+HTTP/1.0 200 OK
+Cache-Control: private
+Content-Type: text/html
+Server: restytest1.0
+Connection: Close
+Content-Length: 2340
+== TEST 7 [OUTPUT] =============================================================
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
+<html lang="en"> 
+  <head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+    <title>jQuery Tablesort Demo</title> 
+  </head> 
+  <body> 
+    <div class="container"> 
+      <div> 
+        <div class="nav"> 
+          <a href="http://github.com/micha/resty">fork me on github</a> 
+        </div> 
+        <h2>Resty<br />Test<br />Page</h2> 
+      </div> 
+      <hr/> 
+      <div class="container">
+        <h3>Hello There.</h3>
+        <table class="demo jquery-tablesort" cellspacing="0" cellpadding="0">
+          <caption>Table 1: Pets you can adopt.</caption>
+          <colgroup>
+            <col>
+            <col>
+            <col>
+            <col>
+            <col>
+          </colgroup>
+          <thead>
+            <tr>
+              <th><div>#</div></th>
+              <th><div>name</div></th>
+              <th><div>species</div></th>
+              <th><div>price</div></th>
+              <th><div>available</div></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="even">
+              <td>1</td>
+              <td>bugs</td>
+              <td>rabbit</td>
+              <td>$1.25</td>
+              <td>Jun 24 2009</td>
+            </tr>
+            <tr class="odd">
+              <td>2</td>
+              <td>rascal</td>
+              <td>dog</td>
+              <td>$3.50</td>
+              <td>Apr 1 2010</td>
+            </tr>
+            <tr class="even">
+              <td>3</td>
+              <td>rufus</td>
+              <td>dog</td>
+              <td>$0.25</td>
+              <td>Jun 17 2009</td>
+            </tr>
+            <tr class="odd">
+              <td>4</td>
+              <td>scabby</td>
+              <td>bird</td>
+              <td>$0.02</td>
+              <td>Jun 04 2009</td>
+            </tr>
+            <tr class="even">
+              <td>5</td>
+              <td>roger</td>
+              <td>goldfish</td>
+              <td>$0.02</td>
+              <td>Jun 05 2009</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>The table on the right has sortable columns. Click on the
+        column headings to sort and re-sort that column. The rain in
+        Spain falls mainly on the plain. Thanks!</p>
+      </div>
+      <hr /> 
+    </div> 
+  </body> 
+</html>
+== TEST 8 [OUTPUT] =============================================================
+* <url> malformed
+* About to connect() to 127.0.0.1 port 9090 (#0)
+*   Trying 127.0.0.1... connected
+* Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
+> GET / HTTP/1.1
+> User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+> Host: 127.0.0.1:9090
+> Accept: */*
+> 
+* HTTP 1.0, assume close after body
+< HTTP/1.0 200 OK
+< Cache-Control: private
+< Content-Type: text/html
+< Server: restytest1.0
+< Connection: Close
+< Content-Length: 2340
+< 
+{ [data not shown]
+* Closing connection #0
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 9 [OUTPUT] =============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 10 [OUTPUT] ============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty
+== TEST 11 [OUTPUT] ============================================================
+   [1]fork me on github
+
+Resty
+Test
+Page
+     __________________________________________________________________
+
+Hello There.
+
+   CAPTION: Table 1: Pets you can adopt.
+
+       #
+     name
+    species
+     price
+   available
+   1        bugs   rabbit   $1.25 Jun 24 2009
+   2        rascal dog      $3.50 Apr 1 2010
+   3        rufus  dog      $0.25 Jun 17 2009
+   4        scabby bird     $0.02 Jun 04 2009
+   5        roger  goldfish $0.02 Jun 05 2009
+
+   The table on the right has sortable columns. Click on the column
+   headings to sort and re-sort that column. The rain in Spain falls
+   mainly on the plain. Thanks!
+     __________________________________________________________________
+
+References
+
+http://github.com/micha/resty

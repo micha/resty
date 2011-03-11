@@ -6,6 +6,12 @@ DELETE /
 TRACE / 'here is some data'
 OPTIONS /
 
+# Raw response
+GET / -Z
+
+# Get headers too
+GET / -v 2>&1
+
 # POST with data sent in query string
 POST /Test -d foo=bar -G
 

@@ -1,13 +1,30 @@
 #!/usr/bin/env bash
 
 TEST=$1
-PORT=${2:-9090}
+RESP=$2
+PORT=${3:-9090}
+LINE="=============================================================================="
 
-. ../resty -W localhost:$PORT
+. ../resty -W 127.0.0.1:$PORT
 
-( while true; do
-  gnetcat -l -w 1 -p $PORT -e 'while read -t 1 a; do echo "$a"; done' localhost || break
-done )&
+# run tests to check that the correct request is being made
+( j=1
+  while true; do
+    gnetcat -l -w 1 -p $PORT \
+      -e 'while read -t 1 a; do echo "$a"; done' localhost || break
+    echo "== TEST $j [REQUEST] $LINE" |head -c 80 && echo && j=$((j+1))
+  done )&
+
+. $TEST
+
+wait
+
+# run tests again, this time checking actual output
+( j=1
+  while true; do
+    gnetcat -l -w 1 -p $PORT -e "cat $RESP" localhost || break
+    echo "== TEST $j [OUTPUT] $LINE" |head -c 80 && echo && j=$((j+1))
+  done )&
 
 . $TEST
 
