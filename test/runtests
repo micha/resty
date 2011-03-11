@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 TEST=$1
-RESP=$2
 PORT=${3:-9090}
 
 . ../resty -W 127.0.0.1:$PORT
@@ -21,7 +20,8 @@ wait
 # run tests again, this time checking actual output
 ( j=1
   while true; do
-    gnetcat -l -w 1 -p $PORT -e "cat $RESP" localhost || break
+    gnetcat -l -w 1 -p $PORT \
+      -e "read a b c; cat .\$(echo \$b |sed 's/?.*//')" localhost || break
     grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 && j=$((j+1))
   done )&
 

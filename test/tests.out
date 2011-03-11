@@ -1,11 +1,11 @@
 # TEST 1: basic GET request
-GET / HTTP/1.1
+GET /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
 # TEST 2: basic PUT request
-PUT / HTTP/1.1
+PUT /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
@@ -14,7 +14,7 @@ Content-Type: application/x-www-form-urlencoded
 
 here is some data
 # TEST 3: basic POST request
-POST / HTTP/1.1
+POST /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
@@ -23,13 +23,13 @@ Content-Type: application/x-www-form-urlencoded
 
 here is some data
 # TEST 4: basic DELETE request
-DELETE / HTTP/1.1
+DELETE /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
 # TEST 5: basic TRACE request
-TRACE / HTTP/1.1
+TRACE /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
@@ -38,13 +38,13 @@ Content-Type: application/x-www-form-urlencoded
 
 here is some data
 # TEST 6: basic OPTIONS request
-OPTIONS / HTTP/1.1
+OPTIONS /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
 # TEST 7: Raw response
-GET / HTTP/1.1
+GET /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
@@ -54,7 +54,7 @@ Accept: */*
 * About to connect() to 127.0.0.1 port 9090 (#0)
 *   Trying 127.0.0.1... connected
 * Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
-> GET / HTTP/1.1
+> GET /simple.html HTTP/1.1
 > User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 > Host: 127.0.0.1:9090
 > Accept: */*
@@ -62,19 +62,19 @@ Accept: */*
 { [data not shown]
 * Connection #0 to host 127.0.0.1 left intact
 * Closing connection #0
-GET / HTTP/1.1
+GET /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
 # TEST 9: POST with data sent in query string
-POST /Test?foo=bar HTTP/1.1
+POST /simple.html?foo=bar HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
 # TEST 10: POST with data sent in message body
-POST /Test HTTP/1.1
+POST /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
@@ -83,20 +83,15 @@ Content-Type: application/x-www-form-urlencoded
 
 {foo: "bar"}
 # TEST 11: POST with extra header and basic auth, data in message body
-POST /Test HTTP/1.1
+POST /simple.html HTTP/1.1
 Authorization: Basic dXNlcjpzZWNyZXQ=
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: application/json
-Content-Length: 160
+Content-Length: 66
 Content-Type: application/x-www-form-urlencoded
 
-test:
-./runtests tests html-simple.resp > tests.tmp 2>&1
-diff tests.out tests.tmp |tee tests.log
-
-record:
-./runtests tests html-simple.resp > tests.out 2>&1
+{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
 # TEST 1: basic GET request
    [1]fork me on github
 
@@ -346,7 +341,7 @@ Content-Length: 2340
 * About to connect() to 127.0.0.1 port 9090 (#0)
 *   Trying 127.0.0.1... connected
 * Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
-> GET / HTTP/1.1
+> GET /simple.html HTTP/1.1
 > User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 > Host: 127.0.0.1:9090
 > Accept: */*
