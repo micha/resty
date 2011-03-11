@@ -323,15 +323,15 @@ scripts that make dealing with JSON data easier.
 
   * Another way to format JSON output:
 
-    $ echo '{"json":"obj"}' | python -mjson.tool
-    {
-      "json": "obj"
-    }
+      $ echo '{"json":"obj"}' | python -mjson.tool
+      {
+        "json": "obj"
+      }
 
   * The `tidy` tool can be used to format HTML/XML:
 
-    $ ~$ echo "<test><deep>value</deep></test>" | tidy -xml -q -i
-    <test>
-      <deep>value</deep>
-    </test>
+      $ ~$ echo "<test><deep>value</deep></test>" | tidy -xml -q -i
+      <test>
+        <deep>value</deep>
+      </test>
 
