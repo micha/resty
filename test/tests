@@ -1,22 +1,32 @@
-# basic test requests
-GET /
+# TEST 1: basic GET request
+GET /     
+
+# TEST 2: basic PUT request
 PUT / 'here is some data'
+
+# TEST 3: basic POST request
 POST / 'here is some data'
+
+# TEST 4: basic DELETE request
 DELETE /
+
+# TEST 5: basic TRACE request
 TRACE / 'here is some data'
+
+# TEST 6: basic OPTIONS request
 OPTIONS /
 
-# Raw response
+# TEST 7: Raw response
 GET / -Z
 
-# Get headers too
+# TEST 8: Get headers too
 GET / -v 2>&1
 
-# POST with data sent in query string
+# TEST 9: POST with data sent in query string
 POST /Test -d foo=bar -G
 
-# POST with data sent in message body
+# TEST 10: POST with data sent in message body
 POST /Test '{foo: "bar"}'
 
-# POST with extra header and basic auth, data in message body
+# TEST 11: POST with extra header and basic auth, data in message body
 POST /Test -u "user:secret" -H "Accept: application/json" < Makefile

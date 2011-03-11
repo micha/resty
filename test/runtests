@@ -12,7 +12,7 @@ LINE="==========================================================================
   while true; do
     gnetcat -l -w 1 -p $PORT \
       -e 'while read -t 1 a; do echo "$a"; done' localhost || break
-    echo "== TEST $j [REQUEST] $LINE" |head -c 80 && echo && j=$((j+1))
+    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 && j=$((j+1))
   done )&
 
 . $TEST
@@ -23,7 +23,7 @@ wait
 ( j=1
   while true; do
     gnetcat -l -w 1 -p $PORT -e "cat $RESP" localhost || break
-    echo "== TEST $j [OUTPUT] $LINE" |head -c 80 && echo && j=$((j+1))
+    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 && j=$((j+1))
   done )&
 
 . $TEST

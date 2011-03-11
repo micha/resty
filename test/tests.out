@@ -1,10 +1,10 @@
-== TEST 1 [REQUEST] ============================================================
+# TEST 1: basic GET request
 GET / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 2 [REQUEST] ============================================================
+# TEST 2: basic PUT request
 PUT / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
@@ -13,7 +13,7 @@ Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
-== TEST 3 [REQUEST] ============================================================
+# TEST 3: basic POST request
 POST / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
@@ -22,13 +22,13 @@ Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
-== TEST 4 [REQUEST] ============================================================
+# TEST 4: basic DELETE request
 DELETE / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 5 [REQUEST] ============================================================
+# TEST 5: basic TRACE request
 TRACE / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
@@ -37,19 +37,19 @@ Content-Length: 20
 Content-Type: application/x-www-form-urlencoded
 
 here is some data
-== TEST 6 [REQUEST] ============================================================
+# TEST 6: basic OPTIONS request
 OPTIONS / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 7 [REQUEST] ============================================================
+# TEST 7: Raw response
 GET / HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 8 [REQUEST] ============================================================
+# TEST 8: Get headers too
 * <url> malformed
 * About to connect() to 127.0.0.1 port 9090 (#0)
 *   Trying 127.0.0.1... connected
@@ -67,13 +67,13 @@ User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 9 [REQUEST] ============================================================
+# TEST 9: POST with data sent in query string
 POST /Test?foo=bar HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
 
-== TEST 10 [REQUEST] ===========================================================
+# TEST 10: POST with data sent in message body
 POST /Test HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
@@ -82,7 +82,7 @@ Content-Length: 15
 Content-Type: application/x-www-form-urlencoded
 
 {foo: "bar"}
-== TEST 11 [REQUEST] ===========================================================
+# TEST 11: POST with extra header and basic auth, data in message body
 POST /Test HTTP/1.1
 Authorization: Basic dXNlcjpzZWNyZXQ=
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
@@ -97,7 +97,7 @@ diff tests.out tests.tmp |tee tests.log
 
 record:
 ./runtests tests html-simple.resp > tests.out 2>&1
-== TEST 1 [OUTPUT] =============================================================
+# TEST 1: basic GET request
    [1]fork me on github
 
 Resty
@@ -128,7 +128,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 2 [OUTPUT] =============================================================
+# TEST 2: basic PUT request
    [1]fork me on github
 
 Resty
@@ -159,7 +159,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 3 [OUTPUT] =============================================================
+# TEST 3: basic POST request
    [1]fork me on github
 
 Resty
@@ -190,7 +190,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 4 [OUTPUT] =============================================================
+# TEST 4: basic DELETE request
    [1]fork me on github
 
 Resty
@@ -221,7 +221,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 5 [OUTPUT] =============================================================
+# TEST 5: basic TRACE request
    [1]fork me on github
 
 Resty
@@ -252,14 +252,14 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 6 [OUTPUT] =============================================================
+# TEST 6: basic OPTIONS request
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: text/html
 Server: restytest1.0
 Connection: Close
 Content-Length: 2340
-== TEST 7 [OUTPUT] =============================================================
+# TEST 7: Raw response
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
 <html lang="en"> 
   <head> 
@@ -341,7 +341,7 @@ Content-Length: 2340
     </div> 
   </body> 
 </html>
-== TEST 8 [OUTPUT] =============================================================
+# TEST 8: Get headers too
 * <url> malformed
 * About to connect() to 127.0.0.1 port 9090 (#0)
 *   Trying 127.0.0.1... connected
@@ -391,7 +391,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 9 [OUTPUT] =============================================================
+# TEST 9: POST with data sent in query string
    [1]fork me on github
 
 Resty
@@ -422,7 +422,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 10 [OUTPUT] ============================================================
+# TEST 10: POST with data sent in message body
    [1]fork me on github
 
 Resty
@@ -453,7 +453,7 @@ Hello There.
 References
 
 http://github.com/micha/resty
-== TEST 11 [OUTPUT] ============================================================
+# TEST 11: POST with extra header and basic auth, data in message body
    [1]fork me on github
 
 Resty
