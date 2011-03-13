@@ -39,7 +39,7 @@ here is some data
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: text/plain
-Server: restytest1.0
+Server: lilhttpd 1.0
 Connection: close
 Content-Length: 168
 # [REQ] TEST 7: Raw response
@@ -61,7 +61,7 @@ Accept: */*
 < HTTP/1.0 200 OK
 < Cache-Control: private
 < Content-Type: text/plain
-< Server: restytest1.0
+< Server: lilhttpd 1.0
 < Connection: close
 < Content-Length: 164
 < 
@@ -254,7 +254,7 @@ http://github.com/micha/resty
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: text/html; charset=us-ascii
-Server: restytest1.0
+Server: lilhttpd 1.0
 Connection: close
 Content-Length: 2340
 # [OUT] TEST 7: Raw response
@@ -353,7 +353,7 @@ Content-Length: 2340
 < HTTP/1.0 200 OK
 < Cache-Control: private
 < Content-Type: text/html; charset=us-ascii
-< Server: restytest1.0
+< Server: lilhttpd 1.0
 < Connection: close
 < Content-Length: 2340
 < 
