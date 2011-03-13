@@ -8,9 +8,9 @@ PORT=${3:-9090}
 # run tests to check that the correct request is being made
 ( j=1
   while true; do
-    gnetcat -l -w 1 -p $PORT \
-      -e 'while read -t 1 a; do echo "$a"; done' localhost || break
-    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 && j=$((j+1))
+    gnetcat -l -w 1 -p $PORT -e './lilhttpd -I' localhost || break
+    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 |sed 's/^#/# [REQ]/'
+    j=$((j+1))
   done )&
 
 . $TEST
@@ -20,9 +20,9 @@ wait
 # run tests again, this time checking actual output
 ( j=1
   while true; do
-    gnetcat -l -w 1 -p $PORT \
-      -e "read a b c; cat .\$(echo \$b |sed 's/?.*//')" localhost || break
-    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 && j=$((j+1))
+    gnetcat -l -w 1 -p $PORT -e ./lilhttpd localhost || break
+    grep '^# TEST [0-9][0-9]*' $TEST |head -$j |tail -1 |sed 's/^#/# [OUT]/'
+    j=$((j+1))
   done )&
 
 . $TEST

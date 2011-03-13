@@ -30,3 +30,6 @@ POST /simple.html '{foo: "bar"}'
 
 # TEST 11: POST with extra header and basic auth, data in message body
 POST /simple.html -u "user:secret" -H "Accept: application/json" < simple.json
+
+# TEST 12: json pretty-print formatting
+GET /simple.json | ../pp 2>/dev/null
