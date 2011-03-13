@@ -27,7 +27,7 @@ cat <<EOF
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: $ct
-Server: restytest1.0
+Server: lilhttpd 1.0
 Connection: close
 Content-Length: $(echo "$r" |wc -c |awk '{print $1}')
 
