@@ -50,7 +50,7 @@ Usage
 
       source resty [-W] [remote]              # load functions into shell
       resty                                   # prints current request URI base
-      resty <remote>                          # sets the base request URI
+      resty <remote> [curl opts]              # sets the base request URI
 
       HEAD [path] [curl opts]                 # HEAD request
       OPTIONS [path] [curl opts]              # OPTIONS request
