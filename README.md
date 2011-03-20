@@ -227,6 +227,20 @@ to make a GET request to `/Something?foo=bar&baz=baf` you would do:
 This sends the name/value pairs specified with the `-d` options as a query
 string in the URL.
 
+Default Curl Options
+--------------------
+
+Sometimes you want to send some options to curl for every request. It
+would be tedious to have to repeat these options constantly. To tell
+resty to always add certain curl options you can specify those options
+when you call resty to set the URI base. For example:
+
+      resty example.com:8080 -H "Accept: application/json" -u user:pass
+
+Every subsequent request will have the `-H "Accept:..."` and `-u user:...`
+options automatically added. Each time resty is called this option list
+is reset.
+
 Per-Host/Per-Method Curl Configuration Files
 --------------------------------------------
 

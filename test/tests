@@ -1,3 +1,6 @@
+
+resty 127.0.0.1:9090 2> /dev/null
+
 # TEST 1: basic GET request
 GET /simple.html
 
@@ -33,3 +36,14 @@ POST /simple.html -u "user:secret" -H "Accept: application/json" < simple.json
 
 # TEST 12: json pretty-print formatting
 GET /simple.json | ../pp 2>/dev/null
+
+resty 127.0.0.1:9090 -H "Accept: application/json" -u user:pass 2> /dev/null
+
+# TEST 13: make sure the default options are correctly set
+GET /simple.json
+
+resty 127.0.0.1:9090 2> /dev/null
+
+# TEST 14: make sure the default options are correctly unset
+GET /simple.json
+

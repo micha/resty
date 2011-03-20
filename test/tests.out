@@ -39,7 +39,7 @@ here is some data
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: text/plain
-Server: lilhttpd 1.0
+Server: lilhttpd/1.0
 Connection: close
 Content-Length: 168
 # [REQ] TEST 7: Raw response
@@ -61,7 +61,7 @@ Accept: */*
 < HTTP/1.0 200 OK
 < Cache-Control: private
 < Content-Type: text/plain
-< Server: lilhttpd 1.0
+< Server: lilhttpd/1.0
 < Connection: close
 < Content-Length: 164
 < 
@@ -95,6 +95,17 @@ Content-Length: 66
 Content-Type: application/x-www-form-urlencoded
 {"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
 # [REQ] TEST 12: json pretty-print formatting
+# [REQ] TEST 13: make sure the default options are correctly set
+GET /simple.json HTTP/1.1
+Authorization: Basic dXNlcjpwYXNz
+User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+Host: 127.0.0.1:9090
+Accept: application/json
+# [REQ] TEST 14: make sure the default options are correctly unset
+GET /simple.json HTTP/1.1
+User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
+Host: 127.0.0.1:9090
+Accept: */*
 # [OUT] TEST 1: basic GET request
    [1]fork me on github
 
@@ -254,7 +265,7 @@ http://github.com/micha/resty
 HTTP/1.0 200 OK
 Cache-Control: private
 Content-Type: text/html; charset=us-ascii
-Server: lilhttpd 1.0
+Server: lilhttpd/1.0
 Connection: close
 Content-Length: 2340
 # [OUT] TEST 7: Raw response
@@ -353,7 +364,7 @@ Content-Length: 2340
 < HTTP/1.0 200 OK
 < Cache-Control: private
 < Content-Type: text/html; charset=us-ascii
-< Server: lilhttpd 1.0
+< Server: lilhttpd/1.0
 < Connection: close
 < Content-Length: 2340
 < 
@@ -496,3 +507,7 @@ http://github.com/micha/resty
    ]
 }
 
+# [OUT] TEST 13: make sure the default options are correctly set
+{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
+# [OUT] TEST 14: make sure the default options are correctly unset
+{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
