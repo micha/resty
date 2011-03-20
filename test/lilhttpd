@@ -14,7 +14,7 @@ while read a; do
   [ "$a" = "" ] && break
 done
 
-r=$(printf "%s\\n%s" "$r" "$(head -c ${n:-0})")
+[ -n "$n" ] && r=$(printf "%s\\n%s" "$r" "$(head -c $n)")
 
 if [ "$reflect" = "yes" ]; then 
   ct="text/plain"
