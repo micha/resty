@@ -1,6 +1,12 @@
 Resty CHANGES
 =============
 
+### Version 1.5 (2011-03-20)
+
+* Curl options can now be specified when calling the resty command to set
+  the URI base. These options will be passed to curl for all subsequent
+  requests, until the next time the resty command is called.
+
 ### Version 1.4 (2011-03-08)
 
 * Finalized bug fix for zsh users.
