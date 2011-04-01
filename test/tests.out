@@ -8,19 +8,17 @@ PUT /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
-Content-Length: 20
+Content-Length: 17
 Content-Type: application/x-www-form-urlencoded
 here is some data
-@-
 # [REQ] TEST 3: basic POST request
 POST /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
-Content-Length: 20
+Content-Length: 17
 Content-Type: application/x-www-form-urlencoded
 here is some data
-@-
 # [REQ] TEST 4: basic DELETE request
 DELETE /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
@@ -31,10 +29,9 @@ TRACE /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
-Content-Length: 20
+Content-Length: 17
 Content-Type: application/x-www-form-urlencoded
 here is some data
-@-
 # [REQ] TEST 6: basic OPTIONS request
 HTTP/1.0 200 OK
 Cache-Control: private
@@ -81,10 +78,9 @@ POST /simple.html HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.19
 Host: 127.0.0.1:9090
 Accept: */*
-Content-Length: 15
+Content-Length: 12
 Content-Type: application/x-www-form-urlencoded
 {foo: "bar"}
-@-
 # [REQ] TEST 11: POST with extra header and basic auth, data in message body
 POST /simple.html HTTP/1.1
 Authorization: Basic dXNlcjpzZWNyZXQ=
