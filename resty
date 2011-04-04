@@ -14,7 +14,7 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 hasdata vimedit
+  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit
   local -a curlopt
   local -a curlopt2
 
@@ -26,7 +26,7 @@ function resty() {
                 || which html2text || which cat)
   editor=$(which "$EDITOR" || which vim || echo "vi")
   
-  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && hasdata="yes"
+  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
@@ -53,10 +53,10 @@ function resty() {
   case "$method" in
     HEAD|OPTIONS|GET|DELETE|POST|PUT|TRACE)
       eval "curlopt2=(${_resty_opts[*]})"
-      dat=$( ( [ "$hasdata" = "yes" ] \
+      dat=$( ( [ "$wantdata" = "yes" ] \
         && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
         || ([ ! -t 0 ] && echo "@-") ) ) || echo)
-      if [ "$hasdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
+      if [ "$wantdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
         [ -t 0 ] || cat > $tmpf
         (exec < /dev/tty; "$editor" $tmpf)
