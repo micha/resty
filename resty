@@ -14,7 +14,7 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote
+  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query norc
   local -a curlopt
   local -a curlopt2
 
@@ -31,9 +31,18 @@ function resty() {
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && _path="$1" && shift
+  [ "$1" = "${1#-}" ] && dat="$1" && shift
   
   j=1
   for i in "$@"; do
+    if [ -n "$maybe_query" ]; then
+      if [ "$i" = "${i#-}" ]; then
+        query="?$i"
+        unset norc
+      fi
+      unset maybe_query
+      continue
+    fi
     ([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
       && verbose="yes" && continue
     [ "$i" = "-V" ] && vimedit="yes" && continue
@@ -41,6 +50,7 @@ function resty() {
       && raw="yes" && continue
     [ "$i" = "-W" ] && continue
     [ "$i" = "-Q" ] && quote="yes" && continue
+    [ "$i" = "-q" ] && maybe_query="yes" && norc="-q" && continue
     curlopt[j]="$i" && j=$((j + 1))
   done
 
@@ -57,7 +67,7 @@ function resty() {
     HEAD|OPTIONS|GET|DELETE|POST|PUT|TRACE)
       eval "curlopt2=(${_resty_opts[*]})"
       dat=$( ( [ "$wantdata" = "yes" ] \
-        && ( ( [ -n "$1" ] && [ "${1#-}" = "$1" ] && echo "$1") \
+        && ( ( [ -n "$dat" ] && echo "$dat") \
         || ([ ! -t 0 ] && echo "@-") ) ) || echo)
       if [ "$wantdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
@@ -72,9 +82,9 @@ function resty() {
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
       [ "$method" = "OPTIONS" ] && opt="-I" && raw="yes"
       eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-      res=$((((curl -sLv $opt "$dat" -X $method \
+      res=$((((curl $norc -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
-              "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path" \
+              "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
       out=$(echo "$res" |sed '/^OUT /s/^....//p; d')

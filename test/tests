@@ -60,6 +60,9 @@ resty 127.0.0.1:9090 2> /dev/null
 # TEST 14: make sure the default options are correctly unset
 GET /simple.json
 
-# TEST 15: try PUT with both data in body and query params in url
+# TEST 15: try PUT with both data in body and query params in url, no urlencode
 echo '{"foo":"bar"}' |PUT '/simple.json?param=value&other=blah' -Q
+
+# TEST 16: try PUT with both data in body and query params in url via -q
+echo '{"foo":"bar"}' |PUT '/simple.json' -q 'param=value&other=blah'
 

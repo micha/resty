@@ -103,7 +103,15 @@ GET /simple.json HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
 Host: 127.0.0.1:9090
 Accept: */*
-# [REQ] TEST 15: try PUT with both data in body and query params in url
+# [REQ] TEST 15: try PUT with both data in body and query params in url, no urlencode
+PUT /simple.json?param=value&other=blah HTTP/1.1
+User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+Host: 127.0.0.1:9090
+Accept: */*
+Content-Length: 14
+Content-Type: application/x-www-form-urlencoded
+{"foo":"bar"}
+# [REQ] TEST 16: try PUT with both data in body and query params in url via -q
 PUT /simple.json?param=value&other=blah HTTP/1.1
 User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
 Host: 127.0.0.1:9090
@@ -517,5 +525,7 @@ http://github.com/micha/resty
 {"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
 # [OUT] TEST 14: make sure the default options are correctly unset
 {"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
-# [OUT] TEST 15: try PUT with both data in body and query params in url
+# [OUT] TEST 15: try PUT with both data in body and query params in url, no urlencode
+{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
+# [OUT] TEST 16: try PUT with both data in body and query params in url via -q
 {"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}
