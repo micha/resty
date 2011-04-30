@@ -50,23 +50,27 @@ Usage
 
       source resty [-W] [remote]              # load functions into shell
       resty                                   # prints current request URI base
-      resty <remote> [curl opts]              # sets the base request URI
+      resty <remote> [OPTIONS]                # sets the base request URI
 
-      HEAD [path] [curl opts]                 # HEAD request
-      OPTIONS [path] [curl opts]              # OPTIONS request
-      GET [path] [-Z] [curl opts]             # GET request 
-      DELETE [path] [-Z] [curl opts]          # DELETE request 
-      PUT [path] [data|-V] [-Z] [curl opts]   # PUT request
-      POST [path] [data|-V] [-Z] [curl opts]  # POST request
-      TRACE [path] [-Z] [curl opts]           # TRACE request
+      HEAD [path] [OPTIONS]                   # HEAD request
+      OPTIONS [path] [OPTIONS]                # OPTIONS request
+      GET [path] [OPTIONS]                    # GET request 
+      DELETE [path] [OPTIONS]                 # DELETE request 
+      PUT [path] [data] [OPTIONS]             # PUT request
+      POST [path] [data] [OPTIONS]            # POST request
+      TRACE [path] [OPTIONS]                  # TRACE request
 
       Options:
 
+      -Q            Don't URL encode the path.
+      -q <query>    Send query string with the path. A '?' is prepended to
+                    <query> and concatenated onto the <path>.
       -W            Don't write to history file (only when sourcing script).
       -V            Edit the input data interactively in 'vi'. (PUT and POST
                     requests only, with data piped to stdin.)
       -Z            Raw output. This disables any processing of HTML in the
                     response.
+      <curl opt>    Any curl options will be passed down to curl.
 
 Request URI Base
 ================
@@ -128,8 +132,22 @@ Resty will always [URL encode]
 (http://www.blooberry.com/indexdot/html/topics/urlencoding.htm) the path,
 except for slashes. (Slashes in path elements need to be manually encoded as
 `%2F`.) This means that the `?`, `=`, and `&` characters will be encoded, as
-well as some other problematic characters. See the query string howto below
-for the way to send query parameters in GET requests.
+well as some other problematic characters. To disable this behavior use the
+`-Q` option.
+
+Query Strings
+-------------
+
+There are two ways to add a query string to the path. The first, mentioned
+above, is to disable URL with the `-Q` option, and include the query string
+with the path parameter, like this:
+
+      GET '/blogs/47?param=foo&otherparam=bar' -Q
+
+To specify a query string without disabling URL encoding on the path the
+`-q` option is used, like this:
+
+      GET /blogs/47 -q 'param=foo&otherparam=bar'
 
 POST/PUT Requests and Data
 ==========================
@@ -213,19 +231,6 @@ Here are some useful options to try:
   * **-u \<username:password\>** HTTP basic authentication
   * **-H \<header\>** add request header (this option can be added more than 
     once)
-  * **-d/-G** send query string parameters with a GET request (see below)
-
-Query Strings For GET Requests
-------------------------------
-
-Since the path parameter is URL encoded, the best way to send query parameters
-in GET requests is by using curl's commnand line arguments. For example,
-to make a GET request to `/Something?foo=bar&baz=baf` you would do:
-
-      GET /Something -d foo=bar -d baz=baf -G
-
-This sends the name/value pairs specified with the `-d` options as a query
-string in the URL.
 
 Default Curl Options
 --------------------
