@@ -30,8 +30,8 @@ function resty() {
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && _path="$1" && shift
-  [ "$1" = "${1#-}" ] && dat="$1" && shift
+    && _path="$1" && [[ $# > 0 ]] && shift
+  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
   
   j=1
   for i in "$@"; do
@@ -69,8 +69,8 @@ function resty() {
         dat=$(cat $tmpf)
         rm -f $tmpf
       fi
-      [ -n "$dat" ] && [ "$dat" != "@-" ] && shift
-      [ "$1" = "-Z" ] && raw="yes" && shift
+      [ -n "$dat" ] && [ "$dat" != "@-" ] && [[ $# > 0 ]] && shift
+      [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
       [ "$method" = "OPTIONS" ] && opt="-I" && raw="yes"
@@ -138,6 +138,6 @@ function TRACE() {
   resty TRACE "$@"
 }
 
-[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && shift
+[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# > 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
