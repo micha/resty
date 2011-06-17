@@ -139,8 +139,8 @@ Query Strings
 -------------
 
 There are two ways to add a query string to the path. The first, mentioned
-above, is to disable URL with the `-Q` option, and include the query string
-with the path parameter, like this:
+above, is to disable URL encoding with the `-Q` option, and include the
+query string with the path parameter, like this:
 
       GET '/blogs/47?param=foo&otherparam=bar' -Q
 
