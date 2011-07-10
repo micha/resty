@@ -21,10 +21,10 @@ function resty() {
   confdir="${HOME}/.resty"
   host="${confdir}/host"
   cookies="$confdir/c"
-  method="$1";          [[ $# > 0 ]] && shift
-  h2t=$((which lynx >/dev/null && echo lynx -stdin -dump) \
-                || which html2text || which cat)
-  editor=$(which "$EDITOR" || which vim || echo "vi")
+  method="$1"; [[ $# > 0 ]] && shift
+  h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
+                || which html2text || which cat) |tail -n 1)
+  editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
   
   [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 

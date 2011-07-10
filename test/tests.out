@@ -1,11 +1,11 @@
 # [REQ] TEST 1: basic GET request
 GET /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 2: basic PUT request
 PUT /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 17
@@ -13,7 +13,7 @@ Content-Type: application/x-www-form-urlencoded
 here is some data
 # [REQ] TEST 3: basic POST request
 POST /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 17
@@ -21,12 +21,12 @@ Content-Type: application/x-www-form-urlencoded
 here is some data
 # [REQ] TEST 4: basic DELETE request
 DELETE /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 5: basic TRACE request
 TRACE /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 17
@@ -41,7 +41,7 @@ Connection: close
 Content-Length: 168
 # [REQ] TEST 7: Raw response
 GET /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 8: Get headers too
@@ -51,7 +51,7 @@ Accept: */*
 *   Trying 127.0.0.1... connected
 * Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
 > GET /simple.html HTTP/1.1
-> User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+> User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 > Host: 127.0.0.1:9090
 > Accept: */*
 > 
@@ -66,17 +66,17 @@ Accept: */*
 { [data not shown]
 * Closing connection #0
 GET /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 9: POST with data sent in query string
 POST /simple.html?foo=bar HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 10: POST with data sent in message body
 POST /simple.html HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 12
@@ -85,7 +85,7 @@ Content-Type: application/x-www-form-urlencoded
 # [REQ] TEST 11: POST with extra header and basic auth, data in message body
 POST /simple.html HTTP/1.1
 Authorization: Basic dXNlcjpzZWNyZXQ=
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: application/json
 Content-Length: 66
@@ -95,17 +95,17 @@ Content-Type: application/x-www-form-urlencoded
 # [REQ] TEST 13: make sure the default options are correctly set
 GET /simple.json HTTP/1.1
 Authorization: Basic dXNlcjpwYXNz
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: application/json
 # [REQ] TEST 14: make sure the default options are correctly unset
 GET /simple.json HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 # [REQ] TEST 15: try PUT with both data in body and query params in url, no urlencode
 PUT /simple.json?param=value&other=blah HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 14
@@ -113,7 +113,7 @@ Content-Type: application/x-www-form-urlencoded
 {"foo":"bar"}
 # [REQ] TEST 16: try PUT with both data in body and query params in url via -q
 PUT /simple.json?param=value&other=blah HTTP/1.1
-User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 Host: 127.0.0.1:9090
 Accept: */*
 Content-Length: 14
@@ -370,7 +370,7 @@ Content-Length: 2340
 *   Trying 127.0.0.1... connected
 * Connected to 127.0.0.1 (127.0.0.1) port 9090 (#0)
 > GET /simple.html HTTP/1.1
-> User-Agent: curl/7.21.2 (x86_64-apple-darwin10.4.0) libcurl/7.21.2 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.20
+> User-Agent: curl/7.21.7 (x86_64-apple-darwin10.7.0) libcurl/7.21.7 OpenSSL/1.0.0d zlib/1.2.5 libidn/1.22
 > Host: 127.0.0.1:9090
 > Accept: */*
 > 
