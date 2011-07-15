@@ -18,9 +18,14 @@ function resty() {
   local -a curlopt
   local -a curlopt2
 
-  confdir="${XDG_CONFIG_HOME}/resty"
+  if [ -n "$XDG_CONFIG_HOME" ]; then
+    confdir="$XDG_CONFIG_HOME/resty"
+    datadir="$XDG_DATA_HOME/resty"
+  else
+    confdir="$HOME/.resty"
+    datadir="$confdir"
+  fi
   mkdir -p "$confdir"
-  datadir="${XDG_DATA_HOME}/resty"
   host="$datadir/host"
   cookies="$datadir/c"
   method="$1"; [[ $# > 0 ]] && shift
