@@ -160,10 +160,10 @@ except for slashes. (Slashes in path elements need to be manually encoded as
 well as some other problematic characters. To disable this behavior use the
 `-Q` option.
 
-Query Strings
--------------
+Query Strings, POST Parameters, And Both At The Same Time
+---------------------------------------------------------
 
-There are two ways to add a query string to the path. The first, mentioned
+There are three ways to add a query string to the path. The first, mentioned
 above, is to disable URL encoding with the `-Q` option, and include the
 query string with the path parameter, like this:
 
@@ -173,6 +173,17 @@ To specify a query string without disabling URL encoding on the path the
 `-q` option is used, like this:
 
       $ GET /blogs/47 -q 'param=foo&otherparam=bar'
+
+Finally, you can use the curl `-d` and `-G` options, like this:
+
+      $ GET /blogs/47 -d 'param=foo' -d 'otherparam=bar' -G
+
+However, if you want to pass both GET parameters in the query string _and_
+POST parameters in the request body, curl cannot support this by itself.
+Using the `-q` or `-Q` resty options with the `-d` curl option will accomplish
+this, like so:
+
+      $ POST '/blogs/47?param=foo&otherparam=bar' -Q -d 'postparam=baz'
 
 POST/PUT Requests and Data
 ==========================
