@@ -31,19 +31,23 @@ Source the script before using it. (You can put this line in your `~/.bashrc`
 file if you want, or just paste the contents of the `resty` script right in
 there. Either way works.)
 
-      . resty
+      $ . resty
 
 Set the REST host to which you will be making your requests (you can do this
 whenever you want to change hosts, anytime).
 
-      resty http://127.0.0.1:8080/data
+      $ resty http://127.0.0.1:8080/data
+      http://127.0.0.1:8080/data*
 
 Make some HTTP requests.
 
-      GET /blogs.json
-      PUT /blogs/2.json '{"title" : "updated post", "body" : "This is the new."}'
-      DELETE /blogs/2
-      POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
+      $ GET /blogs.json
+      [ {"id" : 1, "title" : "first post", "body" : "This is the first post"}, ... ]
+      $ PUT /blogs/2.json '{"id" : 2, "title" : "updated post", "body" : "This is the new."}'
+      {"id" : 2, "title" : "updated post", "body" : "This is the new."}
+      $ DELETE /blogs/2
+      $ POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
+      {"id" : 204, "title" : "new post", "body" : "This is the new new."}'
 
 Usage
 =====
@@ -72,6 +76,23 @@ Usage
                     response.
       <curl opt>    Any curl options will be passed down to curl.
 
+Configuration, Data File Locations
+==================================
+
+Resty creates a few files in either your `${XDG_CONFIG_HOME}` and `${XDG_DATA_HOME}`
+directory (if your linux uses the XDG directory standard) or in the `~/.resty`
+directory, otherwise.
+
+### Using Existing, Pre-v2.1 Configuration Files With v2.1 ###
+
+If you had resty installed before version 2.1 and you want to continue using
+your existing configuration files, please make a backup of your `~/.resty`
+directory and then do:
+
+      $ mkdir -p "${XDG_CONFIG_HOME}/resty" "${XDG_DATA_HOME}/resty"
+      $ mv ~/.resty/c "${XDG_DATA_HOME}/resty"
+      $ mv ~/.resty/* "${XDG_CONFIG_HOME}/resty"
+
 Request URI Base
 ================
 
@@ -82,11 +103,13 @@ one or more times. The `*` will be replaced with the `path` parameter in the
 
 For example:
 
-      resty 'http://127.0.0.1:8080/data*.json'
+      $ resty 'http://127.0.0.1:8080/data*.json'
+      http://127.0.0.1:8080/data*.json
 
 and then
 
-      GET /5
+      $ GET /5
+      { "the_response" : true }
 
 would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 
@@ -98,17 +121,18 @@ HTTPS URIs
 
 HTTPS URIs can be used, as well. For example:
 
-      resty 'https://example.com/doit'
+      $ resty 'https://example.com/doit'
+      https://example.com/doit*
 
 URI Base History
 ----------------
 
-The URI base is saved to an rc file (_~/.resty/host_) each time it's set,
-and the last setting is saved in an environment variable (`$_resty_host`).
-The URI base is read from the rc file when resty starts up, but only if the
-`$_resty_host` environment variable is not set.  In this way you can make
-requests to different hosts using resty from separate terminals, and have
-a different URI base for each terminal.
+The URI base is saved to an rc file (_${XDG_CONFIG_HOME}/resty/host_ or _~/.resty/host_)i
+each time it's set, and the last setting is saved in an environment variable
+(`$_resty_host`).  The URI base is read from the rc file when resty starts
+up, but only if the `$_resty_host` environment variable is not set.
+In this way you can make requests to different hosts using resty from
+separate terminals, and have a different URI base for each terminal.
 
 If you want to see what the current URI base is, just run `resty` with no
 arguments. The URI base will be printed to stdout.
@@ -142,12 +166,12 @@ There are two ways to add a query string to the path. The first, mentioned
 above, is to disable URL encoding with the `-Q` option, and include the
 query string with the path parameter, like this:
 
-      GET '/blogs/47?param=foo&otherparam=bar' -Q
+      $ GET '/blogs/47?param=foo&otherparam=bar' -Q
 
 To specify a query string without disabling URL encoding on the path the
 `-q` option is used, like this:
 
-      GET /blogs/47 -q 'param=foo&otherparam=bar'
+      $ GET /blogs/47 -q 'param=foo&otherparam=bar'
 
 POST/PUT Requests and Data
 ==========================
@@ -155,21 +179,21 @@ POST/PUT Requests and Data
 Normally you would probably want to provide the request body data right on
 the command line like this:
 
-      PUT /blogs/5.json '{"title" : "hello", "body" : "this is it"}'
+      $ PUT /blogs/5.json '{"title" : "hello", "body" : "this is it"}'
 
 But sometimes you will want to send the request body from a file instead. To
 do that you pipe in the contents of the file:
 
-      PUT /blogs/5.json < /tmp/t
+      $ PUT /blogs/5.json < /tmp/t
 
 Or you can pipe the data from another program, like this:
 
-      myprog | PUT /blogs/5.json
+      $ myprog | PUT /blogs/5.json
 
 Or, interestingly, as a filter pipeline with 
 [jsawk](http://github.com/micha/jsawk):
 
-      GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT
+      $ GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT
 
 Notice how the `path` argument is omitted from the `PUT` command.
 
@@ -180,7 +204,7 @@ With the `-V` options you can pipe data into `PUT` or `POST`, edit it in vi,
 save the data (using `:wq` in vi, as normal) and the resulting data is then
 PUT or POSTed. This is similar to the way `visudo` works, for example.
 
-      GET /blogs/2 | PUT -V
+      $ GET /blogs/2 | PUT -V
 
 This fetches the data and lets you edit it, and then does a PUT on the
 resource. If you don't like vi you can specify your preferred editor by
@@ -214,12 +238,12 @@ Anything after the (optional) `path` and `data` arguments is passed on to
 
 For example:
 
-      GET /blogs.json -H "Range: items=1-10"
+      $ GET /blogs.json -H "Range: items=1-10"
 
 The `-H "Range: items=1-10"` argument will be passed to `curl` for you. This
 makes it possible to do some more complex operations when necessary.
 
-      POST -v -u user:test
+      $ POST -v -u user:test
 
 In this example the `path` and `data` arguments were left off, but `-v` and
 `-u user:test` will be passed through to `curl`, as you would expect.
@@ -232,15 +256,15 @@ Here are some useful options to try:
   * **-H \<header\>** add request header (this option can be added more than 
     once)
 
-Default Curl Options
---------------------
+Setting The Default Curl Options
+--------------------------------
 
 Sometimes you want to send some options to curl for every request. It
 would be tedious to have to repeat these options constantly. To tell
 resty to always add certain curl options you can specify those options
 when you call resty to set the URI base. For example:
 
-      resty example.com:8080 -H "Accept: application/json" -u user:pass
+      $ resty example.com:8080 -H "Accept: application/json" -u user:pass
 
 Every subsequent request will have the `-H "Accept:..."` and `-u user:...`
 options automatically added. Each time resty is called this option list
@@ -253,10 +277,10 @@ Resty supports a per-host/per-method configuration file to help you with
 frequently used curl options. Each host (including the port) can have its
 own configuration file in the _~/.resty_ directory. The file format is
 
-      GET [arg] [arg] ...
-      PUT [arg] [arg] ...
-      POST [arg] [arg] ...
-      DELETE [arg] [arg] ...
+      $ GET [arg] [arg] ...
+      $ PUT [arg] [arg] ...
+      $ POST [arg] [arg] ...
+      $ DELETE [arg] [arg] ...
 
 Where the `arg`s are curl command line arguments. Each line can specify
 arguments for that HTTP verb only, and all lines are optional.
@@ -265,12 +289,12 @@ So, suppose you find yourself using the same curl options over and over. You
 can save them in a file and resty will pass them to curl for you. Say this
 is a frequent pattern for you:
 
-      resty localhost:8080
-      GET /Blah -H "Accept: application/json"
-      GET /Other -H "Accept: application/json"
+      $ resty localhost:8080
+      $ GET /Blah -H "Accept: application/json"
+      $ GET /Other -H "Accept: application/json"
       ...
-      POST /Something -H "Content-Type: text/plain" -u user:pass
-      POST /SomethingElse -H "Content-Type: text/plain" -u user:pass
+      $ POST /Something -H "Content-Type: text/plain" -u user:pass
+      $ POST /SomethingElse -H "Content-Type: text/plain" -u user:pass
       ...
 
 It's annoying to add the `-H` and `-u` options to curl all the time. So
@@ -285,11 +309,11 @@ Then any GET or POST requests to localhost:8080 will have the specified
 options prepended to the curl command line arguments, saving you from having
 to type them out each time, like this:
 
-      GET /Blah
-      GET /Other
+      $ GET /Blah
+      $ GET /Other
       ...
-      POST /Something
-      POST /SomethingElse
+      $ POST /Something
+      $ POST /SomethingElse
       ...
 
 Sweet! Much better.
