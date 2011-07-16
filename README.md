@@ -25,7 +25,7 @@ Quick Start
 
 You have `curl`, right? Okay. 
 
-      curl -L http://github.com/micha/resty/raw/master/resty > resty
+      $ curl -L http://github.com/micha/resty/raw/master/resty > resty
 
 Source the script before using it. (You can put this line in your `~/.bashrc`
 file if you want, or just paste the contents of the `resty` script right in
@@ -47,7 +47,7 @@ Make some HTTP requests.
       {"id" : 2, "title" : "updated post", "body" : "This is the new."}
       $ DELETE /blogs/2
       $ POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
-      {"id" : 204, "title" : "new post", "body" : "This is the new new."}'
+      {"id" : 204, "title" : "new post", "body" : "This is the new new."}
 
 Usage
 =====
