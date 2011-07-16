@@ -14,13 +14,20 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query
+  local confdir datadir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query
   local -a curlopt
   local -a curlopt2
 
-  confdir="${HOME}/.resty"
-  host="${confdir}/host"
-  cookies="$confdir/c"
+  if [ -n "$XDG_CONFIG_HOME" ]; then
+    confdir="$XDG_CONFIG_HOME/resty"
+    datadir="$XDG_DATA_HOME/resty"
+  else
+    confdir="$HOME/.resty"
+    datadir="$confdir"
+  fi
+  mkdir -p "$confdir"
+  host="$datadir/host"
+  cookies="$datadir/c"
   method="$1"; [[ $# > 0 ]] && shift
   h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
