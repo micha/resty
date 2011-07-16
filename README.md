@@ -85,9 +85,10 @@ directory, otherwise.
 
 ### Using Existing, Pre-v2.1 Configuration Files With v2.1 ###
 
-If you had resty installed before version 2.1 and you want to continue using
-your existing configuration files, please make a backup of your `~/.resty`
-directory and then do:
+If you had resty installed before version 2.1 and your system uses the XDG
+config directory standard and you want to continue using your existing
+configuration files, please make a backup of your `~/.resty` directory
+and then do:
 
       $ mkdir -p "${XDG_CONFIG_HOME}/resty" "${XDG_DATA_HOME}/resty"
       $ mv ~/.resty/c "${XDG_DATA_HOME}/resty"
