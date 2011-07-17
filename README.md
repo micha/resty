@@ -43,9 +43,12 @@ Make some HTTP requests.
 
       $ GET /blogs.json
       [ {"id" : 1, "title" : "first post", "body" : "This is the first post"}, ... ]
+      
       $ PUT /blogs/2.json '{"id" : 2, "title" : "updated post", "body" : "This is the new."}'
       {"id" : 2, "title" : "updated post", "body" : "This is the new."}
+
       $ DELETE /blogs/2
+
       $ POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
       {"id" : 204, "title" : "new post", "body" : "This is the new new."}
 
