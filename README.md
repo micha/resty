@@ -56,7 +56,7 @@ Usage
 =====
 
       source resty [-W] [remote]              # load functions into shell
-      resty                                   # prints current request URI base
+      resty [-v]                              # prints current request URI base
       resty <remote> [OPTIONS]                # sets the base request URI
 
       HEAD [path] [OPTIONS]                   # HEAD request
@@ -77,6 +77,10 @@ Usage
                     requests only, with data piped to stdin.)
       -Z            Raw output. This disables any processing of HTML in the
                     response.
+      -v            Verbose output. When used with the resty command itself
+                    this prints the saved curl options along with the current
+                    URI base. Otherwise this is passed to curl for verbose
+                    curl output.
       <curl opt>    Any curl options will be passed down to curl.
 
 Configuration, Data File Locations
