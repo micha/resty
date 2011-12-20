@@ -32,14 +32,14 @@ function resty() {
   h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
   editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
-  
+
   [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && _path="$1" && [[ $# > 0 ]] && shift
   [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
-  
+
   j=1
   for i in "$@"; do
     [ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue

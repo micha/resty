@@ -16,7 +16,7 @@ done
 
 [ -n "$n" ] && r=$(printf "%s\\n%s" "$r" "$(head -c $n)")
 
-if [ "$reflect" = "yes" ]; then 
+if [ "$reflect" = "yes" ]; then
   ct="text/plain"
 else
   r=$(cat "$f")
