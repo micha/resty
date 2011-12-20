@@ -62,7 +62,7 @@ Accept: */*
 < Server: lilhttpd/1.0
 < Connection: close
 < Content-Length: 164
-< 
+<
 { [data not shown]
 * Closing connection #0
 GET /simple.html HTTP/1.1
@@ -282,21 +282,21 @@ Server: lilhttpd/1.0
 Connection: close
 Content-Length: 2340
 # [OUT] TEST 7: Raw response
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"> 
-<html lang="en"> 
-  <head> 
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
-    <title>jQuery Tablesort Demo</title> 
-  </head> 
-  <body> 
-    <div class="container"> 
-      <div> 
-        <div class="nav"> 
-          <a href="http://github.com/micha/resty">fork me on github</a> 
-        </div> 
-        <h2>Resty<br />Test<br />Page</h2> 
-      </div> 
-      <hr/> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>jQuery Tablesort Demo</title>
+  </head>
+  <body>
+    <div class="container">
+      <div>
+        <div class="nav">
+          <a href="http://github.com/micha/resty">fork me on github</a>
+        </div>
+        <h2>Resty<br />Test<br />Page</h2>
+      </div>
+      <hr/>
       <div class="container">
         <h3>Hello There.</h3>
         <table class="demo jquery-tablesort" cellspacing="0" cellpadding="0">
@@ -359,9 +359,9 @@ Content-Length: 2340
         column headings to sort and re-sort that column. The rain in
         Spain falls mainly on the plain. Thanks!</p>
       </div>
-      <hr /> 
-    </div> 
-  </body> 
+      <hr />
+    </div>
+  </body>
 </html>
 # [OUT] TEST 8: Get headers too
 * <url> malformed
@@ -381,7 +381,7 @@ Content-Length: 2340
 < Server: lilhttpd/1.0
 < Connection: close
 < Content-Length: 2340
-< 
+<
 { [data not shown]
 * Closing connection #0
    [1]fork me on github
