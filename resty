@@ -81,7 +81,7 @@ function resty() {
       [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
-      eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
+      [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
       res=$((((curl -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
               "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
