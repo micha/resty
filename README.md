@@ -1,6 +1,8 @@
 Resty
 =====
 
+*If you use resty and want to help maintain it, please let me know and I'll add you to the repo.*
+
 Resty is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
