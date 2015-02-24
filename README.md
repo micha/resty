@@ -9,9 +9,9 @@ provides a simple, concise shell interface for interacting with
 Since it is implemented as functions in your shell and not in its own separate
 command environment you have access to all the powerful shell tools, such
 as perl, awk, grep, sed, etc. You can use resty in pipelines to process data
-from REST services, and PUT or POST the data right back.  You can even pipe
-the data in and then edit it interactively in your text editor prior to PUT 
-or POST.
+from REST services, and PUT, PATCH, or POST the data right back.  You can even pipe
+the data in and then edit it interactively in your text editor prior to PUT,
+PATCH, or POST.
 
 Cookies are supported automatically and stored in a file locally. Most of
 the arguments are remembered from one call to the next to save typing. It
@@ -66,6 +66,7 @@ Usage
       GET [path] [OPTIONS]                    # GET request 
       DELETE [path] [OPTIONS]                 # DELETE request 
       PUT [path] [data] [OPTIONS]             # PUT request
+      PATCH [path] [data] [OPTIONS]           # PATCH request
       POST [path] [data] [OPTIONS]            # POST request
       TRACE [path] [OPTIONS]                  # TRACE request
 
@@ -75,8 +76,8 @@ Usage
       -q <query>    Send query string with the path. A '?' is prepended to
                     <query> and concatenated onto the <path>.
       -W            Don't write to history file (only when sourcing script).
-      -V            Edit the input data interactively in 'vi'. (PUT and POST
-                    requests only, with data piped to stdin.)
+      -V            Edit the input data interactively in 'vi'. (PUT, PATCH,
+                    and POST requests only, with data piped to stdin.)
       -Z            Raw output. This disables any processing of HTML in the
                     response.
       -v            Verbose output. When used with the resty command itself
@@ -109,7 +110,8 @@ Request URI Base
 The request URI base is what the eventual URI to which the requests will be
 made is based on. Specifically, it is a URI that may contain the `*` character
 one or more times. The `*` will be replaced with the `path` parameter in the
-`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, or `DELETE` request as described above.
+`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, `PATCH`, or `DELETE` request as described
+above.
 
 For example:
 
@@ -150,11 +152,10 @@ arguments. The URI base will be printed to stdout.
 The Optional Path Parameter
 ===========================
 
-The HTTP verbs (`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, and `DELETE`) first 
-argument is always
-an optional URI path. This path must always start with a `/` character. If
-the path parameter is not provided on the command line, resty will just use
-the last path it was provided with. This "last path" is stored in an
+The HTTP verbs (`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`)
+first argument is always an optional URI path. This path must always start with a
+`/` character. If the path parameter is not provided on the command line, resty
+will just use the last path it was provided with. This "last path" is stored in an
 environment variable (`$_resty_path`), so each terminal basically has its
 own "last path".
 
@@ -194,8 +195,8 @@ this, like so:
 
       $ POST '/blogs/47?param=foo&otherparam=bar' -Q -d 'postparam=baz'
 
-POST/PUT Requests and Data
-==========================
+POST/PUT/PATCH Requests and Data
+================================
 
 Normally you would probably want to provide the request body data right on
 the command line like this:
@@ -218,12 +219,12 @@ Or, interestingly, as a filter pipeline with
 
 Notice how the `path` argument is omitted from the `PUT` command.
 
-Edit PUT/POST Data In Vi
-------------------------
+Edit PUT/PATCH/POST Data In Vi
+------------------------------
 
-With the `-V` options you can pipe data into `PUT` or `POST`, edit it in vi,
-save the data (using `:wq` in vi, as normal) and the resulting data is then
-PUT or POSTed. This is similar to the way `visudo` works, for example.
+With the `-V` options you can pipe data into `PUT`, `PATCH`, or `POST`, edit
+it in vi, save the data (using `:wq` in vi, as normal) and the resulting data
+is then PUT, PATCH, or POSTed. This is similar to the way `visudo` works, for example.
 
       $ GET /blogs/2 | PUT -V
 
@@ -300,6 +301,7 @@ own configuration file in the _~/.resty_ directory. The file format is
 
       $ GET [arg] [arg] ...
       $ PUT [arg] [arg] ...
+      $ PATCH [arg] [arg] ...
       $ POST [arg] [arg] ...
       $ DELETE [arg] [arg] ...
 
