@@ -14,7 +14,7 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir datadir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query
+  local confdir datadir host cookies method h2t editor domain _path opt body res ret out err verbose raw i j d tmpf args2 hasbody vimedit quote query maybe_query
   local -a curlopt
   local -a curlopt2
 
@@ -31,14 +31,14 @@ function resty() {
   method="$1"; [[ $# > 0 ]] && shift
   h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
-  editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
+  editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)         # editor default
 
-  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
+  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && hasbody="yes"
+  # hack: want data only for Put and Post
 
-  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
-  [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && _path="$1" && [[ $# > 0 ]] && shift
-  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
+  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
+  [ -n "$1" ] && [ "${1#/}" != "$1" ] && _path="$1" && [[ $# > 0 ]] && shift          # retrieve path
+  [ "$1" = "${1#-}" ] && body="$1" && [[ $# > 0 ]] && shift                           # retrieve data
 
   j=1
   for i in "$@"; do
@@ -67,25 +67,25 @@ function resty() {
   case "$method" in
     HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
       eval "curlopt2=(${_resty_opts[*]})"
-      dat=$( ( [ "$wantdata" = "yes" ] \
-        && ( ( [ -n "$dat" ] && echo "$dat") \
+      body=$( ( [ "$hasbody" = "yes" ] \
+        && ( ( [ -n "$body" ] && echo "$body") \
         || ([ ! -t 0 ] && echo "@-") ) ) || echo)
-      if [ "$wantdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
+      if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
         tmpf=$(mktemp /tmp/resty.XXXXXX)
         [ -t 0 ] || cat > $tmpf
         (exec < /dev/tty; "$editor" $tmpf)
-        dat=$(cat $tmpf)
+        body=$(cat $tmpf)
         rm -f $tmpf
       fi
-      [ -n "$dat" ] && [ "$dat" != "@-" ] && [[ $# > 0 ]] && shift
+      [ -n "$body" ] && [ "$body" != "@-" ] && [[ $# > 0 ]] && shift
       [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
-      [ -n "$dat" ] && opt="--data-binary"
+      [ -n "$body" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
 
-      ## Retrieve stored option in confidir.
+      ## Retrieve stored option in config dir.
       ## §maybe: cache this when resty)
       [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-      res=$((((curl -sLv $opt "$dat" -X $method \
+      res=$((((curl -sLv $opt "$body" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
               "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
