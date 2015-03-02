@@ -25,7 +25,7 @@ command line pain.
 Quick Start
 ===========
 
-You have `curl`, right? Okay. 
+You have `curl`, right? Okay.
 
       $ curl -L http://github.com/micha/resty/raw/master/resty > resty
 
@@ -45,7 +45,7 @@ Make some HTTP requests.
 
       $ GET /blogs.json
       [ {"id" : 1, "title" : "first post", "body" : "This is the first post"}, ... ]
-      
+
       $ PUT /blogs/2.json '{"id" : 2, "title" : "updated post", "body" : "This is the new."}'
       {"id" : 2, "title" : "updated post", "body" : "This is the new."}
 
@@ -63,8 +63,8 @@ Usage
 
       HEAD [path] [OPTIONS]                   # HEAD request
       OPTIONS [path] [OPTIONS]                # OPTIONS request
-      GET [path] [OPTIONS]                    # GET request 
-      DELETE [path] [OPTIONS]                 # DELETE request 
+      GET [path] [OPTIONS]                    # GET request
+      DELETE [path] [OPTIONS]                 # DELETE request
       PUT [path] [data] [OPTIONS]             # PUT request
       PATCH [path] [data] [OPTIONS]           # PATCH request
       POST [path] [data] [OPTIONS]            # POST request
@@ -212,7 +212,7 @@ Or you can pipe the data from another program, like this:
 
       $ myprog | PUT /blogs/5.json
 
-Or, interestingly, as a filter pipeline with 
+Or, interestingly, as a filter pipeline with
 [jsawk](http://github.com/micha/jsawk):
 
       $ GET /blogs/5.json | jsawk 'this.author="Bob Smith";this.tags.push("news")' | PUT
@@ -255,7 +255,7 @@ can use the `-Z` option, and get the raw output.
 Passing Command Line Options To Curl
 ====================================
 
-Anything after the (optional) `path` and `data` arguments is passed on to 
+Anything after the (optional) `path` and `data` arguments is passed on to
 `curl`.
 
 For example:
@@ -275,7 +275,7 @@ Here are some useful options to try:
   * **-v** verbose output, shows HTTP headers and status on stderr
   * **-j** junk session cookies (refresh cookie-based session)
   * **-u \<username:password\>** HTTP basic authentication
-  * **-H \<header\>** add request header (this option can be added more than 
+  * **-H \<header\>** add request header (this option can be added more than
     once)
 
 Setting The Default Curl Options
@@ -297,13 +297,13 @@ Per-Host/Per-Method Curl Configuration Files
 
 Resty supports a per-host/per-method configuration file to help you with
 frequently used curl options. Each host (including the port) can have its
-own configuration file in the _~/.resty_ directory. The file format is
+own configuration file in the `~/.resty_ directory`. The file format is
 
-      $ GET [arg] [arg] ...
-      $ PUT [arg] [arg] ...
-      $ PATCH [arg] [arg] ...
-      $ POST [arg] [arg] ...
-      $ DELETE [arg] [arg] ...
+      GET [arg] [arg] ...
+      PUT [arg] [arg] ...
+      PATCH [arg] [arg] ...
+      POST [arg] [arg] ...
+      DELETE [arg] [arg] ...
 
 Where the `arg`s are curl command line arguments. Each line can specify
 arguments for that HTTP verb only, and all lines are optional.
@@ -328,7 +328,7 @@ _~/.resty/localhost:8080_
       GET -H "Accept: application/json"
       POST -H "Content-Type: text/plain" -u user:pass
 
-Then any GET or POST requests to localhost:8080 will have the specified 
+Then any GET or POST requests to localhost:8080 will have the specified
 options prepended to the curl command line arguments, saving you from having
 to type them out each time, like this:
 
@@ -400,4 +400,3 @@ scripts that make dealing with JSON data easier.
         <test>
           <deep>value</deep>
         </test>
-

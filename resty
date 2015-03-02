@@ -32,14 +32,14 @@ function resty() {
   h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
   editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
-  
+
   [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && _path="$1" && [[ $# > 0 ]] && shift
   [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
-  
+
   j=1
   for i in "$@"; do
     [ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue
@@ -81,6 +81,9 @@ function resty() {
       [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
+
+      ## Retrieve stored option in confidir.
+      ## §maybe: cache this when resty)
       [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
       res=$((((curl -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
