@@ -31,14 +31,14 @@ function resty() {
   method="$1"; [[ $# -gt 0 ]] && shift
   h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
-  editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
+  editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
 
   [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && _path="$1" && [[ $# -gt 0 ]] && shift
-  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# -gt 0 ]] && shift
+    && _path="$1" && [[ $# > 0 ]] && shift
+  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
 
   j=1
   for i in "$@"; do
@@ -80,6 +80,8 @@ function resty() {
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
 
+      ## Retrieve stored option in confidir.
+      ## §maybe: cache this when resty)
       [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep "^$method" |cut -b $((${#method}+2))-) )"
       [ "$dry" = "yes" ] && echo "curl -sLv $opt \"$dat\" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \"${args2[@]}\" \"${curlopt2[@]}\" \"${curlopt[@]}\" \"$_path$query\"" && return 0
       # TODO: refactor function
