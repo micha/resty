@@ -71,8 +71,14 @@ function resty-call() {
     if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
     [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
-    [ -n "$1" ] && [ "${1#/}" != "$1" ] && local _path="$1" && [[ $# > 0 ]] && shift          # retrieve path
-    [ "$1" = "${1#-}" ] && local body="$1" && [[ $# > 0 ]] && shift                           # retrieve data
+    if [[ "$1"  =~ "^/" ]] ; then  # retrieve path
+	local _path="$1";
+	[[ $# > 0 ]] && shift
+    fi
+    if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve  data
+	local body="$1"
+	[[ $# > 0 ]] && shift
+    fi
 
     local raw query vimedit quote maybe_query
     j=1
