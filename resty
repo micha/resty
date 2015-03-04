@@ -23,10 +23,6 @@ export _RESTY_DATA_DIR _RESTY_CONF_DIR;
 
 
 function resty() {
-    # todo: cleaning of locals
-    local confdir datadir host cookies method h2t editor domain _path opt body res ret out err verbose raw i j d tmpf args2 hasbody vimedit quote query maybe_query
-    local -a curlopt
-    local -a curlopt2
 
     if [ -n "$XDG_CONFIG_HOME" ]; then
 	_RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
@@ -37,7 +33,7 @@ function resty() {
     fi
     mkdir -p "$_RESTY_CONF_DIR"
 
-    host="$_RESTY_DATA_DIR/host"
+    local host="$_RESTY_DATA_DIR/host"
 
     local url=$1
 
@@ -50,7 +46,7 @@ function resty() {
 		&& _resty_host="$url"
 	    ;;
 	*)
-	    resty "http://$url" "${curlopt[@]}"
+	    resty "http://$url" "${@[@]}"
 	    ;;
     esac
 }
@@ -58,30 +54,33 @@ function resty() {
 
 
 function resty-call() {
-     local confdir datadir host cookies method h2t editor domain _path opt body res ret out err verbose raw i j d tmpf args2 hasbody vimedit quote query maybe_query
+    # maaybe: check # HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
+
     local -a curlopt
     local -a curlopt2
 
     # TODO: local to reset
-    host="$_RESTY_DATA_DIR/host"
-    cookies="$_RESTY_DATA_DIR/c"
+    local host="$_RESTY_DATA_DIR/host"
+    local cookies="$_RESTY_DATA_DIR/c"
 
-    method="$1"; [[ $# > 0 ]] && shift
-    h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
+    local method="$1"; [[ $# > 0 ]] && shift
+    local h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
 			  || which html2text || which cat) |tail -n 1)
-    editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)         # editor default
+    local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)         # editor default
 
-    if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then hasbody="yes" ;fi
+    if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
     [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
-    [ -n "$1" ] && [ "${1#/}" != "$1" ] && _path="$1" && [[ $# > 0 ]] && shift          # retrieve path
-    [ "$1" = "${1#-}" ] && body="$1" && [[ $# > 0 ]] && shift                           # retrieve data
+    [ -n "$1" ] && [ "${1#/}" != "$1" ] && local _path="$1" && [[ $# > 0 ]] && shift          # retrieve path
+    [ "$1" = "${1#-}" ] && local body="$1" && [[ $# > 0 ]] && shift                           # retrieve data
 
+    local raw query vimedit quote maybe_query
     j=1
+    # TODO: use an option parser or a switch
     for i in "$@"; do
 	[ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue
 	([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
-	    && verbose="yes" && continue
+	    &&  verbose="yes" && continue
 	[ "$i" = "-V" ] && vimedit="yes" && continue
 	[ "$i" = "-Z" ] && raw="yes" && continue
 	[ "$i" = "-W" ] && continue
@@ -92,28 +91,29 @@ function resty-call() {
 
     [ -z "$quote" ] && _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
 
-    [ "$method" = "HEAD" ] || [ "$method" = "OPTIONS" ] && raw="yes"
-    [ -z "$_resty_host" ] && _resty_host=$(cat "$host" 2>/dev/null)
+    if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
+    [ -z "$_resty_host" ] && local _resty_host=$(cat "$host" 2>/dev/null)
     [ "$method" = "-v" ] && echo "$_resty_host $_resty_opts" && return
     [ -z "$method" ] && echo "$_resty_host" && return
     [ -n "$_path" ] && _resty_path=$_path
-    domain=$(echo -n "$_resty_host" \
+    local domain=$(echo -n "$_resty_host" \
 		    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    _path="${_resty_host//\*/$_resty_path}"
+    local _path="${_resty_host//\*/$_resty_path}"
 
-
-    # HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
     eval "curlopt2=(${_resty_opts[*]})"
-    body=$( ( [ "$hasbody" = "yes" ] \
+    # todo refactor
+    local body=$( ( [ "$hasbody" = "yes" ] \
 		  && ( ( [ -n "$body" ] && echo "$body") \
 			   || ([ ! -t 0 ] && echo "@-") ) ) || echo)
+
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
-	tmpf=$(mktemp /tmp/resty.XXXXXX)
+	loxal tmpf=$(mktemp /tmp/resty.XXXXXX)
 	[ -t 0 ] || cat > $tmpf
 	(exec < /dev/tty; "$editor" $tmpf)
 	body=$(cat $tmpf)
 	rm -f $tmpf
     fi
+
     [ -n "$body" ] && [ "$body" != "@-" ] && [[ $# > 0 ]] && shift
     [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
     [ -n "$body" ] && opt="--data-binary"
@@ -122,14 +122,14 @@ function resty-call() {
     ## Retrieve stored option in config dir.
     ## §maybe: cache this when resty)
     [ -f "$_RESTY_CONF_DIR/$domain" ] && eval "args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-    res=$((((curl -sLv $opt "$body" -X $method \
+    local res=$((((curl -sLv $opt "$body" -X $method \
 		  -b "$cookies/$domain" -c "$cookies/$domain" \
 		  "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
 		    |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
 	       |sed 's/^/ERR /' && echo) 2>&1)
-    out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
-    err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
-    ret=$(echo "$err" |sed \
+    local out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
+    local err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
+    local ret=$(echo "$err" |sed \
 			   '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
 		 | tail -n1)
     [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
