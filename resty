@@ -9,7 +9,7 @@
 #   Copyright 2009, no rights reserved.
 #
 # Maintener:
-#   Adriean Khisbe <adriean.khisbe@live.com>
+#   Adriean Khisbe <adriean.khisbe@live.fr>
 #
 
 
@@ -120,29 +120,39 @@ function resty-call() {
 	rm -f $tmpf
     fi
 
+    ## TODO: refactor block
     [ -n "$body" ] && [ "$body" != "@-" ] && [[ $# > 0 ]] && shift
     [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
-    [ -n "$body" ] && opt="--data-binary"
-    [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
+    [ -n "$body" ] && curl_opt="--data-binary"
+    [ "$method" = "HEAD" ] && curl_opt="-I" && raw="yes" # HERE??
 
-    ## Retrieve stored option in config dir.
-    ## §maybe: cache this when resty)
-    [ -f "$_RESTY_CONF_DIR/$domain" ] && eval "args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-    local res=$((((curl -sLv $opt "$body" -X $method \
-		  -b "$cookies/$domain" -c "$cookies/$domain" \
-		  "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
-		    |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
-	       |sed 's/^/ERR /' && echo) 2>&1)
-    local out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
-    local err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
-    local ret=$(echo "$err" |sed \
-			   '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
-		 | tail -n1)
-    [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
+
+    if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
+	## §maybe: cache this when resty)
+	local cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
+	# echo $cmd
+	eval $cmd
+    fi
+
+    # Launch command and retrieved streams
+    local res out err ret
+    res=$((((curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
+		     "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
+				| sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) |sed 's/^/ERR /' && echo) 2>&1)
+    out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
+    err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
+    ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
+
+    if [ -n "$err" -a -n "$verbose" ]; then echo "$err" 1>&2 ; fi
+
     echo "$err" | grep -i '^< \s*Content-Type:  *text/html' >/dev/null \
 	&& [ -z "$raw" ] && d=$h2t || d=cat
+
     [ -n "$out" ] && out=$(echo "$out" |eval "$d")
+
+    # §TODO: refactor
     [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+
     if [ "$ret" != "2" ]; then
 	[ -n "$out" ] && echo "$out" 1>&2
 	return $ret
