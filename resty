@@ -33,8 +33,7 @@ function resty() {
                 || which html2text || which cat) |tail -n 1)
   editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)         # editor default
 
-  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && hasbody="yes"
-  # hack: want data only for Put and Post
+  if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then hasbody="yes" ;fi
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
   [ -n "$1" ] && [ "${1#/}" != "$1" ] && _path="$1" && [[ $# > 0 ]] && shift          # retrieve path
