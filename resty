@@ -198,39 +198,50 @@ function resty-call() {
 
 }
 
+function resty-load-alias(){
+    alias HEAD=resty-head OPTIONS=resty-options GET=resty-get POST=resty-post PUT=resty-put
+    alias TRACE=resty-trace PATCH=resty-patch DELETE=resty-delete
+    # maybe add option?
+}
+
+function resty-unload-alias(){
+    unalias HEAD OPTIONS GET POST PUT TRACE PATCH DELETE
+}
+
 # TODO: option to have or not head as alias? resty-head?
-function HEAD() {
+function resty-head() {
     resty-call HEAD "$@"
 }
 
-function OPTIONS() {
+function resty-options() {
     resty-call OPTIONS "$@"
 }
 
-function GET() {
+function resty-get() {
     resty-call GET "$@"
 }
 
-function POST() {
+function resty-post() {
     resty-call POST "$@"
 }
 
-function PUT() {
+function resty-put() {
     resty-call PUT "$@"
 }
 
-function PATCH() {
+function resty-patch() {
     resty-call PATCH "$@"
 }
 
-function DELETE() {
+function resty-delete() {
     resty-call DELETE "$@"
 }
 
-function TRACE() {
+function resty-trace() {
     resty-call TRACE "$@"
 }
 
+# TODO: see what it does?
 [ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# -gt 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
