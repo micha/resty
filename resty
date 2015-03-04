@@ -54,7 +54,7 @@ function resty() {
 
 
 function resty-call() {
-    # maaybe: check # HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
+    # maybe: check # HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
 
     local -a curlopt
     local -a curlopt2
@@ -70,7 +70,10 @@ function resty-call() {
 
     if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
-    [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
+    if [ -d "$cookies" ] ; then   # retrieve cookie
+	(mkdir -p "$cookies"; echo "http://localhost*" > "$host")
+    fi
+
     if [[ "$1"  =~ "^/" ]] ; then  # retrieve path
 	local _path="$1";
     fi
@@ -103,16 +106,27 @@ function resty-call() {
     fi
 
     if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
-    [ -z "$_resty_host" ] && local _resty_host=$(cat "$host" 2>/dev/null)
-    [ "$method" = "-v" ] && echo "$_resty_host $_resty_opts" && return
-    [ -z "$method" ] && echo "$_resty_host" && return
-    [ -n "$_path" ] && local _resty_path=$_path
+    if [ -z "$_resty_host" ] ;then local _resty_host=$(cat "$host" 2>/dev/null);fi
+
+    if [ "$method" = "-v" ] ; then # ??
+	echo "$_resty_host $_resty_opts"
+	return
+    fi
+    if [ -z "$method" ] ; then # return since no method
+	echo "$_resty_host"
+	return
+    fi
+    if [ -n "$_path" ] ; then # .??
+	local _resty_path=$_path
+    fi
+
     local domain=$(echo -n "$_resty_host" \
 		    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     local _path="${_resty_host//\*/$_resty_path}"
 
-    eval "curlopt2=(${_resty_opts[*]})"
-    # todo refactor
+    eval "curlopt2=(${_resty_opts[*]})"  # TODO: rename or change
+
+    # TODO: refactor
     local body=$( ( [ "$hasbody" = "yes" ] \
 		  && ( ( [ -n "$body" ] && echo "$body") \
 			   || ([ ! -t 0 ] && echo "@-") ) ) || echo)
@@ -125,11 +139,13 @@ function resty-call() {
 	rm -f $tmpf
     fi
 
-    ## TODO: refactor block
-    [ -n "$body" ] && [ "$body" != "@-" ] && [[ $# > 0 ]] && shift
-    [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
-    [ -n "$body" ] && curl_opt="--data-binary"
-    [ "$method" = "HEAD" ] && curl_opt="-I" && raw="yes" # HERE??
+    if [ -n "$body" ] && [ "$body" != "@-" ] ; then [[ $# > 0 ]] && shift;fi
+    if [ "$1" = "-Z" ] ; then  raw="yes" ; [[ $# > 0 ]] && shift ;fi
+    if [ -n "$body" ] ;then curl_opt="--data-binary" ;fi
+    if [ "$method" = "HEAD" ] ; then
+	curl_opt="-I"
+	raw="yes"
+    fi
 
 
     if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
@@ -150,10 +166,13 @@ function resty-call() {
 
     if [ -n "$err" -a -n "$verbose" ]; then echo "$err" 1>&2 ; fi
 
-    echo "$err" | grep -i '^< \s*Content-Type:  *text/html' >/dev/null \
-	&& [ -z "$raw" ] && d=$h2t || d=cat
+    if  grep -i '^< \s*Content-Type:  *text/html' >/dev/null <<< "$err" &&[ -z "$raw" ]
+    then d=$h2t
+    else d=cat
+    fi
+    # TODO: rename d to output tool
 
-    [ -n "$out" ] && out=$(echo "$out" |eval "$d")
+    if [ -n "$out" ]; then  out=$(echo "$out" | "$d") ; fi
 
     # §TODO: refactor
     [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
