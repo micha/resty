@@ -13,9 +13,9 @@
 #
 
 
-export _resty_host="" # TODO: to upper case!
-export _resty_path=""
-export _resty_nohistory=""
+export _RESTY_HOST="" # TODO: to upper case!
+export _RESTY_PATH=""
+export _RESTY_NO_HISTORY=""
 
 
 # TODO: global var holers
@@ -42,8 +42,8 @@ function resty() {
 	    _resty_opts=$(printf '%q ' "${curlopt[@]}")
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
-	    (echo "$url" |tee "${_resty_nohistory:-$host}") |cat 1>&2 \
-		&& export _resty_host="$url"
+	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
+		&& export _RESTY_HOST="$url"
 	    ;;
 	*)
 	    resty "http://$url" "${@[@]}"
@@ -67,7 +67,7 @@ function resty-call() {
     local host="$_RESTY_DATA_DIR/host"
     local cookies="$_RESTY_DATA_DIR/c"
 
-
+    # §maybe cache
     local h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
 			  || which html2text || which cat) |tail -n 1) # torename
     local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
@@ -82,7 +82,7 @@ function resty-call() {
 	local _path="$1"
 	[[ $# > 0 ]] && shift
     fi
-    if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve  data
+    if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve data
 	local body="$1"
 	[[ $# > 0 ]] && shift
     fi
@@ -112,23 +112,23 @@ function resty-call() {
     fi
 
     if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
-    if [ -z "$_resty_host" ] ;then local _resty_host=$(cat "$host" 2>/dev/null);fi
+    if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
 
     if [ "$method" = "-v" ] ; then # ??
-	echo "$_resty_host $_resty_opts"
+	echo "$_RESTY_HOST $_resty_opts"
 	return
     fi
     if [ -z "$method" ] ; then # return since no method
-	echo "$_resty_host"
+	echo "$_RESTY_HOST"
 	return
     fi
-    if [ -n "$_path" ] ; then # .??
-	local _resty_path=$_path
+    if [ -n "$_path" ] ; then # update current path
+	_RESTY_PATH=$_path
     fi
 
-    local domain=$(echo -n "$_resty_host" \
+    local domain=$(echo -n "$_RESTY_HOST" \
 		    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    local _path="${_resty_host//\*/$_resty_path}"
+    local _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
 
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
 
@@ -185,7 +185,7 @@ function resty-call() {
 
     # todo: also filter elinks and co
     if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
-	out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
+	out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
 				-e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
     fi
 
@@ -244,6 +244,6 @@ function resty-trace() {
 }
 
 # TODO: see what it does?
-[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# -gt 0 ]] && shift
+[ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# -gt 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
