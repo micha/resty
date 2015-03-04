@@ -63,10 +63,6 @@ function resty-call() {
 	return 1
     fi
 
-
-    local -a curlopt
-    local -a curlopt2
-
     # TODO: local to reset
     local host="$_RESTY_DATA_DIR/host"
     local cookies="$_RESTY_DATA_DIR/c"
@@ -91,6 +87,7 @@ function resty-call() {
 	[[ $# > 0 ]] && shift
     fi
 
+    local -a curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose
     local j=1 # try to replace with happened?
     # TODO: use an option parser or a switch
@@ -105,7 +102,7 @@ function resty-call() {
 	    -W) ;; # §todo: check why nothing?
 	    -Q) quote="yes" ;;
 	    -q) maybe_query="yes" ;;
-	    *) curlopt[j]="$opt" && j=$((j + 1))
+	    *) curlopt_cmd[j]="$opt" && j=$((j + 1))
 	esac
 	## idea: add --json, other option.
     done
@@ -133,7 +130,7 @@ function resty-call() {
 		    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     local _path="${_resty_host//\*/$_resty_path}"
 
-    eval "curlopt2=(${_resty_opts[*]})"  # TODO: rename or change
+    eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
 
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
 	if [ ! -t 0 ] ; then # retrieve what stdin hold
@@ -169,7 +166,7 @@ function resty-call() {
     # Launch command and retrieved streams
     local res out err ret
     res=$((((curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
-		     "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
+		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
 				| sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) |sed 's/^/ERR /' && echo) 2>&1)
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
     err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
@@ -179,15 +176,13 @@ function resty-call() {
 
 
     local display
-    if  grep -i '^< \s*Content-Type:  *text/html' >/dev/null <<< "$err" &&[ -z "$raw" ]
+    if [ -z "$raw" ] && grep -i '^< \s*Content-Type:  *text/html' >/dev/null <<< "$err"
     then display=$h2t
     else display=cat
     fi
-    # TODO: rename d to output tool
 
     if [ -n "$out" ]; then out=$(echo "$out" | "$display") ; fi
 
-    # §TODO: refactor
     # todo: also filter elinks and co
     if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
 	out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
