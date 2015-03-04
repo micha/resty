@@ -43,7 +43,7 @@ function resty() {
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_resty_nohistory:-$host}") |cat 1>&2 \
-		&& _resty_host="$url"
+		&& export _resty_host="$url"
 	    ;;
 	*)
 	    resty "http://$url" "${@[@]}"
@@ -73,35 +73,40 @@ function resty-call() {
     [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")      # retrieve cookie
     if [[ "$1"  =~ "^/" ]] ; then  # retrieve path
 	local _path="$1";
-	[[ $# > 0 ]] && shift
     fi
     if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve  data
 	local body="$1"
 	[[ $# > 0 ]] && shift
     fi
 
-    local raw query vimedit quote maybe_query
-    j=1
+    local raw query vimedit quote maybe_query verbose
+    local j=1 # try to replace with happened?
     # TODO: use an option parser or a switch
-    for i in "$@"; do
-	[ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue
-	([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
-	    &&  verbose="yes" && continue
-	[ "$i" = "-V" ] && vimedit="yes" && continue
-	[ "$i" = "-Z" ] && raw="yes" && continue
-	[ "$i" = "-W" ] && continue
-	[ "$i" = "-Q" ] && quote="yes" && continue
-	[ "$i" = "-q" ] && maybe_query="yes" && continue
-	curlopt[j]="$i" && j=$((j + 1))
+    for opt in "$@"; do
+	if [ -n "$maybe_query" -a -z "$query" ] ; then query="?$opt"; continue; fi
+
+	case $opt in
+	    --verbose|-v) verbose="yes";;
+		# TODO; try adapt ; echo "$opt" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
+	    -V) vimedit="yes" ;;
+	    -Z) raw="yes" ;;
+	    -W) ;; # §todo: check why nothing?
+	    -Q) quote="yes" ;;
+	    -q) maybe_query="yes" ;;
+	    *) curlopt[j]="$opt" && j=$((j + 1))
+	esac
+	## idea: add --json, other option.
     done
 
-    [ -z "$quote" ] && _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
+    if [ -z "$quote" ]; then # replace special char with codes
+	_path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
+    fi
 
     if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
     [ -z "$_resty_host" ] && local _resty_host=$(cat "$host" 2>/dev/null)
     [ "$method" = "-v" ] && echo "$_resty_host $_resty_opts" && return
     [ -z "$method" ] && echo "$_resty_host" && return
-    [ -n "$_path" ] && _resty_path=$_path
+    [ -n "$_path" ] && local _resty_path=$_path
     local domain=$(echo -n "$_resty_host" \
 		    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     local _path="${_resty_host//\*/$_resty_path}"
