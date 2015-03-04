@@ -89,8 +89,6 @@ function resty-call() {
 
     local -a curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose
-    local j=1 # try to replace with happened?
-    # TODO: use an option parser or a switch
     for opt in "$@"; do
 	if [ -n "$maybe_query" -a -z "$query" ] ; then query="?$opt"; continue; fi
 
@@ -102,7 +100,7 @@ function resty-call() {
 	    -W) ;; # §todo: check why nothing?
 	    -Q) quote="yes" ;;
 	    -q) maybe_query="yes" ;;
-	    *) curlopt_cmd[j]="$opt" && j=$((j + 1))
+	    *) curlopt_cmd+=("$opt")
 	esac
 	## idea: add --json, other option.
     done
@@ -133,10 +131,10 @@ function resty-call() {
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
 
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
-	if [ ! -t 0 ] ; then # retrieve what stdin hold
-	    body="@-"
+	if [ -t 0 ] ; then # retrieve what stdin hold
+	   local body="@-"
 	else
-	    body=""
+	   local body=""
 	fi
     fi
 
@@ -144,13 +142,13 @@ function resty-call() {
 	local tmpf=$(mktemp /tmp/resty.XXXXXX)
 	[ -t 0 ] || cat > $tmpf
 	(exec < /dev/tty; "$editor" $tmpf)
-	body=$(cat $tmpf)
+	local body=$(cat $tmpf)
 	rm -f $tmpf
     fi
 
     if [ -n "$body" ] && [ "$body" != "@-" ] ; then [[ $# > 0 ]] && shift;fi
     if [ "$1" = "-Z" ] ; then  raw="yes" ; [[ $# > 0 ]] && shift ;fi
-    if [ -n "$body" ] ;then curl_opt="--data-binary" ;fi
+    if [ -n "$body" ] ; then curl_opt="--data-binary" ;fi
     if [ "$method" = "HEAD" ] ; then
 	curl_opt="-I"
 	raw="yes"
@@ -168,6 +166,7 @@ function resty-call() {
     res=$((((curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
 				| sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) |sed 's/^/ERR /' && echo) 2>&1)
+
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
     err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
     ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
