@@ -65,8 +65,8 @@ function resty-call() {
 
     local method="$1"; [[ $# > 0 ]] && shift
     local h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
-			  || which html2text || which cat) |tail -n 1)
-    local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)         # editor default
+			  || which html2text || which cat) |tail -n 1) # torename
+    local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
     if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
@@ -136,7 +136,7 @@ function resty-call() {
     fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
-	loxal tmpf=$(mktemp /tmp/resty.XXXXXX)
+	local tmpf=$(mktemp /tmp/resty.XXXXXX)
 	[ -t 0 ] || cat > $tmpf
 	(exec < /dev/tty; "$editor" $tmpf)
 	body=$(cat $tmpf)
@@ -150,7 +150,6 @@ function resty-call() {
 	curl_opt="-I"
 	raw="yes"
     fi
-
 
     if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
 	## §maybe: cache this when resty)
@@ -170,16 +169,22 @@ function resty-call() {
 
     if [ -n "$err" -a -n "$verbose" ]; then echo "$err" 1>&2 ; fi
 
+
+    local display
     if  grep -i '^< \s*Content-Type:  *text/html' >/dev/null <<< "$err" &&[ -z "$raw" ]
-    then d=$h2t
-    else d=cat
+    then display=$h2t
+    else display=cat
     fi
     # TODO: rename d to output tool
 
-    if [ -n "$out" ]; then  out=$(echo "$out" | "$d") ; fi
+    if [ -n "$out" ]; then out=$(echo "$out" | "$display") ; fi
 
     # §TODO: refactor
-    [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+    # todo: also filter elinks and co
+    if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
+	out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
+				-e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+    fi
 
     if [ "$ret" != "2" ]; then
 	[ -n "$out" ] && echo "$out" 1>&2
@@ -190,6 +195,7 @@ function resty-call() {
 
 }
 
+# TODO: option to have or not head as alias? resty-head?
 function HEAD() {
     resty-call HEAD "$@"
 }
