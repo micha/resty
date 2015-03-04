@@ -54,7 +54,15 @@ function resty() {
 
 
 function resty-call() {
-    # maybe: check # HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
+
+    if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
+
+    local method="$1"; shift
+    if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ "$method" ]] ; then # this is not good
+	echo "First arg must be an HTTP verb, '$method' isn't" >&2
+	return 1
+    fi
+
 
     local -a curlopt
     local -a curlopt2
@@ -63,7 +71,7 @@ function resty-call() {
     local host="$_RESTY_DATA_DIR/host"
     local cookies="$_RESTY_DATA_DIR/c"
 
-    local method="$1"; [[ $# > 0 ]] && shift
+
     local h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
 			  || which html2text || which cat) |tail -n 1) # torename
     local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
