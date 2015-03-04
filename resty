@@ -75,7 +75,8 @@ function resty-call() {
     fi
 
     if [[ "$1"  =~ "^/" ]] ; then  # retrieve path
-	local _path="$1";
+	local _path="$1"
+	[[ $# > 0 ]] && shift
     fi
     if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve  data
 	local body="$1"
@@ -126,10 +127,13 @@ function resty-call() {
 
     eval "curlopt2=(${_resty_opts[*]})"  # TODO: rename or change
 
-    # TODO: refactor
-    local body=$( ( [ "$hasbody" = "yes" ] \
-		  && ( ( [ -n "$body" ] && echo "$body") \
-			   || ([ ! -t 0 ] && echo "@-") ) ) || echo)
+    if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
+	if [ ! -t 0 ] ; then # retrieve what stdin hold
+	    body="@-"
+	else
+	    body=""
+	fi
+    fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
 	loxal tmpf=$(mktemp /tmp/resty.XXXXXX)
