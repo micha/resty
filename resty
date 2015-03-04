@@ -204,6 +204,8 @@ function resty-load-alias(){
     # maybe add option?
 }
 
+resty-load-alias # Loaded by default. Latter do an option
+
 function resty-unload-alias(){
     unalias HEAD OPTIONS GET POST PUT TRACE PATCH DELETE
 }
