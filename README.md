@@ -1,17 +1,15 @@
 Resty
 =====
 
-*If you use resty and want to help maintain it, please let me know and I'll add you to the repo.*
-
-Resty is a tiny script wrapper for [curl](http://curl.haxx.se/). It
+*Resty* is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
 Since it is implemented as functions in your shell and not in its own separate
 command environment you have access to all the powerful shell tools, such
-as perl, awk, grep, sed, etc. You can use resty in pipelines to process data
-from REST services, and PUT, PATCH, or POST the data right back.  You can even pipe
-the data in and then edit it interactively in your text editor prior to PUT,
-PATCH, or POST.
+as `perl`, `awk`, `grep`, `sed`, etc. You can use resty in pipelines to process data
+from `REST` services, and `PUT`, `PATCH`, or `POST` the data right back.  You can even pipe
+the data in and then edit it interactively in your text editor prior to `PUT`,
+`PATCH`, or `POST`.
 
 Cookies are supported automatically and stored in a file locally. Most of
 the arguments are remembered from one call to the next to save typing. It
@@ -35,7 +33,9 @@ there. Either way works.)
 
       $ . resty
 
-Set the REST host to which you will be making your requests (you can do this
+Otherwise, if you use `zsh` and `antigen` to install resty with `antigen bundle micha/resty` in your `.zshr`
+
+Once resty is installed, set the REST host to which you will be making your requests (you can do this
 whenever you want to change hosts, anytime).
 
       $ resty http://127.0.0.1:8080/data
@@ -140,7 +140,7 @@ HTTPS URIs can be used, as well. For example:
 URI Base History
 ----------------
 
-The URI base is saved to an rc file (_${XDG_CONFIG_HOME}/resty/host_ or _~/.resty/host_)i
+The URI base is saved to an rc file (`${XDG_CONFIG_HOME}/resty/host` or `~/.resty/host`)i
 each time it's set, and the last setting is saved in an environment variable
 (`$_resty_host`).  The URI base is read from the rc file when resty starts
 up, but only if the `$_resty_host` environment variable is not set.
@@ -236,11 +236,11 @@ setting the `EDITOR` environment variable.
 Errors and Output
 =================
 
-For successful 2xx responses, the response body is printed on stdout. You
+For successful *2xx* responses, the response body is printed on stdout. You
 can pipe the output to stuff, process it, and then pipe it back to resty,
 if you want.
 
-For responses other than 2xx the response body is dumped to stderr.
+For responses other than *2xx* the response body is dumped to stderr.
 
 In either case, if the content type of the response is `text/html`, then
 resty will try to process the response through either `lynx`, `html2text`,
@@ -322,14 +322,14 @@ is a frequent pattern for you:
       ...
 
 It's annoying to add the `-H` and `-u` options to curl all the time. So
-create a file _~/.resty/localhost:8080_, like this:
+create a file `~/.resty/localhost:8080_`, like this:
 
 _~/.resty/localhost:8080_
 
       GET -H "Accept: application/json"
       POST -H "Content-Type: text/plain" -u user:pass
 
-Then any GET or POST requests to localhost:8080 will have the specified
+Then any `GET` or `POST` requests to `localhost:8080` will have the specified
 options prepended to the curl command line arguments, saving you from having
 to type them out each time, like this:
 
@@ -345,7 +345,7 @@ Sweet! Much better.
 Exit Status
 ===========
 
-Successful requests (HTTP respose with 2xx status) return zero.
+Successful requests (HTTP respose with *2xx* status) return zero.
 Otherwise, the first digit of the response status is returned (i.e., 1 for
 1xx, 3 for 3xx, 4 for 4xx, etc.) This is because the exit status is an 8 bit
 integer---it can't be greater than 255. If you want the exact status code
@@ -372,14 +372,14 @@ To assign the response of resty to a variable you can you do for example: `VAR="
 Working With JSON or XML Data
 =============================
 
-JSON REST web services require some special tools to make them accessible
+`JSON REST` web services require some special tools to make them accessible
 and easily manipulated in the shell environment. The following are a few
 scripts that make dealing with JSON data easier.
 
   * [Jsawk](http://github.com/micha/jsawk) can be used to process and filter
     JSON data from and to resty, in a shell pipeline. This takes care of
-    parsing the input JSON correctly, rather than using regexes and sed,
-    awk, perl or the like, and prints the resulting output in correct JSON
+    parsing the input JSON correctly, rather than using regexes and `sed`,
+    `awk`, `per`l or the like, and prints the resulting output in correct JSON
     format, as well.
 
     `GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles`
