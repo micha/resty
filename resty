@@ -242,7 +242,7 @@ function resty-trace() {
     resty-call TRACE "$@"
 }
 
-# TODO: see what it does?
+# With -W option, does not write to history file
 [ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# > 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
