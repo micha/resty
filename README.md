@@ -1,4 +1,4 @@
-Resty
+Resty [![Build Status](https://drone.io/github.com/micha/resty/status.png)](https://drone.io/github.com/micha/resty/latest)
 =====
 
 *If you use resty and want to help maintain it, please let me know and I'll add you to the repo.*
