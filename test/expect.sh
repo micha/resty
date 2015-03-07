@@ -50,6 +50,15 @@ function stdout() {
   fi
 }
 
+function stderr() {
+  if _passing
+  then
+    [ "$_stderr" == "${1?}" ]
+    _test_ok=$?
+    _expected="stderr == $1"
+  fi
+}
+
 function end() {
   if _passing
   then

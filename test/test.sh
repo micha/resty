@@ -18,6 +18,12 @@ describe "should have default uri base"
     stdout "http://localhost*"
 end
 
+describe "should be able to set uri base"
+  ensure "resty localhost:8011"
+    status 0
+    stderr "http://localhost:8011*"
+end
+
 describe "should be able to GET /"
   ensure "GET /"
     status 0
