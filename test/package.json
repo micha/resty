@@ -1,6 +1,6 @@
 {
-  "name": "first-express-app",
-  "description": "a fine piece of express art",
+  "name": "resty-testy",
+  "description": "RESTful HTTP serving Resty test data",
   "version": "0.0.1",
   "dependencies": {
     "express": "3.x"
