@@ -1,4 +1,4 @@
-Resty [![Build Status](https://drone.io/github.com/micha/resty/status.png)](https://drone.io/github.com/micha/resty/latest)
+Resty [![Stories in Ready][waffle-badge]][waffle-board] [![Build Status][drone-badge]][drone-build]
 =====
 
 *If you use resty and want to help maintain it, please let me know and I'll add you to the repo.*
@@ -401,3 +401,7 @@ scripts that make dealing with JSON data easier.
           <deep>value</deep>
         </test>
 
+[drone-badge]: https://drone.io/github.com/micha/resty/status.png
+[drone-build]: https://drone.io/github.com/micha/resty/latest
+[waffle-board]: http://waffle.io/micha/resty
+[waffle-badge]: https://badge.waffle.io/micha/resty.svg?label=ready&title=Ready
