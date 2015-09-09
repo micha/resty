@@ -102,6 +102,7 @@ function resty() {
         return $ret
       else
         [ -n "$out" ] && echo "$out"
+	return 0
       fi
       ;;
     http://*|https://*)
