@@ -14,7 +14,7 @@ export _resty_path=""
 export _resty_nohistory=""
 
 function resty() {
-  local confdir datadir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query
+  local confdir datadir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query dry
   local -a curlopt
   local -a curlopt2
 
@@ -32,20 +32,21 @@ function resty() {
   h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
   editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
-  
+
   [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
     && _path="$1" && [[ $# > 0 ]] && shift
   [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
-  
+
   j=1
   for i in "$@"; do
     [ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue
     ([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
       && verbose="yes" && continue
     [ "$i" = "-V" ] && vimedit="yes" && continue
+    [ "$i" = "--dry-run" ] && dry="yes" && continue
     [ "$i" = "-Z" ] && raw="yes" && continue
     [ "$i" = "-W" ] && continue
     [ "$i" = "-Q" ] && quote="yes" && continue
@@ -82,6 +83,9 @@ function resty() {
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
       [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
+
+      [ "$dry" = "yes" ] && echo "curl -sLv $opt \"$dat\" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \"${args2[@]}\" \"${curlopt2[@]}\" \"${curlopt[@]}\" \"$_path$query\"" && return 0
+      # TODO: refactor function
       res=$( ( ( (curl -sLv $opt "$dat" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
               "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
