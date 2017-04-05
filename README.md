@@ -27,7 +27,7 @@ Quick Start
 
 You have `curl`, right? Okay.
 
-      $ curl -L http://github.com/micha/resty/raw/master/resty > resty
+      $ curl -L https://raw.githubusercontent.com/micha/resty/master/resty > resty
 
 Source the script before using it. (You can put this line in your `~/.bashrc`
 file if you want, or just paste the contents of the `resty` script right in
