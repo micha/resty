@@ -4,7 +4,7 @@ env:
   - SHELL=zsh
 install:
   # install antigen
-  - curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/bin/antigen.zsh > ~/antigen.zsh
+  - curl -L git.io/antigen > ~/antigen.zsh
   - echo "source ~/antigen.zsh; antigen bundle rylnd/shpec; antigen apply" > ~/.zshrc
   - echo "setopt sh_word_split" > ~/.zshenv
   - zsh ~/.zshrc
