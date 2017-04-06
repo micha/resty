@@ -1,0 +1,28 @@
+# zsh shpec build draft
+language: zsh
+env:
+  - SHELL=zsh
+install:
+  # install antigen
+  - curl -L https://raw.githubusercontent.com/zsh-users/antigen/master/antigen.zsh > ~/antigen.zsh
+  - echo "source ~/antigen.zsh; antigen bundle rylnd/shpec; antigen apply" > ~/.zshrc
+  - echo "setop sh_word_split" > ~/.zshenv
+  - zsh ~/.zshrc
+  - export SHELL=zsh
+  - source ~/.zshrc
+
+  - $HOME/.nvm/nvm.sh
+  - nvm install 6 && nvm use 6
+  - (cd test && npm install)
+
+script:
+  - (cd test && node server.js)&
+  - zsh --version
+  - shpec
+
+before_install:
+  - sudo apt-get install zsh
+  - export SHELL=zsh
+
+notifications:
+  email: false
