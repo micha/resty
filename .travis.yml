@@ -17,7 +17,7 @@ install:
 script:
   - (cd test && node server.js)&
   - zsh --version
-  - zsh -c shpec
+  - (source ~/.zshrc && shpec)
 
 before_install:
   - sudo apt-get install zsh
