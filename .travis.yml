@@ -9,7 +9,6 @@ install:
   - echo "setopt sh_word_split" > ~/.zshenv
   - zsh ~/.zshrc
   - export SHELL=zsh
-  - source ~/.zshrc
 
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
