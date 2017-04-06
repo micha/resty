@@ -68,7 +68,7 @@ function resty-call() {
     local cookies="$_RESTY_DATA_DIR/c"
 
     # §maybe cache
-    local h2t=$((exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
+    local h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
 			  || which html2text || which cat) |tail -n 1) # torename
     local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
@@ -163,7 +163,7 @@ function resty-call() {
 
     # Launch command and retrieved streams
     local res out err ret
-    res=$((((curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
+    res=$( ( ( (curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
 				| sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) |sed 's/^/ERR /' && echo) 2>&1)
 
