@@ -3,7 +3,6 @@ env:
   - SHELL=zsh
 install:
   - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
-  - PATH="$PATH:/usr/local/bin/"
 
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
@@ -11,8 +10,7 @@ install:
 
 script:
   - (cd test && node server.js)&
-  - zsh --version
-  - shpec
+  - /usr/local/bin/shpec
 
 before_install:
   - sudo apt-get install zsh
