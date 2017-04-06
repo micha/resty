@@ -3,6 +3,7 @@ env:
   - SHELL=zsh
 install:
   - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
+  - PATH="$PATH:/usr/local/bin/"
 
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
