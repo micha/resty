@@ -15,7 +15,7 @@ install:
   - (cd test && npm install)
 
 script:
-  - zsh --version
+  - zsh --version ; lynx --version
   - ./.travis-test.zsh
 
 before_install:
