@@ -37,9 +37,10 @@ describe "Resty"
     describe "Viewer"
 
         it "prety format when lynx is installed"
-            output=$(GET /simple.html)
+            output=$(GET /simple.html | tr -d ' ')
             assert match $(which lynx) lynx
-            assert equal "$output" "$(< test/test-data/simple-html-lynx.txt)"
+            assert equal "$output" "$(cat test/test-data/simple-html-lynx.txt | tr -d ' ')"
+            # note : hack to cope with lynx version differencies and different handling of table headers
         end
         it "does not prety format on raw mode"
             output=$(GET /simple.html -Z)
