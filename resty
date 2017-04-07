@@ -180,7 +180,7 @@ function resty-call() {
     else display=cat
     fi
 
-    if [ -n "$out" ]; then out=$(echo "$out" | "$display") ; fi
+    if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
     # todo: also filter elinks and co
     if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
