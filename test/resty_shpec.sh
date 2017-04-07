@@ -26,12 +26,27 @@ describe "Resty"
             assert equal "$output" "hi there"
         end
 
-
     end
 
 
     describe "HTTP Verbs"
         echo "To Be Done"
+
+    end
+
+    describe "Viewer"
+
+        it "prety format when lynx is installed"
+            output=$(GET /simple.html)
+            assert match $(which lynx) lynx
+            assert equal "$output" "$(< test/test-data/simple-html-lynx.txt)"
+        end
+        it "does not prety format on raw mode"
+            output=$(GET /simple.html -Z)
+            assert equal "$output" "$(< test/data/simple.html)"
+        end
+
+
 
     end
 
