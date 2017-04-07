@@ -19,7 +19,7 @@ script:
   - ./.travis-test.zsh
 
 before_install:
-  - sudo apt-get install zsh
+  - sudo apt-get install zsh lynx
   - export SHELL=zsh
 
 notifications:
