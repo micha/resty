@@ -15,7 +15,6 @@ install:
   - (cd test && npm install)
 
 script:
-  - (cd test && node server.js)&
   - zsh --version
   - ./.travis-test.zsh
 

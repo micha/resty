@@ -1,6 +1,9 @@
 #!/bin/zsh
-echo "Sourcing ZshRc"
+
 source ~/.zshrc
 
-echo "Launching Test"
+cd test && node server.js &
+sleep 1
+
+cd ..
 shpec
