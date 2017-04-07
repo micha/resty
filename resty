@@ -68,8 +68,8 @@ function resty-call() {
     local cookies="$_RESTY_DATA_DIR/c"
 
     # §maybe cache
-    local h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
-			  || which html2text || which cat) |tail -n 1) # torename
+    local h2t="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
+			  || which html2text || which cat) |tail -n 1)"  # html to text
     local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
     if [[ "POST PUT TRACE DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
