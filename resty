@@ -35,11 +35,11 @@ function resty() {
 
     local host="$_RESTY_DATA_DIR/host"
 
-    local url=$1
+    local url=$1; shift
 
     case "$url" in
 	http://*|https://*)
-	    _resty_opts=$(printf '%q ' "${curlopt[@]}")
+	    _resty_opts=$(printf '%q ' "${@[@]}")
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
