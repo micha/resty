@@ -103,9 +103,12 @@ describe "Resty"
             output=$(GET /simple.html -Z)
             assert equal "$output" "$(< test/data/simple.html)"
         end
-
-
-
+        it "json pretty-print formatting with pypp"
+            output=$(GET /simple.json | ./pypp)
+            assert equal "$output" '{\n    "bar": {
+        "cat": "meow",\n        "dog": "woof",\n        "fish": "banana"\n    },\n    "foo": [
+        1,\n        2,\n        3\n    ]\n}'
+        end
     end
 
     describe "Options"
@@ -113,13 +116,22 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" "get"
-            assert match "$erroroutput" "content-type" # TODO : later once shpec better matcher pass text
-            assert match "$erroroutput" "cache-control"
+            assert match "$erroroutput" "content-type:\ text/plain\;\ charset=utf-8"
+            assert match "$erroroutput" "cache-control:\ no-cache"
         end
 
         it "POST with data sent in query string"
             output=$(POST /echo -d foo=bar -G)
             assert equal "$output" 'post\n\n{"foo":"bar"}'
+        end
+
+        it "POST with extra header and basic auth, data in message body"
+            output=$(POST /echo -u "user:secret" -H "Accept: application/json" \
+                     -v < test/data/simple.json 2> /tmp/resty-getheader-error)
+            erroroutput=$(< /tmp/resty-getheader-error)
+            assert equal "$output" 'post\n{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}'
+            assert match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert match "$erroroutput" "Accept:\ application/json"
         end
 
     end
