@@ -14,6 +14,9 @@ server.register(require('inert'), (err) => {
         if(request.payload){
             result += "\n" + request.payload
         }
+        if(JSON.stringify(request.query) !== '{}') {
+            result += "\n" + JSON.stringify(request.query)
+        }
         reply(result).header('Content-Type', 'text/plain');
 
     };
