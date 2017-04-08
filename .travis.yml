@@ -1,14 +1,17 @@
 # zsh shpec build draft
-language: zsh
+language: sh
 env:
-  - SHELL=zsh
+  matrix:
+    - SHELL=bash
+    - SHELL=zsh
+
 install:
   # install antigen
   - curl -L git.io/antigen > ~/antigen.zsh
   - echo "source ~/antigen.zsh; antigen bundle rylnd/shpec; antigen apply" > ~/.zshrc
   - echo "setopt sh_word_split" > ~/.zshenv
   - zsh ~/.zshrc
-  - export SHELL=zsh
+  - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
 
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
@@ -16,7 +19,8 @@ install:
 
 script:
   - zsh --version ; lynx --version
-  - ./.travis-test.zsh
+  - [[ $SHELL -eq "zsh" ]] && ./.travis-test.zsh
+  - [[ $SHELL -eq "bash" ]] && /usr/local/bin/shpec
 
 before_install:
   - sudo apt-get install zsh lynx
