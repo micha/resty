@@ -136,4 +136,24 @@ describe "Resty"
 
     end
 
+    describe "Resty Global options"
+        it "Setting new options"
+            resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
+            output=$(GET /echo -v 2> /tmp/resty-getheader-error)
+            erroroutput=$(< /tmp/resty-getheader-error)
+            assert equal "$output" "get"
+            assert match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert match "$erroroutput" "Accept:\ application/json"
+        end
+
+        it "Resetting options"
+            resty localhost:4004 2> /dev/null
+            output=$(GET /echo -v 2> /tmp/resty-getheader-error)
+            erroroutput=$(< /tmp/resty-getheader-error)
+            assert equal "$output" "get"
+            assert no_match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert no_match "$erroroutput" "Accept:\ application/json"
+        end
+
+    end
 end
