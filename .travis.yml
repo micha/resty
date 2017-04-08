@@ -17,13 +17,21 @@ install:
   - nvm install 6 && nvm use 6
   - (cd test && npm install)
 
-script:
   - lynx --version
+
+script:
+  - (cd test && node server.js &)
   - |
-        $SHELL --version
+        echo $SHELL && $SHELL --version
         if [ "$SHELL" = "zsh" ]; then
-          ./.travis-test.zsh
+          echo "Run Zsh test"
+
+          source ~/.zshrc
+          which shpec
+          shpec
         elif [ "$SHELL" = "bash"]]; then
+          echo "Run Bash test"
+          which shpec
           /usr/local/bin/shpec
         fi
 before_install:
