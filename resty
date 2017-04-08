@@ -73,8 +73,8 @@ function resty-call() {
 
     # §maybe cache
     local h2t="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
-			  || which html2text || which cat) |tail -n 1)"  # html to text
-    local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
+			  || which html2text || which cat) |tail -n 1)" brew install shellcheck
+    local editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
     if [[ "POST PUT TRACE PATCH DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
