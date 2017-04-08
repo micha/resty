@@ -35,17 +35,38 @@ describe "Resty"
             output=$(GET /echo)
             assert equal "$output" "get"
         end
+        it "GET with query string"
+            output=$(GET "/echo?a=b" -Q)
+            assert equal "$output" 'get\n{"a":"b"}'
+        end
+
+        it "GET with query string by argument"
+            output=$(GET /echo -q "a=b")
+            assert equal "$output" 'get\n{"a":"b"}'
+        end
         it "POST with data"
             output=$(POST /echo "$data")
             assert equal "$output" "post\n$data"
+        end
+        it "POST with data and query parameter"
+            output=$(POST /echo "$data" -q "a=b")
+            assert equal "$output" 'post\n'"$data"'\n{"a":"b"}'
         end
         it "PUT with data"
             output=$(PUT /echo "$data")
             assert equal "$output" "put\n$data"
         end
+        it "PUT with data and query parameter"
+            output=$(PUT /echo "$data" -q "a=b")
+            assert equal "$output" 'put\n'"$data"'\n{"a":"b"}'
+        end
         it "PATCH with data"
             output=$(PATCH /echo "$data")
             assert equal "$output" "patch\n$data"
+        end
+        it "PATCH with data and query parameter"
+            output=$(PATCH /echo "$data" -q "a=b")
+            assert equal "$output" 'patch\n'"$data"'\n{"a":"b"}'
         end
         it "DELETE"
             output=$(DELETE /echo)
