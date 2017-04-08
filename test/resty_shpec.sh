@@ -63,6 +63,10 @@ describe "Resty"
             output=$(OPTIONS /echo)
             assert equal "$output" "options"
         end
+        it "HEAD"
+            output=$(HEAD /echo)
+            assert match  "$output" "200"
+        end
 
     end
 
