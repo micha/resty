@@ -17,7 +17,8 @@ describe "Resty"
 
         # Launch server
         resty localhost:4004 2>/dev/null
-
+        GET /
+        GET / -V
         it "can access to it with a get"
             output=$(GET / 2>&1)
             assert present "$output"
