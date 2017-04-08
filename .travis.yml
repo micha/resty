@@ -29,7 +29,7 @@ script:
           source ~/.zshrc
           which shpec
           shpec
-        elif [ "$SHELL" = "bash"]]; then
+        elif [ "$SHELL" = "bash" ]; then
           echo "Run Bash test"
           which shpec
           /usr/local/bin/shpec
