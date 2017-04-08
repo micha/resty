@@ -30,7 +30,39 @@ describe "Resty"
 
 
     describe "HTTP Verbs"
-        echo "To Be Done"
+        data='data here'
+        it "GET"
+            output=$(GET /echo)
+            assert equal "$output" "get"
+        end
+        it "POST with data"
+            output=$(POST /echo "$data")
+            assert equal "$output" "post\n$data"
+        end
+        it "PUT with data"
+            output=$(PUT /echo "$data")
+            assert equal "$output" "put\n$data"
+        end
+        it "PATCH with data"
+            output=$(PATCH /echo "$data")
+            assert equal "$output" "patch\n$data"
+        end
+        it "DELETE"
+            output=$(DELETE /echo <<< "")
+            assert equal "$output" "delete"
+        end
+        it "DELETE with data"
+            output=$(DELETE /echo "$data")
+            assert equal "$output" "delete\n$data"
+        end
+        it "TRACE"
+            output=$(TRACE /echo "$data")
+            assert equal "$output" "trace\n$data"
+        end
+        it "OPTIONS"
+            output=$(OPTIONS /echo)
+            assert equal "$output" "options"
+        end
 
     end
 

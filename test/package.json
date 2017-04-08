@@ -24,7 +24,8 @@
   "homepage": "https://github.com/micha/resty#readme",
   "dependencies": {
     "hapi": "^16.1.1",
-    "inert": "^4.2.0"
+    "inert": "^4.2.0",
+    "joi": "^10.4.1"
   },
   "devDependencies": {
     "code": "^4.0.0",
