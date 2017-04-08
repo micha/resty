@@ -60,8 +60,7 @@ function resty() {
 function resty-call() {
     if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
 
-    local method
-    method="$1"; shift
+    local method; method="$1"; shift
     if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ "$method" ]] ; then # this is not good
         echo "First arg must be an HTTP verb, '$method' isn't" >&2
         return 1
@@ -72,9 +71,9 @@ function resty-call() {
     local cookies="$_RESTY_DATA_DIR/c"
 
     # §maybe cache
-    local h2t="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
+    local h2t;h2t="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
 			  || which html2text || which cat) |tail -n 1)"
-    local editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
+    local editor;editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
     if [[ "POST PUT TRACE PATCH DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
 
@@ -83,11 +82,11 @@ function resty-call() {
     fi
 
     if [[ "$1" =~ ^/ ]] ; then  # retrieve path
-        local _path="$1"
+        local _path; _path="$1"
         [[ $# > 0 ]] && shift
     fi
     if [[ ! "$1" =~ ^- ]] ; then  # retrieve data
-        local body="$1"
+        local body; body="$1"
         [[ $# > 0 ]] && shift
     fi
 
@@ -128,25 +127,25 @@ function resty-call() {
 	    _RESTY_PATH=$_path
     fi
 
-    local domain=$(echo -n "$_RESTY_HOST" \
+    local domain; domain=$(echo -n "$_RESTY_HOST" \
 		    | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    local _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
+    local _path; _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
 
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
 
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
         if [ ! -t 0 ] ; then # retrieve what stdin hold
-           local body="@-"
+           local body; body="@-"
         else
-           local body=""
+           local body; body=""
         fi
     fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
-        local tmpf=$(mktemp /tmp/resty.XXXXXX)
+        local tmpf; tmpf=$(mktemp /tmp/resty.XXXXXX)
         [ -t 0 ] || cat > $tmpf
         (exec < /dev/tty; "$editor" $tmpf)
-        local body=$(cat $tmpf)
+        local body; body=$(cat $tmpf)
         rm -f $tmpf
     fi
 
