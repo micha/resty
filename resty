@@ -23,6 +23,7 @@ export _RESTY_DATA_DIR _RESTY_CONF_DIR;
 
 
 function resty() {
+    echo args: $@  >&2
     if [ -n "$XDG_CONFIG_HOME" ]; then
         _RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
         _RESTY_DATA_DIR="$XDG_DATA_HOME/resty"
@@ -36,6 +37,7 @@ function resty() {
 
     local url=$1
     shift
+    echo url: $url >&2
     local args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
@@ -50,6 +52,7 @@ function resty() {
 		&& export _RESTY_HOST="$url"
 	    ;;
 	*)
+
 	    resty "http://$url" "${args[@]}"
 	    ;;
     esac
