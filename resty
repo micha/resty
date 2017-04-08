@@ -157,7 +157,6 @@ function resty-call() {
     if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
 	## §maybe: cache this when resty)
 	local cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-	# echo $cmd
 	eval $cmd
     fi
 
@@ -179,8 +178,8 @@ function resty-call() {
     then display=$h2t
     else display=cat
     fi
-
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
+
 
     # todo: also filter elinks and co
     if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
