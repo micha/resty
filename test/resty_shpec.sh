@@ -1,12 +1,13 @@
-
+[[ "$SHELL" == "bash" ]] && shopt -s expand_aliases # needed for bash
 
 describe "Resty"
 
     describe "Basic"
         it "load resty function without error"
-           . ./resty -W # source resty with no history mode
+           source ./resty -W # source resty with no history mode
            assert equal $? 0
         end
+
 
         it "can define a target"
             output=$(resty localhost:4004 2>&1 )
@@ -154,6 +155,7 @@ describe "Resty"
             assert no_match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
             assert no_match "$erroroutput" "Accept:\ application/json"
         end
+
 
     end
 end
