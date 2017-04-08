@@ -35,9 +35,9 @@ function resty() {
 
     local host="$_RESTY_DATA_DIR/host"
     echo '$1' $1
-    local url="$1"
-    shift
-    echo '$1' $1
+    local url
+    url="$1"; shift
+    echo 'host' $host
     echo url: $url >&2
     local args=() j=1
     for i in "$@"; do
