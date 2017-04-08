@@ -60,7 +60,8 @@ function resty() {
 function resty-call() {
     if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
 
-    local method="$1"; shift
+    local method
+    method="$1"; shift
     if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ "$method" ]] ; then # this is not good
         echo "First arg must be an HTTP verb, '$method' isn't" >&2
         return 1
