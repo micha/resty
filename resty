@@ -159,7 +159,8 @@ function resty-call() {
 
     if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
         ## §maybe: cache this when resty)
-        local cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
+        local cmd
+        cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
         eval $cmd
     fi
 
