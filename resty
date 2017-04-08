@@ -34,9 +34,10 @@ function resty() {
     mkdir -p "$_RESTY_CONF_DIR"
 
     local host="$_RESTY_DATA_DIR/host"
-
-    local url=$1
+    echo '$1' $1
+    local url="$1"
     shift
+    echo '$1' $1
     echo url: $url >&2
     local args=() j=1
     for i in "$@"; do
