@@ -11,7 +11,7 @@ install:
   - echo "source ~/antigen.zsh; antigen bundle rylnd/shpec; antigen apply" > ~/.zshrc
   - echo "setopt sh_word_split" > ~/.zshenv
   - zsh ~/.zshrc
-  - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
+  - sh -c "`curl -L https://raw.github.com/rylnd/shpec/master/install.sh` $HOME"
 
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
@@ -25,14 +25,11 @@ script:
         echo $SHELL && $SHELL --version
         if [ "$SHELL" = "zsh" ]; then
           echo "Run Zsh test"
-
-          source ~/.zshrc
-          which shpec
-          shpec
+          ./.travis-test.zsh
         elif [ "$SHELL" = "bash" ]; then
           echo "Run Bash test"
           which shpec
-          /usr/local/bin/shpec
+          $HOME/shpec
         fi
 before_install:
   - sudo apt-get install zsh lynx
