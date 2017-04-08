@@ -20,7 +20,8 @@ install:
   - lynx --version
 
 script:
-  - (cd test && node server.js && sleep 2 &)
+  - (cd test && node server.js &)
+  - sleep 1
   - |
         echo $SHELL && $SHELL --version
         if [ "$SHELL" = "zsh" ]; then
