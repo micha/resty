@@ -23,7 +23,6 @@ export _RESTY_DATA_DIR _RESTY_CONF_DIR;
 
 
 function resty() {
-    echo args: $@  >&2
     if [ -n "$XDG_CONFIG_HOME" ]; then
         _RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
         _RESTY_DATA_DIR="$XDG_DATA_HOME/resty"
@@ -34,11 +33,8 @@ function resty() {
     mkdir -p "$_RESTY_CONF_DIR"
 
     local host="$_RESTY_DATA_DIR/host"
-    echo '$1' $1
     local url
     url="$1"; shift
-    echo 'host' $host
-    echo url: $url >&2
     local args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
