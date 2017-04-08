@@ -50,6 +50,7 @@ function resty() {
 		&& export _RESTY_HOST="$url"
 	    ;;
 	*)
+	echo yo
 	    resty "http://$url" "${args[@]}"
 	    ;;
     esac
