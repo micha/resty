@@ -82,13 +82,13 @@ function resty-call() {
 	(mkdir -p "$cookies"; echo "http://localhost*" > "$host")
     fi
 
-    if [[ "$1"  =~ "^/" ]] ; then  # retrieve path
-	local _path="$1"
-	[[ $# > 0 ]] && shift
+    if [[ "$1" =~ ^/ ]] ; then  # retrieve path
+        local _path="$1"
+        [[ $# > 0 ]] && shift
     fi
-    if [[ ! "$1"  =~ "^-" ]] ; then  # retrieve data
-	local body="$1"
-	[[ $# > 0 ]] && shift
+    if [[ ! "$1" =~ ^- ]] ; then  # retrieve data
+        local body="$1"
+        [[ $# > 0 ]] && shift
     fi
 
     local -a curlopt_cmd curlopt_file
