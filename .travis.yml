@@ -18,10 +18,14 @@ install:
   - (cd test && npm install)
 
 script:
-  - zsh --version ; lynx --version
-  - [[ $SHELL -eq "zsh" ]] && ./.travis-test.zsh
-  - [[ $SHELL -eq "bash" ]] && /usr/local/bin/shpec
-
+  - lynx --version
+  - |
+        $SHELL --version
+        if [ "$SHELL" = "zsh" ]; then
+          ./.travis-test.zsh
+        elif [ "$SHELL" = "bash"]]; then
+          /usr/local/bin/shpec
+        fi
 before_install:
   - sudo apt-get install zsh lynx
   - export SHELL=zsh
