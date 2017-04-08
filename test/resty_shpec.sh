@@ -73,7 +73,7 @@ describe "Resty"
             assert equal "$output" "delete"
         end
         it "DELETE with data"
-            output=$(DELETE /echo "$data" --body )
+            output=$(DELETE /echo "$data")
             assert equal "$output" "delete\n$data"
         end
         it "TRACE"
