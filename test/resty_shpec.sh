@@ -48,11 +48,11 @@ describe "Resty"
             assert equal "$output" "patch\n$data"
         end
         it "DELETE"
-            output=$(DELETE /echo <<< "")
+            output=$(DELETE /echo)
             assert equal "$output" "delete"
         end
         it "DELETE with data"
-            output=$(DELETE /echo "$data")
+            output=$(DELETE /echo "$data" --body )
             assert equal "$output" "delete\n$data"
         end
         it "TRACE"

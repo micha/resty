@@ -72,7 +72,7 @@ function resty-call() {
 			  || which html2text || which cat) |tail -n 1)"  # html to text
     local editor=$((exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
-    if [[ "POST PUT TRACE DELETE PATCH" =~ "$method" ]]; then local hasbody="yes" ;fi
+    if [[ "POST PUT TRACE PATCH" =~ "$method" ]]; then local hasbody="yes" ;fi
 
     if [ -d "$cookies" ] ; then   # retrieve cookie
 	(mkdir -p "$cookies"; echo "http://localhost*" > "$host")
@@ -100,6 +100,7 @@ function resty-call() {
             -W) ;; # §todo: check why nothing?
             -Q) quote="yes" ;;
             -q) maybe_query="yes" ;;
+            --body) hasbody="yes";;
             *) curlopt_cmd+=("$opt")
         esac
         ## idea: add --json, other option.
