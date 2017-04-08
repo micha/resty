@@ -36,17 +36,21 @@ function resty() {
     local host="$_RESTY_DATA_DIR/host"
 
     local url=$1; shift
+    local args=() j=1
+    for i in "$@"; do
+        args[j]="$i" && j=$((j + 1))
+    done
 
     case "$url" in
 	http://*|https://*)
-	    _resty_opts=$(printf '%q ' "${@[@]}")
+	    _resty_opts=$(printf '%q ' "${args[@]}")
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
 		&& export _RESTY_HOST="$url"
 	    ;;
 	*)
-	    resty "http://$url" "${@[@]}"
+	    resty "http://$url" "${args[@]}"
 	    ;;
     esac
 }
