@@ -109,7 +109,18 @@ describe "Resty"
     end
 
     describe "Options"
-        echo "To be done"
+         it "GET with headers"
+            output=$(GET /echo -v 2> /tmp/resty-getheader-error)
+            erroroutput=$(< /tmp/resty-getheader-error)
+            assert equal "$output" "get"
+            assert match "$erroroutput" "content-type" # TODO : later once shpec better matcher pass text
+            assert match "$erroroutput" "cache-control"
+        end
+
+        it "POST with data sent in query string"
+            output=$(POST /echo -d foo=bar -G)
+            assert equal "$output" 'post\n\n{"foo":"bar"}'
+        end
 
     end
 
