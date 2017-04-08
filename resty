@@ -90,38 +90,38 @@ function resty-call() {
     local -a curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose
     for opt in "$@"; do
-	if [ -n "$maybe_query" -a -z "$query" ] ; then query="?$opt"; continue; fi
+        if [ -n "$maybe_query" -a -z "$query" ] ; then query="?$opt"; continue; fi
 
-	case $opt in
-	    --verbose|-v) verbose="yes";;
-		# TODO; try adapt ; echo "$opt" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
-	    -V) vimedit="yes" ;;
-	    -Z) raw="yes" ;;
-	    -W) ;; # §todo: check why nothing?
-	    -Q) quote="yes" ;;
-	    -q) maybe_query="yes" ;;
-	    *) curlopt_cmd+=("$opt")
-	esac
-	## idea: add --json, other option.
+        case $opt in
+            --verbose|-v) verbose="yes";;
+            # TODO; try adapt ; echo "$opt" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
+            -V) vimedit="yes" ;;
+            -Z) raw="yes" ;;
+            -W) ;; # §todo: check why nothing?
+            -Q) quote="yes" ;;
+            -q) maybe_query="yes" ;;
+            *) curlopt_cmd+=("$opt")
+        esac
+        ## idea: add --json, other option.
     done
 
     if [ -z "$quote" ]; then # replace special char with codes
-	_path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
+	    _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
     fi
 
     if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
     if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
 
     if [ "$method" = "-v" ] ; then # ??
-	echo "$_RESTY_HOST $_resty_opts"
-	return
+        echo "$_RESTY_HOST $_resty_opts"
+        return
     fi
     if [ -z "$method" ] ; then # return since no method
-	echo "$_RESTY_HOST"
-	return
+        echo "$_RESTY_HOST"
+        return
     fi
     if [ -n "$_path" ] ; then # update current path
-	_RESTY_PATH=$_path
+	    _RESTY_PATH=$_path
     fi
 
     local domain=$(echo -n "$_RESTY_HOST" \
@@ -139,25 +139,25 @@ function resty-call() {
     fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
-	local tmpf=$(mktemp /tmp/resty.XXXXXX)
-	[ -t 0 ] || cat > $tmpf
-	(exec < /dev/tty; "$editor" $tmpf)
-	local body=$(cat $tmpf)
-	rm -f $tmpf
+        local tmpf=$(mktemp /tmp/resty.XXXXXX)
+        [ -t 0 ] || cat > $tmpf
+        (exec < /dev/tty; "$editor" $tmpf)
+        local body=$(cat $tmpf)
+        rm -f $tmpf
     fi
 
     if [ -n "$body" ] && [ "$body" != "@-" ] ; then [[ $# > 0 ]] && shift;fi
     if [ "$1" = "-Z" ] ; then  raw="yes" ; [[ $# > 0 ]] && shift ;fi
     if [ -n "$body" ] ; then curl_opt="--data-binary" ;fi
     if [ "$method" = "HEAD" ] ; then
-	curl_opt="-I"
-	raw="yes"
+        curl_opt="-I"
+        raw="yes"
     fi
 
     if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
-	## §maybe: cache this when resty)
-	local cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
-	eval $cmd
+        ## §maybe: cache this when resty)
+        local cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null |sed 's/^ *//' |grep ^$method |cut -b $((${#method}+2))-) )"
+        eval $cmd
     fi
 
     # Launch command and retrieved streams
@@ -183,15 +183,15 @@ function resty-call() {
 
     # todo: also filter elinks and co
     if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
-	out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
-				-e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+        out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
+                    -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
     fi
 
     if [ "$ret" != "2" ]; then
-	[ -n "$out" ] && echo "$out" 1>&2
-	return $ret
+        [ -n "$out" ] && echo "$out" 1>&2
+        return $ret
     else
-	[ -n "$out" ] && echo "$out"
+        [ -n "$out" ] && echo "$out"
     fi
 
 }
