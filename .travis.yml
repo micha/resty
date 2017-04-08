@@ -20,7 +20,7 @@ install:
   - lynx --version
 
 script:
-  - (cd test && node server.js && sleep 1 &)
+  - (cd test && node server.js && sleep 2 &)
   - |
         echo $SHELL && $SHELL --version
         if [ "$SHELL" = "zsh" ]; then
@@ -28,7 +28,6 @@ script:
           ./.travis-test.zsh
         elif [ "$SHELL" = "bash" ]; then
           echo "Run Bash test"
-          which shpec
           $HOME/shpec
         fi
 before_install:
