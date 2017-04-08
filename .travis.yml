@@ -28,7 +28,6 @@ script:
         fi
 before_install:
   - sudo apt-get install zsh lynx
-  - export SHELL=zsh
 
 cache: apt
 
