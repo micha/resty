@@ -132,11 +132,11 @@ function resty-call() {
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
 
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
-	if [ -t 0 ] ; then # retrieve what stdin hold
-	   local body="@-"
-	else
-	   local body=""
-	fi
+        if [ ! -t 0 ] ; then # retrieve what stdin hold
+           local body="@-"
+        else
+           local body=""
+        fi
     fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
