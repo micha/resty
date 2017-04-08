@@ -11,7 +11,6 @@ server.register(require('inert'), (err) => {
 
     const echoHandler = function (request, reply){
         let result = request.method
-        console.log(request.payload)
         if(request.payload){
             result += "\n" + request.payload
         }
@@ -20,7 +19,7 @@ server.register(require('inert'), (err) => {
     };
 
     server.route({
-        method: ['GET'],
+        method: 'GET',
         path: '/echo',
         handler: echoHandler
     });
