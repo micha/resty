@@ -170,8 +170,7 @@ function resty-call() {
     local res out err ret
     res=$(curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
-		     2> >(sed -E 's/^/ERR /') > >(sed -E 's/^/OUT /') )
-
+		     2> >(sed 's/^/ERR /') > >(sed 's/^/OUT /') )
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
     err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
     ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
