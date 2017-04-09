@@ -124,6 +124,7 @@ describe "Resty"
         it "POST with data sent in query string"
             output=$(POST /echo -d 'foo=bar' -G)
             assert equal "$output" 'post\n\n{"foo":"bar"}'
+            echo "     note a strange behavior on osx where query send has a '&' in it"
         end
 
         it "POST with extra header and basic auth, data in message body"
