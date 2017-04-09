@@ -85,8 +85,9 @@ function resty-call() {
         local _path; _path="$1"
         [[ $# > 0 ]] && shift
     fi
+    local body
     if [[ ! "$1" =~ ^- ]] ; then  # retrieve data
-        local body; body="$1"
+         body="$1"
         [[ $# > 0 ]] && shift
     fi
 
@@ -136,9 +137,9 @@ function resty-call() {
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
         if [ ! -t 0 ] ; then # retrieve what stdin hold
-           local body; body="@-"
+           body="@-"
         else
-           local body; body=""
+           body=""
         fi
     fi
 
@@ -146,7 +147,7 @@ function resty-call() {
         local tmpf; tmpf=$(mktemp /tmp/resty.XXXXXX)
         [ -t 0 ] || cat > $tmpf
         (exec < /dev/tty; "$editor" $tmpf)
-        local body; body=$(cat $tmpf)
+        body=$(cat $tmpf)
         rm -f $tmpf
     fi
 
