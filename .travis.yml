@@ -26,9 +26,6 @@ script:
         echo $SHELL && $SHELL --version
         if [ "$SHELL" = "zsh" ]; then
           echo "Run Zsh test"
-          $HOME/shpec
-          echo attempt
-          rm $HOME/shpec
           ./.travis-test.zsh
         elif [ "$SHELL" = "bash" ]; then
           echo "Run Bash test"

@@ -32,10 +32,10 @@ function resty() {
     fi
     mkdir -p "$_RESTY_CONF_DIR"
 
-    local host="$_RESTY_DATA_DIR/host"
+    local host; host="$_RESTY_DATA_DIR/host"
     local url
     url="$1"; shift
-    local args=() j=1
+    local args j; args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
     done
@@ -75,10 +75,10 @@ function resty-call() {
 			  || which html2text || which cat) |tail -n 1)"
     local editor;editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
-    if [[ "POST PUT TRACE PATCH DELETE" =~ "$method" ]]; then local hasbody="yes" ;fi
+    if [[ "POST PUT TRACE PATCH DELETE" =~ "$method" ]]; then local hasbody; hasbody="yes" ;fi
 
     if [ -d "$cookies" ] ; then   # retrieve cookie
-	(mkdir -p "$cookies"; echo "http://localhost*" > "$host")
+	    (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
     fi
 
     if [[ "$1" =~ ^/ ]] ; then  # retrieve path
@@ -129,10 +129,10 @@ function resty-call() {
 
     local domain; domain=$(echo -n "$_RESTY_HOST" \
 		    | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    local _path; _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
+    local _path
+    _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
 
     eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
-
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
         if [ ! -t 0 ] ; then # retrieve what stdin hold
            local body; body="@-"

@@ -17,8 +17,7 @@ describe "Resty"
 
         # Launch server
         resty localhost:4004 2>/dev/null
-        GET /
-        GET / -V
+
         it "can access to it with a get"
             output=$(GET / 2>&1)
             assert present "$output"
@@ -118,8 +117,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" "get"
-            assert match "$erroroutput" "content-type:\ text/plain\;\ charset=utf-8"
-            assert match "$erroroutput" "cache-control:\ no-cache"
+            assert match "$erroroutput" "content-type:"
+            assert match "$erroroutput" "cache-control:"
         end
 
         it "POST with data sent in query string"
@@ -141,8 +140,8 @@ describe "Resty"
     describe "Resty Global options"
         it "Setting new options"
             resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
-            output=$(GET /echo -v 2> /tmp/resty-getheader-error)
-            erroroutput=$(< /tmp/resty-getheader-error)
+            output=$(GET /echo -v 2> /tmp/resty-newopt-error)
+            erroroutput=$(< /tmp/resty-newopt-error)
             assert equal "$output" "get"
             assert match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
             assert match "$erroroutput" "Accept:\ application/json"
@@ -150,8 +149,8 @@ describe "Resty"
 
         it "Resetting options"
             resty localhost:4004 2> /dev/null
-            output=$(GET /echo -v 2> /tmp/resty-getheader-error)
-            erroroutput=$(< /tmp/resty-getheader-error)
+            output=$(GET /echo -v 2> /tmp/resty-resetopt-error)
+            erroroutput=$(< /tmp/resty-resetopt-error)
             assert equal "$output" "get"
             assert no_match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
             assert no_match "$erroroutput" "Accept:\ application/json"
