@@ -15,7 +15,8 @@ server.register(require('inert'), (err) => {
             result += "\n" + request.payload
         }
         if(JSON.stringify(request.query) !== '{}') {
-            result += "\n" + JSON.stringify(request.query)
+            result += "\n" + JSON.stringify(request.query).replace('"":"",', '')
+            // note: hack to avoid empty query string to be printed: '&a=b'
         }
         reply(result).header('Content-Type', 'text/plain');
 
