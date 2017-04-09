@@ -83,7 +83,7 @@ function resty-call() {
 
     if [[ "$1" =~ ^/ ]] ; then  # retrieve path
         local _path; _path="$1"
-        [[ $# > 0 ]] && shift
+        shift
     fi
     local body
     if [[ ! "$1" =~ ^- ]] ; then  # retrieve data
@@ -168,9 +168,9 @@ function resty-call() {
 
     # Launch command and retrieved streams
     local res out err ret
-    res=$( ( ( (curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
+    res=$(curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
-				| sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) |sed 's/^/ERR /' && echo) 2>&1)
+		     2> >(sed -E 's/^/ERR /') > >(sed -E 's/^/OUT /') )
 
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
     err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
