@@ -25,7 +25,7 @@ Quick Start
 
 You have `curl`, right? Okay.
 
-      $ curl -L http://github.com/micha/resty/raw/master/resty > resty
+      $ curl -L https://raw.githubusercontent.com/micha/resty/master/resty > resty
 
 Source the script before using it. (You can put this line in your `~/.bashrc`
 file if you want, or just paste the contents of the `resty` script right in
@@ -365,6 +365,8 @@ Since resty creates the REST verb functions in the shell, when using it from a s
       GET /users | jsawk 'this.disabled = false' | PUT
 
 Here the `-W` option was used when loading the script to prevent writing to the history file and an initial URI base was set at the same time. Then a JSON file was fetched, edited using [jsawk](http://github.com/micha/jsawk), and re-uploaded to the server.
+
+To assign the response of resty to a variable you can you do for example: `VAR="$(GET /some/request)"`. Note that the quote symbol (`"`) around the subcommand is necessary if the output contains spaces.
 
 Working With JSON or XML Data
 =============================
