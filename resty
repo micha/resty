@@ -61,7 +61,7 @@ function resty-call() {
     if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
 
     local method; method="$1"; shift
-    if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ "$method" ]] ; then # this is not good
+    if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ $method ]] ; then # this is not good
         echo "First arg must be an HTTP verb, '$method' isn't" >&2
         return 1
     fi
@@ -75,7 +75,7 @@ function resty-call() {
 			  || which html2text || which cat) |tail -n 1)"
     local editor;editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
-    if [[ "POST PUT TRACE PATCH DELETE" =~ "$method" ]]; then local hasbody; hasbody="yes" ;fi
+    if [[ "POST PUT TRACE PATCH DELETE" =~ $method ]]; then local hasbody; hasbody="yes" ;fi
 
     if [ -d "$cookies" ] ; then   # retrieve cookie
 	    (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
@@ -88,13 +88,13 @@ function resty-call() {
     local body
     if [[ ! "$1" =~ ^- ]] ; then  # retrieve data
          body="$1"
-        [[ $# > 0 ]] && shift
+        [[ $# -gt 0 ]] && shift
     fi
 
     local -a curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose
     for opt in "$@"; do
-        if [ -n "$maybe_query" -a -z "$query" ] ; then query="?$opt"; continue; fi
+        if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
 
         case $opt in
             --verbose|-v) verbose="yes";;
@@ -113,7 +113,7 @@ function resty-call() {
 	    _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
     fi
 
-    if [[ "HEAD OPTIONS" =~ "$method" ]] ; then raw="yes" ; fi
+    if [[ "HEAD OPTIONS" =~ $method ]] ; then raw="yes" ; fi
     if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
 
     if [ "$method" = "-v" ] ; then # ??
@@ -145,14 +145,14 @@ function resty-call() {
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
         local tmpf; tmpf=$(mktemp /tmp/resty.XXXXXX)
-        [ -t 0 ] || cat > $tmpf
-        (exec < /dev/tty; "$editor" $tmpf)
-        body=$(cat $tmpf)
-        rm -f $tmpf
+        [ -t 0 ] || cat > "$tmpf"
+        (exec < /dev/tty; "$editor" "$tmpf")
+        body=$(cat "$tmpf")
+        rm -f "$tmpf"
     fi
 
-    if [ -n "$body" ] && [ "$body" != "@-" ] ; then [[ $# > 0 ]] && shift;fi
-    if [ "$1" = "-Z" ] ; then  raw="yes" ; [[ $# > 0 ]] && shift ;fi
+    if [ -n "$body" ] && [ "$body" != "@-" ] ; then [[ $# -gt 0 ]] && shift;fi
+    if [ "$1" = "-Z" ] ; then  raw="yes" ; [[ $# -gt 0 ]] && shift ;fi
     if [ -n "$body" ] ; then curl_opt="--data-binary" ;fi
     if [ "$method" = "HEAD" ] ; then
         curl_opt="-I"
@@ -163,20 +163,20 @@ function resty-call() {
         ## §maybe: cache this when resty)
         local cmd
         cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
-                      | grep ^$method | cut -b $((${#method}+2))-) )"
-        eval $cmd
+                      | grep "^$method" | cut -b $((${#method}+2))-) )"
+        eval "$cmd"
     fi
 
     # Launch command and retrieved streams
     local res out err ret
-    res=$(curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
+    res=$(curl -sLv $curl_opt "$body" -X "$method" -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
 		     2> >(sed 's/^/ERR /' ; echo) > >(sed 's/^/OUT /' ; echo) )
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
     err=$(sed '/^ERR /s/^....//p; d' <<< "$res" )
     ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
 
-    if [ -n "$err" -a -n "$verbose" ]; then echo "$err" 1>&2 ; fi
+    if [ -n "$err" ] && [ -n "$verbose" ]; then echo "$err" 1>&2 ; fi
 
 
     local display
@@ -188,14 +188,14 @@ function resty-call() {
 
 
     # todo: also filter elinks and co
-    if  [[ ! "lynx" =~ "$display" ]] ; then # perlicize to make it more readable
+    if  [[ ! "lynx" =~ $display ]] ; then # perlicize to make it more readable
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
                     -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
     fi
 
     if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" 1>&2
-        return $ret
+        return "$ret"
     else
         [ -n "$out" ] && echo "$out"
         return 0
@@ -249,6 +249,6 @@ function resty-trace() {
 }
 
 # With -W option, does not write to history file
-[ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# > 0 ]] && shift
+[ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# -gt 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
