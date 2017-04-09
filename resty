@@ -13,12 +13,12 @@
 #
 
 
-export _RESTY_HOST="" # TODO: to upper case!
+export _RESTY_HOST=""
 export _RESTY_PATH=""
 export _RESTY_NO_HISTORY=""
 
 
-# TODO: global var holers
+# TODO: global var holders
 export _RESTY_DATA_DIR _RESTY_CONF_DIR;
 
 
@@ -49,7 +49,6 @@ function resty() {
 		&& export _RESTY_HOST="$url"
 	    ;;
 	*)
-
 	    resty "http://$url" "${args[@]}"
 	    ;;
     esac
@@ -101,7 +100,7 @@ function resty-call() {
             # TODO; try adapt ; echo "$opt" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
             -V) vimedit="yes" ;;
             -Z) raw="yes" ;;
-            -W) ;; # §todo: check why nothing?
+            -W) ;;
             -Q) quote="yes" ;;
             -q) maybe_query="yes" ;;
             *) curlopt_cmd+=("$opt")
@@ -169,7 +168,7 @@ function resty-call() {
 
     # Launch command and retrieved streams
     local res out err ret
-    res=$(curl -sLv $curl_opt "$body" -X "$method" -b "$cookies/$domain" -c "$cookies/$domain" \
+    res=$(curl -sLv $curl_opt "$body" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \
 		     "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
 		     2> >(sed 's/^/ERR /' ; echo) > >(sed 's/^/OUT /' ; echo) )
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
