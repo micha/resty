@@ -4,6 +4,8 @@ env:
   matrix:
     - SHELL=bash
     - SHELL=zsh
+    - SHELL=dash
+    - SHELL=ksh
 
 install:
   # install antigen
@@ -27,8 +29,8 @@ script:
         if [ "$SHELL" = "zsh" ]; then
           echo "Run Zsh test"
           ./.travis-test.zsh
-        elif [ "$SHELL" = "bash" ]; then
-          echo "Run Bash test"
+        else
+          echo "Run $SHELL test"
           $HOME/shpec
         fi
 before_install:
