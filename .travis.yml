@@ -20,6 +20,7 @@ install:
   - nvm install 6 && nvm use 6
   - (cd test && npm install)
 
+  - curl --version
   - lynx --version
 
 script:
