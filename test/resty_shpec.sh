@@ -122,7 +122,7 @@ describe "Resty"
         end
 
         it "POST with data sent in query string"
-            output=$(POST /echo -d foo=bar -G)
+            output=$(POST /echo -d 'foo=bar' -G)
             assert equal "$output" 'post\n\n{"foo":"bar"}'
         end
 
