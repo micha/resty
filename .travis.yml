@@ -4,6 +4,9 @@ env:
   matrix:
     - SHELL=bash
     - SHELL=zsh
+os:
+  - linux
+  - osx
 
 install:
   # install antigen
@@ -32,7 +35,11 @@ script:
           $HOME/shpec
         fi
 before_install:
-  - sudo apt-get install zsh lynx
+  - |
+      [ "${TRAVIS_OS_NAME}" = "linux" ] && sudo apt-get install zsh lynx
+  - |
+      [ "${TRAVIS_OS_NAME}" = "osx" ] && brew install zsh lynx
+
 
 cache: apt
 
