@@ -36,9 +36,9 @@ script:
         fi
 before_install:
   - |
-      [ "${TRAVIS_OS_NAME}" = "linux" ] && sudo apt-get install zsh lynx
+      ([ "${TRAVIS_OS_NAME}" = "linux" ] && sudo apt-get install zsh lynx) || echo "osx, skipping apt-get"
   - |
-      [ "${TRAVIS_OS_NAME}" = "osx" ] && brew install zsh lynx
+      ([ "${TRAVIS_OS_NAME}" = "osx" ] && brew install zsh lynx) || echo "linux, skipping brew"
 
 
 cache: apt
