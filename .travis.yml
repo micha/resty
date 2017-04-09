@@ -42,7 +42,10 @@ before_install:
       ([ "${TRAVIS_OS_NAME}" = "osx" ] && brew install zsh lynx curl) || echo "linux, skipping brew"
 
 
-cache: apt
+cache:
+  apt: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
 
 notifications:
   email: false
