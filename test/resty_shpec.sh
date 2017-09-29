@@ -87,7 +87,7 @@ describe "Resty"
         end
         it "HEAD"
             output=$(HEAD /echo)
-            assert match  "$output" "200"
+            assert glob  "$output" "200"
         end
 
     end
@@ -96,7 +96,7 @@ describe "Resty"
 
         it "prety format when lynx is installed"
             output=$(GET /simple.html | tr -d ' ')
-            assert match $(which lynx) lynx
+            assert glob $(which lynx) lynx
             assert equal "$output" "$(cat test/test-data/simple-html-lynx.txt | tr -d ' ')"
             # note : hack to cope with lynx version differencies and different handling of table headers
         end
@@ -117,8 +117,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" "get"
-            assert match "$erroroutput" "content-type:"
-            assert match "$erroroutput" "cache-control:"
+            assert glob "$erroroutput" "content-type:"
+            assert glob "$erroroutput" "cache-control:"
         end
 
         it "POST with data sent in query string"
@@ -132,8 +132,8 @@ describe "Resty"
                      -v < test/data/simple.json 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" 'post\n{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}'
-            assert match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert match "$erroroutput" "Accept:\ application/json"
+            assert glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert glob "$erroroutput" "Accept:\ application/json"
         end
 
     end
@@ -144,8 +144,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-newopt-error)
             erroroutput=$(< /tmp/resty-newopt-error)
             assert equal "$output" "get"
-            assert match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert match "$erroroutput" "Accept:\ application/json"
+            assert glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert glob "$erroroutput" "Accept:\ application/json"
         end
 
         it "Resetting options"
@@ -153,8 +153,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-resetopt-error)
             erroroutput=$(< /tmp/resty-resetopt-error)
             assert equal "$output" "get"
-            assert no_match "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert no_match "$erroroutput" "Accept:\ application/json"
+            assert no_glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert no_glob "$erroroutput" "Accept:\ application/json"
         end
 
 
