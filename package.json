@@ -1,0 +1,8 @@
+{
+  "name": "resty",
+  "version": "3.0.0-beta",
+  "description": "Terminal utility functions",
+  "scripts": [ "resty", "pypp", "pp" ],
+  "global": "true",
+  "install": "make install"
+}
