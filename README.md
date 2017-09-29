@@ -1,7 +1,7 @@
 Resty
 =====
 
-*Resty* is a tiny script wrapper for [curl](http://curl.haxx.se/). It
+**Resty** is a tiny script wrapper for [curl](http://curl.haxx.se/). It
 provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
 Since it is implemented as functions in your shell and not in its own separate
@@ -14,14 +14,13 @@ the data in and then edit it interactively in your text editor prior to `PUT`,
 Cookies are supported automatically and stored in a file locally. Most of
 the arguments are remembered from one call to the next to save typing. It
 has pretty good defaults for most purposes. Additionally, resty allows you
-to easily provide your own options to be passed directly to curl, so even
+to easily provide your own options to be passed directly to ``curl, so even
 the most complex requests can be accomplished with the minimum amount of
 command line pain.
 
 [Here is a nice screencast showing resty in action](http://jpmens.net/2010/04/26/resty/) (by Jan-Piet Mens).
 
-Quick Start
-===========
+## Quick Start
 
 You have `curl`, right? Okay.
 
@@ -54,8 +53,7 @@ Make some HTTP requests.
       $ POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
       {"id" : 204, "title" : "new post", "body" : "This is the new new."}
 
-Usage
-=====
+## Usage
 
       source resty [-W] [remote]              # load functions into shell
       resty [-v]                              # prints current request URI base
@@ -86,14 +84,14 @@ Usage
                     curl output.
       <curl opt>    Any curl options will be passed down to curl.
 
-Configuration, Data File Locations
-==================================
+## Configuration, Data File Locations
+
 
 Resty creates a few files in either your `${XDG_CONFIG_HOME}` and `${XDG_DATA_HOME}`
 directory (if your linux uses the XDG directory standard) or in the `~/.resty`
 directory, otherwise.
 
-### Using Existing, Pre-v2.1 Configuration Files With v2.1 ###
+#### Using Existing, Pre-v2.1 Configuration Files With v2.1 ####
 
 If you had resty installed before version 2.1 and your system uses the XDG
 config directory standard and you want to continue using your existing
@@ -104,8 +102,7 @@ and then do:
       $ mv ~/.resty/c "${XDG_DATA_HOME}/resty"
       $ mv ~/.resty/* "${XDG_CONFIG_HOME}/resty"
 
-Request URI Base
-================
+## Request URI Base
 
 The request URI base is what the eventual URI to which the requests will be
 made is based on. Specifically, it is a URI that may contain the `*` character
@@ -128,18 +125,16 @@ would result in a `GET` request to the URI `http://127.0.0.1:8080/data/5.json`.
 If no `*` character is specified when setting the base URI, it's just added
 onto the end for you automatically.
 
-HTTPS URIs
-----------
+### HTTPS URIs
 
 HTTPS URIs can be used, as well. For example:
 
       $ resty 'https://example.com/doit'
       https://example.com/doit*
 
-URI Base History
-----------------
+### URI Base History
 
-The URI base is saved to an rc file (`${XDG_CONFIG_HOME}/resty/host` or `~/.resty/host`)i
+The URI base is saved to an rc file (`${XDG_CONFIG_HOME}/resty/host` or `~/.resty/host`)
 each time it's set, and the last setting is saved in an environment variable
 (`$_resty_host`).  The URI base is read from the rc file when resty starts
 up, but only if the `$_resty_host` environment variable is not set.
@@ -149,8 +144,7 @@ separate terminals, and have a different URI base for each terminal.
 If you want to see what the current URI base is, just run `resty` with no
 arguments. The URI base will be printed to stdout.
 
-The Optional Path Parameter
-===========================
+## The Optional Path Parameter
 
 The HTTP verbs (`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`)
 first argument is always an optional URI path. This path must always start with a
@@ -160,8 +154,7 @@ environment variable (`$_resty_path`), so each terminal basically has its
 own "last path".
 
 
-URL Encoding Of Path Parameter
-------------------------------
+### URL Encoding Of Path Parameter
 
 Resty will always [URL encode]
 (http://www.blooberry.com/indexdot/html/topics/urlencoding.htm) the path,
@@ -170,8 +163,8 @@ except for slashes. (Slashes in path elements need to be manually encoded as
 well as some other problematic characters. To disable this behavior use the
 `-Q` option.
 
-Query Strings, POST Parameters, And Both At The Same Time
----------------------------------------------------------
+### Query Strings, POST Parameters, And Both At The Same Time
+
 
 There are three ways to add a query string to the path. The first, mentioned
 above, is to disable URL encoding with the `-Q` option, and include the
@@ -189,14 +182,13 @@ Finally, you can use the curl `-d` and `-G` options, like this:
       $ GET /blogs/47 -d 'param=foo' -d 'otherparam=bar' -G
 
 However, if you want to pass both GET parameters in the query string _and_
-POST parameters in the request body, curl cannot support this by itself.
+`POST` parameters in the request body, curl cannot support this by itself.
 Using the `-q` or `-Q` resty options with the `-d` curl option will accomplish
 this, like so:
 
       $ POST '/blogs/47?param=foo&otherparam=bar' -Q -d 'postparam=baz'
 
-POST/PUT/PATCH Requests and Data
-================================
+## POST/PUT/PATCH Requests and Data
 
 Normally you would probably want to provide the request body data right on
 the command line like this:
@@ -219,8 +211,7 @@ Or, interestingly, as a filter pipeline with
 
 Notice how the `path` argument is omitted from the `PUT` command.
 
-Edit PUT/PATCH/POST Data In Vi
-------------------------------
+### Edit PUT/PATCH/POST Data In Vi
 
 With the `-V` options you can pipe data into `PUT`, `PATCH`, or `POST`, edit
 it in vi, save the data (using `:wq` in vi, as normal) and the resulting data
@@ -232,8 +223,7 @@ This fetches the data and lets you edit it, and then does a PUT on the
 resource. If you don't like vi you can specify your preferred editor by
 setting the `EDITOR` environment variable.
 
-Errors and Output
-=================
+## Errors and Output
 
 For successful *2xx* responses, the response body is printed on stdout. You
 can pipe the output to stuff, process it, and then pipe it back to resty,
@@ -246,14 +236,12 @@ resty will try to process the response through either `lynx`, `html2text`,
 or, finally, `cat`, depending on which of those programs are available on
 your system.
 
-Raw Output (-Z option)
-----------------------
+### Raw Output (-Z option)
 
 If you don't want resty to process the output through lynx or html2text you
 can use the `-Z` option, and get the raw output.
 
-Passing Command Line Options To Curl
-====================================
+## Passing Command Line Options To Curl
 
 Anything after the (optional) `path` and `data` arguments is passed on to
 `curl`.
@@ -272,18 +260,17 @@ In this example the `path` and `data` arguments were left off, but `-v` and
 
 Here are some useful options to try:
 
-  * **-v** verbose output, shows HTTP headers and status on stderr
-  * **-j** junk session cookies (refresh cookie-based session)
-  * **-u \<username:password\>** HTTP basic authentication
-  * **-H \<header\>** add request header (this option can be added more than
+  - **-v** verbose output, shows HTTP headers and status on stderr
+  - **-j** junk session cookies (refresh cookie-based session)
+  - **-u \<username:password\>** HTTP basic authentication
+  - **-H \<header\>** add request header (this option can be added more than
     once)
 
-Setting The Default Curl Options
---------------------------------
+### Setting The Default Curl Options
 
 Sometimes you want to send some options to curl for every request. It
 would be tedious to have to repeat these options constantly. To tell
-resty to always add certain curl options you can specify those options
+*resty* to always add certain curl options you can specify those options
 when you call resty to set the URI base. For example:
 
       $ resty example.com:8080 -H "Accept: application/json" -u user:pass
@@ -292,10 +279,9 @@ Every subsequent request will have the `-H "Accept:..."` and `-u user:...`
 options automatically added. Each time resty is called this option list
 is reset.
 
-Per-Host/Per-Method Curl Configuration Files
---------------------------------------------
+### Per-Host/Per-Method Curl Configuration Files
 
-Resty supports a per-host/per-method configuration file to help you with
+*Resty* supports a *per-host/per-method configuration* file to help you with
 frequently used curl options. Each host (including the port) can have its
 own configuration file in the `~/.resty_ directory`. The file format is
 
@@ -341,8 +327,7 @@ to type them out each time, like this:
 
 Sweet! Much better.
 
-Exit Status
-===========
+## Exit Status
 
 Successful requests (HTTP respose with *2xx* status) return zero.
 Otherwise, the first digit of the response status is returned (i.e., 1 for
@@ -350,8 +335,7 @@ Otherwise, the first digit of the response status is returned (i.e., 1 for
 integer---it can't be greater than 255. If you want the exact status code
 you can always just pass the `-v` option to curl.
 
-Using Resty In Shell Scripts
-============================
+## Using Resty In Shell Scripts
 
 Since resty creates the REST verb functions in the shell, when using it from a script you must `source` it before you use any of the functions. However, it's likely that you don't want it to be overwriting the resty host history file, and you will almost always want to set the URI base explicitly.
 
@@ -368,8 +352,7 @@ Here the `-W` option was used when loading the script to prevent writing to the 
 
 To assign the response of resty to a variable you can you do for example: `VAR="$(GET /some/request)"`. Note that the quote symbol (`"`) around the subcommand is necessary if the output contains spaces.
 
-Working With JSON or XML Data
-=============================
+## Working With JSON or XML Data
 
 `JSON REST` web services require some special tools to make them accessible
 and easily manipulated in the shell environment. The following are a few
