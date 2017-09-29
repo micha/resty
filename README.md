@@ -1,8 +1,12 @@
 Resty
 =====
 
-**Resty** is a tiny script wrapper for [curl](http://curl.haxx.se/). It
-provides a simple, concise shell interface for interacting with
+[![Build Status](https://travis-ci.org/AdrieanKhisbe/resty.svg?branch=master)](https://travis-ci.org/AdrieanKhisbe/resty)
+
+
+**Resty** is a tiny script wrapper for [curl](http://curl.haxx.se/).
+
+It provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
 Since it is implemented as functions in your shell and not in its own separate
 command environment you have access to all the powerful shell tools, such
@@ -13,8 +17,8 @@ the data in and then edit it interactively in your text editor prior to `PUT`,
 
 Cookies are supported automatically and stored in a file locally. Most of
 the arguments are remembered from one call to the next to save typing. It
-has pretty good defaults for most purposes. Additionally, resty allows you
-to easily provide your own options to be passed directly to ``curl, so even
+has pretty good defaults for most purposes. Additionally, **resty** allows you
+to easily provide your own options to be passed directly to `curl`, so even
 the most complex requests can be accomplished with the minimum amount of
 command line pain.
 
