@@ -87,7 +87,7 @@ describe "Resty"
         end
         it "HEAD"
             output=$(HEAD /echo)
-            assert glob  "$output" "200"
+            assert grep "$output" "200"
         end
 
     end
@@ -96,7 +96,7 @@ describe "Resty"
 
         it "prety format when lynx is installed"
             output=$(GET /simple.html | tr -d ' ')
-            assert glob $(which lynx) lynx
+            assert grep $(which lynx) lynx
             assert equal "$output" "$(cat test/test-data/simple-html-lynx.txt | tr -d ' ')"
             # note : hack to cope with lynx version differencies and different handling of table headers
         end
@@ -117,8 +117,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" "get"
-            assert glob "$erroroutput" "content-type:"
-            assert glob "$erroroutput" "cache-control:"
+            assert grep "$erroroutput" "content-type:"
+            assert grep "$erroroutput" "cache-control:"
         end
 
         it "POST with data sent in query string"
@@ -132,20 +132,20 @@ describe "Resty"
                      -v < test/data/simple.json 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
             assert equal "$output" 'post\n{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}'
-            assert glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert glob "$erroroutput" "Accept:\ application/json"
+            assert grep "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert grep "$erroroutput" "Accept:\ application/json"
         end
 
     end
 
-    describe "Resty Global options"
+    describe "Resty Grepal options"
         it "Setting new options"
             resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
             output=$(GET /echo -v 2> /tmp/resty-newopt-error)
             erroroutput=$(< /tmp/resty-newopt-error)
             assert equal "$output" "get"
-            assert glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert glob "$erroroutput" "Accept:\ application/json"
+            assert grep "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert grep "$erroroutput" "Accept:\ application/json"
         end
 
         it "Resetting options"
@@ -153,8 +153,8 @@ describe "Resty"
             output=$(GET /echo -v 2> /tmp/resty-resetopt-error)
             erroroutput=$(< /tmp/resty-resetopt-error)
             assert equal "$output" "get"
-            assert no_glob "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
-            assert no_glob "$erroroutput" "Accept:\ application/json"
+            assert no_grep "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert no_grep "$erroroutput" "Accept:\ application/json"
         end
 
 
