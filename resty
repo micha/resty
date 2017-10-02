@@ -28,7 +28,7 @@ function resty() {
   mkdir -p "$confdir"
   host="$datadir/host"
   cookies="$datadir/c"
-  method="$1"; [[ $# > 0 ]] && shift
+  method="$1"; [[ $# -gt 0 ]] && shift
   h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
                 || which html2text || which cat) |tail -n 1)
   editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
@@ -37,20 +37,17 @@ function resty() {
 
   [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
   [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && _path="$1" && [[ $# > 0 ]] && shift
-  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# > 0 ]] && shift
+    && _path="$1" && [[ $# -gt 0 ]] && shift
+  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# -gt 0 ]] && shift
 
   j=1
   for i in "$@"; do
-    [ -n "$maybe_query" -a -z "$query" ] && query="?$i" && continue
+    [ -n "$maybe_query" ] && [ -z "$query" ] && query="?$i" && continue
     ([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
       && verbose="yes" && continue
     [ "$i" = "-V" ] && vimedit="yes" && continue
     [ "$i" = "--dry-run" ] && dry="yes" && continue
     [ "$i" = "-Z" ] && raw="yes" && continue
-    [ "$i" = "-W" ] && continue
-    [ "$i" = "-Q" ] && quote="yes" && continue
-    [ "$i" = "-q" ] && maybe_query="yes" && continue
     curlopt[j]="$i" && j=$((j + 1))
   done
 
@@ -78,8 +75,8 @@ function resty() {
         dat=$(cat $tmpf)
         rm -f $tmpf
       fi
-      [ -n "$dat" ] && [ "$dat" != "@-" ] && [[ $# > 0 ]] && shift
-      [ "$1" = "-Z" ] && raw="yes" && [[ $# > 0 ]] && shift
+      [ -n "$dat" ] && [ "$dat" != "@-" ] && [[ $# -gt 0 ]] && shift
+      [ "$1" = "-Z" ] && raw="yes" && [[ $# -gt 0 ]] && shift
       [ -n "$dat" ] && opt="--data-binary"
       [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
 
@@ -96,7 +93,7 @@ function resty() {
       ret=$(echo "$err" |sed \
         '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
         | tail -n1)
-      [ -n "$err" -a -n "$verbose" ] && echo "$err" 1>&2
+      [ -n "$err" ] && [ -n "$verbose" ] && echo "$err" 1>&2
       echo "$err" | grep -i '^< \s*Content-Type:  *text/html' >/dev/null \
         && [ -z "$raw" ] && d=$h2t || d=cat
       [ -n "$out" ] && out=$(echo "$out" |eval "$d")
@@ -154,6 +151,6 @@ function TRACE() {
   resty TRACE "$@"
 }
 
-[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# > 0 ]] && shift
+[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# -gt 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1
