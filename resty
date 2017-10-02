@@ -1,4 +1,4 @@
-#
+#  -*-  mode: sh -*-
 # resty - A tiny command line REST interface for bash and zsh.
 #
 # Fork me on github:
@@ -186,7 +186,7 @@ function resty-call() {
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
 
-    # todo: also filter elinks and co
+    # §todo: also filter elinks and co
     if  [[ ! "lynx" =~ $display ]] ; then # perlicize to make it more readable
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
                     -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
@@ -208,13 +208,12 @@ function resty-load-alias(){
     # maybe add option?
 }
 
-resty-load-alias # Loaded by default. Latter do an option
+resty-load-alias # Loaded by default. §maybe: Latter do an option (opt-in or opt-out)
 
 function resty-unload-alias(){
     unalias HEAD OPTIONS GET POST PUT TRACE PATCH DELETE
 }
 
-# TODO: option to have or not head as alias? resty-head?
 function resty-head() {
     resty-call HEAD "$@"
 }
