@@ -30,21 +30,16 @@ You have `curl`, right? Okay.
 
       $ curl -L https://raw.githubusercontent.com/micha/resty/master/resty > resty
 
-Source the script before using it. (You can put this line in your `~/.bashrc`
-file if you want, or just paste the contents of the `resty` script right in
-there. Either way works.)
+Source the script before using it.
 
       $ . resty
 
-Otherwise, if you use `zsh` and `antigen` to install resty with `antigen bundle micha/resty` in your `.zshr`
-
-Once resty is installed, set the REST host to which you will be making your requests (you can do this
-whenever you want to change hosts, anytime).
+Once **resty** is installed, set your REST host to which you will be making your requests.
 
       $ resty http://127.0.0.1:8080/data
       http://127.0.0.1:8080/data*
 
-Make some HTTP requests.
+And now you can Make some HTTP requests.
 
       $ GET /blogs.json
       [ {"id" : 1, "title" : "first post", "body" : "This is the first post"}, ... ]
@@ -56,6 +51,17 @@ Make some HTTP requests.
 
       $ POST /blogs.json '{"title" : "new post", "body" : "This is the new new."}'
       {"id" : 204, "title" : "new post", "body" : "This is the new new."}
+
+## Installation
+
+There are several way to install **resty** other than `curl`ing it and sourcing it.
+
+Here are some shell package manager that are supported:
+
+- **Bpkg** : with [`bpkg`](http://www.bpkg.sh/) installed just run `bpkg install -g micha/resty`,
+   then follow the instruction by adding `source ~/.bashrc.d/resty` to your `bashrc`
+- **Antigen** : with [`antigen`](https://github.com/zsh-users/antigen) for zsh, just add `antigen bundle micha/resty` in your `.zshrc`
+- **Zplug**: with [`zplug`](https://github.com/zplug/zplug) installed, just add `zplug micha/resty, use:'resty'` in your `.zshrc`
 
 ## Usage
 
