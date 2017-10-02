@@ -16,10 +16,11 @@
 export _RESTY_HOST=""
 export _RESTY_PATH=""
 export _RESTY_NO_HISTORY=""
+export _RESTY_H2T="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
+			  || which html2text || which cat) |tail -n 1)"
+export _RESTY_EDITOR=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
 
-
-# TODO: global var holders
-export _RESTY_DATA_DIR _RESTY_CONF_DIR;
+export _RESTY_DATA_DIR _RESTY_CONF_DIR
 
 
 function resty() {
@@ -69,11 +70,8 @@ function resty-call() {
     local host="$_RESTY_DATA_DIR/host"
     local cookies="$_RESTY_DATA_DIR/c"
 
-    # §maybe cache
-    local h2t;h2t="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
-			  || which html2text || which cat) |tail -n 1)"
-    local editor;editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
-
+    local h2t="$_RESTY_H2T"
+    local editor="$_RESTY_EDITOR"
     if [[ "POST PUT TRACE PATCH DELETE" =~ $method ]]; then local hasbody; hasbody="yes" ;fi
 
     if [ -d "$cookies" ] ; then   # retrieve cookie
