@@ -34,8 +34,7 @@ function resty() {
     mkdir -p "$_RESTY_CONF_DIR"
 
     local host; host="$_RESTY_DATA_DIR/host"
-    local url
-    url="$1"; shift
+    local url; url="$1"; shift
     local args j; args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
@@ -51,8 +50,25 @@ function resty() {
 	    ;;
 	*)
 	    resty "http://$url" "${args[@]}"
+	    return
 	    ;;
     esac
+
+    # compute host option
+    local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
+    echo "$_RESTY_CONF_DIR/$domain"
+    if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+            local cmd
+            cmd="export _RESTY_OPT_HOST_$method=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+                          | grep "^$method" | cut -b $((${#method}+2))-) )"
+            eval "$cmd"
+        done
+    else
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+           eval "_RESTY_OPT_HOST_$method=( )"
+        done
+    fi
 }
 
 
@@ -157,19 +173,13 @@ function resty-call() {
         raw="yes"
     fi
 
-    if [ -f "$_RESTY_CONF_DIR/$domain" ] ; then  # Retrieve stored option in config dir.
-        ## §maybe: cache this when resty)
-        local cmd
-        cmd="args2=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
-                      | grep "^$method" | cut -b $((${#method}+2))-) )"
-        eval "$cmd"
-    fi
+    eval "local host_arg; host_arg=\$_RESTY_OPT_HOST_$method"
 
     # Launch command and retrieved streams
     local res out err ret
     res=$( ( ( (curl -sLv $curl_opt "$body" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
-              "${args2[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
+              "${host_arg[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
