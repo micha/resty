@@ -101,9 +101,10 @@ function resty-call() {
             -W) ;;
             -Q) quote="yes" ;;
             -q) maybe_query="yes" ;;
+            --json) curlopt_cmd+=(-H "Accept: application/json" -H "Content-Type: application/json") ;;
+            --xml) curlopt_cmd+=(-H "Accept: application/xml" -H "Content-Type: application/xml") ;;
             *) curlopt_cmd+=("$opt")
         esac
-        ## idea: add --json, other option.
     done
 
     if [ -z "$quote" ]; then # replace special char with codes

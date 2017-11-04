@@ -10,7 +10,7 @@ describe "Resty"
 
 
         it "can define a target"
-            output=$(resty localhost:4004 2>&1 )
+            output=$(resty localhost:4004 2>&1)
             assert equal $? 0
             assert equal "$output" "http://localhost:4004*"
         end
@@ -136,9 +136,18 @@ describe "Resty"
             assert grep "$erroroutput" "Accept:\ application/json"
         end
 
+        it "POST with extra header and basic auth, data in message body and --json option"
+            output=$(POST /echo -u "user:secret" --json \
+                     -v < test/data/simple.json 2> /tmp/resty-getheader-error)
+            erroroutput=$(< /tmp/resty-getheader-error)
+            assert equal "$output" 'post\n{"foo":[1,2,3],"bar":{"dog":"woof","cat":"meow","fish":"banana"}}'
+            assert grep "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
+            assert grep "$erroroutput" "Accept:\ application/json"
+        end
+
     end
 
-    describe "Resty Grepal options"
+    describe "Resty Global options"
         it "Setting new options"
             resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
             output=$(GET /echo -v 2> /tmp/resty-newopt-error)
