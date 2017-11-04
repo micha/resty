@@ -3,6 +3,10 @@ from __future__ import print_function
 import sys
 import json
 
+if "-h" in sys.argv or "--help" in sys.argv:
+    print("pypp: Pretty print json piped as stdin")
+    sys.exit(0)
+
 data = sys.stdin.read()
 
 print(json.dumps(json.loads(data), sort_keys=True, indent=4, separators=(',', ': ')))
