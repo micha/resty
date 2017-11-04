@@ -369,19 +369,15 @@ To assign the response of resty to a variable you can you do for example: `VAR="
 and easily manipulated in the shell environment. The following are a few
 scripts that make dealing with JSON data easier.
 
-  * [Jsawk](http://github.com/micha/jsawk) can be used to process and filter
-    JSON data from and to resty, in a shell pipeline. This takes care of
-    parsing the input JSON correctly, rather than using regexes and `sed`,
-    `awk`, `per`l or the like, and prints the resulting output in correct JSON
-    format, as well.
-
-    `GET /blogs.json |jsawk -n 'out(this.title)' # prints all the blog titles`
-
   * The included `pp` script will pretty-print JSON for you. You just need to
-    install the JSON perl module from CPAN or you can use `pypp` if you have
-    python 2.6 installed.
+    install the JSON perl module from CPAN (included with brew install)
+    or you can use `pypp` if you have python installed.
 
-    `GET /blogs.json |pp # pretty-prints the JSON output from resty`
+    `GET /blogs.json | pp   # pretty-prints the JSON output from resty`
+
+  * You can use powerful [jq](https://stedolan.github.io/jq/) Json command line
+    processor to perform operations on the received json. just pyping to `jq .`
+    will pretty print the json in color
 
   * Another way to format JSON output:
 
@@ -389,6 +385,15 @@ scripts that make dealing with JSON data easier.
         {
           "json": "obj"
         }
+
+  * [Jsawk](http://github.com/micha/jsawk) can be used to process and filter
+    JSON data from and to resty, in a shell pipeline. This takes care of
+    parsing the input JSON correctly, rather than using regexes and `sed`,
+    `awk`, `per`l or the like, and prints the resulting output in correct JSON
+    format, as well.
+
+    `GET /blogs.json | jsawk -n 'out(this.title)' # prints all the blog titles`
+
 
   * The `tidy` tool can be used to format HTML/XML:
 
