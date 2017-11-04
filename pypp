@@ -1,1 +1,7 @@
-python -c "import sys, json; data = sys.stdin.read(); print json.dumps(json.loads(data), sort_keys=True, indent=4, separators=(',', ': '))"
+#!/usr/bin/env python
+import sys
+import json
+
+data = sys.stdin.read()
+
+print json.dumps(json.loads(data), sort_keys=True, indent=4, separators=(',', ': '))
