@@ -54,7 +54,11 @@ function resty() {
 	    ;;
     esac
 
-    # compute host option
+    resty-compute-host-option
+}
+
+function resty-compute-host-option () {
+    # note: extract a function so it can be manually called if edited file
     local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     echo "$_RESTY_CONF_DIR/$domain"
     if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
@@ -70,8 +74,6 @@ function resty() {
         done
     fi
 }
-
-
 
 function resty-call() {
     if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
