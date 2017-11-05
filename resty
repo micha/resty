@@ -38,6 +38,15 @@ function resty() {
     local args j; args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
+        if [[ $i =~ ^-h\|--help$ ]] ; then
+            cat <<HELP
+resty [host] [options]:
+
+      Set the host and default options to provided values
+HELP
+            -resty-help-options
+            return 0
+        fi
     done
 
     case "$url" in
@@ -80,6 +89,18 @@ function resty-call() {
         echo "First arg must be an HTTP verb, '$method' isn't" >&2
         return 1
     fi
+    for opt in "${@[@]}"; do # print help if requested
+        if [[ $opt =~ ^-h\|--help$ ]] ; then
+            cat <<HELP
+$method [path] [options]:
+
+      Perform a $method request to host $_RESTY_HOST with path and options.
+HELP
+            -resty-help-options
+            return 0
+        fi
+    done
+
 
     # TODO: local to reset
     local host="$_RESTY_DATA_DIR/host"
@@ -261,6 +282,28 @@ function resty-delete() {
 
 function resty-trace() {
     resty-call TRACE "$@"
+}
+
+function -resty-help-options () {
+cat <<HELP
+
+      Options:
+
+      -Q            Don't URL encode the path.
+      -q <query>    Send query string with the path. A '?' is prepended to
+                    <query> and concatenated onto the <path>.
+      -W            Don't write to history file (only when sourcing script).
+      -V            Edit the input data interactively in 'vi'. (PUT, PATCH,
+                    and POST requests only, with data piped to stdin.)
+      -Z            Raw output. This disables any processing of HTML in the
+                    response.
+      -v            Verbose output. When used with the resty command itself
+                    this prints the saved curl options along with the current
+                    URI base. Otherwise this is passed to curl for verbose
+                    curl output.
+      --dry-run     Just output the curl command.
+      <curl opt>    Any curl options will be passed down to curl.
+HELP
 }
 
 # With -W option, does not write to history file
