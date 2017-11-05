@@ -170,14 +170,15 @@ describe "Resty"
         it "are setted at resty when host match"
             XDG_CONFIG_HOME=./test/test-data
             resty localhost:4004 2> /dev/null
-            export
             assert equal "$_RESTY_OPT_DEFAULT_GET" "-Q"
             assert equal "$_RESTY_OPT_HOST_GET" "-H Accept: text/plain"
-            assert equal "${_RESTY_OPT_HOST_GET[2]}" "Accept: text/plain"
+            [[ "$SHELL" == "bash" ]] && assert equal "${_RESTY_OPT_HOST_GET[1]}" "Accept: text/plain" \
+                                     || assert equal "${_RESTY_OPT_HOST_GET[2]}" "Accept: text/plain"
             assert equal "$_RESTY_OPT_HOST_POST" "--json"
         end
         it "are used when performing a query"
-            output=$(GET "/echo?a=b"  -v 2> /tmp/resty-resetopt-error)
+            GET "/echo?a=b" -v --dry-run
+            output=$(GET "/echo?a=b" -v 2> /tmp/resty-resetopt-error)
             erroroutput=$(< /tmp/resty-resetopt-error)
             assert equal "$output" 'get\n{"a":"b"}'
             assert grep "$erroroutput" "Accept:\ text/plain"
