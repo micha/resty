@@ -140,7 +140,8 @@ HELP
     local raw query vimedit quote maybe_query verbose dry_run
 
     eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
-    all_opts+=("$@" "${host_arg[@]}")
+    for opt in "$@"; do all_opts+=("$opt") ; done
+    all_opts+=("${host_arg[@]}")
 
     for opt in "${all_opts[@]}"; do
         if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
