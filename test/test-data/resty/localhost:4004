@@ -1,2 +1,2 @@
-GET -Q
+GET -H 'Accept: text/plain'
 POST --json

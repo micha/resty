@@ -87,7 +87,7 @@ function resty-compute-host-option () {
     fi
     if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-            eval "export _RESTY_OPT_HOST_$method+=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+            eval "_RESTY_OPT_HOST_$method+=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
                           | grep "^$method" | cut -b $((${#method}+2))-) )"
         done
     fi
@@ -139,7 +139,7 @@ HELP
     local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose dry_run
 
-    eval "local host_arg; host_arg=\$_RESTY_OPT_HOST_$method"
+    eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
     all_opts+=("${@[@]}" "${host_arg[@]}")
 
     for opt in "${all_opts[@]}"; do
