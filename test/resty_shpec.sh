@@ -168,7 +168,8 @@ describe "Resty"
     end
     describe "Host defined Options"
         it "are setted at resty when host match"
-            XDG_CONFIG_HOME=test/test-data
+            XDG_CONFIG_HOME=./test/test-data
+            ls -r $XDG_CONFIG_HOME
             resty localhost:4004 # 2> /dev/null
             assert equal "$_RESTY_OPT_HOST_GET" "-Q -H Accept: text/plain"
             assert equal "${_RESTY_OPT_HOST_GET[3]}" "Accept: text/plain"
