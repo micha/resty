@@ -104,7 +104,7 @@ function resty-call() {
     fi
 
     local -a all_opts curlopt_cmd curlopt_file
-    local raw query vimedit quote maybe_query verbose
+    local raw query vimedit quote maybe_query verbose dry_run
 
     eval "local host_arg; host_arg=\$_RESTY_OPT_HOST_$method"
     all_opts+=("${@[@]}" "${host_arg[@]}")
@@ -120,6 +120,7 @@ function resty-call() {
             -W) ;;
             -Q) quote="yes" ;;
             -q) maybe_query="yes" ;;
+            --dry-run) dry_run="yes";;
             --json) curlopt_cmd+=(-H "Accept: application/json" -H "Content-Type: application/json") ;;
             --xml) curlopt_cmd+=(-H "Accept: application/xml" -H "Content-Type: application/xml") ;;
             *) curlopt_cmd+=("$opt")
@@ -174,6 +175,10 @@ function resty-call() {
     if [ "$method" = "HEAD" ] ; then
         curl_opt="-I"
         raw="yes"
+    fi
+    if [ "$dry_run" = "yes" ] ; then
+        echo "curl -sLv $curl_opt \"$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\"  \"${curlopt_file[@]}\" \"${curlopt_cmd[@]}\" \"$_path$query\""
+        return 0
     fi
 
     # Launch command and retrieved streams
