@@ -75,14 +75,20 @@ HELP
 function resty-compute-host-option () {
     # note: extract a function so it can be manually called if edited file
     local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
+    if [[ -f "$_RESTY_CONF_DIR/resty" ]] ; then
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-            eval "export _RESTY_OPT_HOST_$method=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+            eval "export _RESTY_OPT_HOST_$method=( $(cat "$_RESTY_CONF_DIR/resty" 2>/dev/null | sed 's/^ *//' \
                           | grep "^$method" | cut -b $((${#method}+2))-) )"
         done
     else
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
            eval "_RESTY_OPT_HOST_$method=()"
+        done
+    fi
+    if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+            eval "export _RESTY_OPT_HOST_$method+=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+                          | grep "^$method" | cut -b $((${#method}+2))-) )"
         done
     fi
 }
