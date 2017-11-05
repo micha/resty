@@ -101,7 +101,7 @@ function resty-call() {
         echo "First arg must be an HTTP verb, '$method' isn't" >&2
         return 1
     fi
-    for opt in "${@[@]}"; do # print help if requested
+    for opt in "$@"; do # print help if requested
         if [[ $opt =~ ^-h\|--help$ ]] ; then
             cat <<HELP
 $method [path] [options]:
@@ -140,7 +140,7 @@ HELP
     local raw query vimedit quote maybe_query verbose dry_run
 
     eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
-    all_opts+=("${@[@]}" "${host_arg[@]}")
+    all_opts+=("$@" "${host_arg[@]}")
 
     for opt in "${all_opts[@]}"; do
         if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
