@@ -165,7 +165,28 @@ describe "Resty"
             assert no_grep "$erroroutput" "Authorization:\ Basic\ dXNlcjpzZWNyZXQ="
             assert no_grep "$erroroutput" "Accept:\ application/json"
         end
+    end
+    describe "Host defined Options"
+        it "are setted at resty when host match"
+            XDG_CONFIG_HOME=test/test-data
+            resty localhost:4004 2> /dev/null
+            assert equal "$_RESTY_OPT_HOST_GET" "-Q"
+            assert equal "$_RESTY_OPT_HOST_POST" "--json"
+        end
+        it "are used when performing a query"
+            output=$(GET "/echo?a=b")
+            assert equal "$output" 'get\n{"a":"b"}'
 
-
+            output=$(POST /echo "{\"a\": \"b\"}"  -v 2> /tmp/resty-resetopt-error)
+            erroroutput=$(< /tmp/resty-resetopt-error)
+            assert equal "$output" 'post\n{"a": "b"}'
+            assert no_grep "$erroroutput" "Content-Type:\ application/json"
+            assert no_grep "$erroroutput" "Accept:\ application/json"
+        end
+        it "are unsetted at resty when no host match"
+            resty localhost:4005 2> /dev/null
+            assert equal "$_RESTY_OPT_HOST_GET" ""
+            assert equal "$_RESTY_OPT_HOST_POST" ""
+        end
     end
 end
