@@ -219,7 +219,7 @@ HELP
         raw="yes"
     fi
     if [ "$dry_run" = "yes" ] ; then
-        echo "curl -sLv $curl_opt \"$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\"  \"${curlopt_file[@]}\" \"${curlopt_cmd[@]}\" \"$_path$query\""
+        eval echo "curl -sLv $curl_opt \"$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\"  \"${curlopt_file[@]}\" \"${curlopt_cmd[@]}\" \"$_path$query\""
         return 0
     fi
 
