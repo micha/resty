@@ -169,7 +169,7 @@ describe "Resty"
     describe "Host defined Options"
         it "are setted at resty when host match"
             XDG_CONFIG_HOME=test/test-data
-            resty localhost:4004 2> /dev/null
+            resty localhost:4004 # 2> /dev/null
             assert equal "$_RESTY_OPT_HOST_GET" "-Q -H Accept: text/plain"
             assert equal "${_RESTY_OPT_HOST_GET[3]}" "Accept: text/plain"
             assert equal "$_RESTY_OPT_HOST_POST" "--json"
@@ -187,7 +187,7 @@ describe "Resty"
             assert grep "$erroroutput" "Accept:\ application/json"
         end
         it "are unsetted at resty when no host match"
-            resty localhost:4005 2> /dev/null
+            resty localhost:4005 # 2> /dev/null
             assert equal "$_RESTY_OPT_HOST_GET" "-Q"
             assert equal "$_RESTY_OPT_HOST_POST" ""
         end
