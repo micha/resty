@@ -60,7 +60,6 @@ function resty() {
 function resty-compute-host-option () {
     # note: extract a function so it can be manually called if edited file
     local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-    echo "$_RESTY_CONF_DIR/$domain"
     if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
             local cmd
@@ -70,7 +69,7 @@ function resty-compute-host-option () {
         done
     else
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-           eval "_RESTY_OPT_HOST_$method=( )"
+           eval "_RESTY_OPT_HOST_$method=()"
         done
     fi
 }
@@ -106,9 +105,13 @@ function resty-call() {
         [[ $# -gt 0 ]] && shift
     fi
 
-    local -a curlopt_cmd curlopt_file
+    local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose
-    for opt in "$@"; do
+
+    eval "local host_arg; host_arg=\$_RESTY_OPT_HOST_$method"
+    all_opts+=("${@[@]}" "${host_arg[@]}")
+
+    for opt in "${all_opts[@]}"; do
         if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
 
         case $opt in
@@ -175,13 +178,11 @@ function resty-call() {
         raw="yes"
     fi
 
-    eval "local host_arg; host_arg=\$_RESTY_OPT_HOST_$method"
-
     # Launch command and retrieved streams
     local res out err ret
     res=$( ( ( (curl -sLv $curl_opt "$body" -X $method \
               -b "$cookies/$domain" -c "$cookies/$domain" \
-              "${host_arg[@]}" "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
+              "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
