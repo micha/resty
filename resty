@@ -24,17 +24,12 @@ export _RESTY_DATA_DIR _RESTY_CONF_DIR
 
 
 function resty() {
-    if [ -n "$XDG_CONFIG_HOME" ]; then
-        _RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
-        _RESTY_DATA_DIR="$XDG_DATA_HOME/resty"
-    else
-        _RESTY_CONF_DIR="$HOME/.resty"
-        _RESTY_DATA_DIR="$_RESTY_CONF_DIR"
-    fi
-    mkdir -p "$_RESTY_CONF_DIR"
-
-    local host; host="$_RESTY_DATA_DIR/host"
     local url; url="$1"; shift
+    if [[ "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ $url ]] ; then
+        resty-call $url "$@"
+        return
+    fi
+
     local args j; args=() j=1
     for i in "$@"; do
         args[j]="$i" && j=$((j + 1))
@@ -48,6 +43,17 @@ HELP
             return 0
         fi
     done
+
+    if [ -n "$XDG_CONFIG_HOME" ]; then
+        _RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
+        _RESTY_DATA_DIR="$XDG_DATA_HOME/resty"
+    else
+        _RESTY_CONF_DIR="$HOME/.resty"
+        _RESTY_DATA_DIR="$_RESTY_CONF_DIR"
+    fi
+    mkdir -p "$_RESTY_CONF_DIR"
+
+    local host; host="$_RESTY_DATA_DIR/host"
 
     case "$url" in
 	http://*|https://*)
