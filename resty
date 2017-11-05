@@ -73,37 +73,26 @@ HELP
 }
 
 function resty-compute-host-option () {
-    echo "pwd: $(pwd)"
-    echo "confdir: $_RESTY_CONF_DIR"; ls -r $_RESTY_CONF_DIR
     # note: extract a function so it can be manually called if edited file
-    echo domain computation
     local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     if [[ -f "$_RESTY_CONF_DIR/resty" ]] ; then
-        echo Resty file is here
-        cat $_RESTY_CONF_DIR/resty
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-            echo "_RESTY_OPT_HOST_$method=($(cat "$_RESTY_CONF_DIR/resty" 2>/dev/null | sed 's/^ *//' \
-                          | grep "^$method" | cut -b $((${#method}+2))-))"
-            eval "_RESTY_OPT_HOST_$method=($(cat "$_RESTY_CONF_DIR/resty" 2>/dev/null | sed 's/^ *//' \
+            eval "export _RESTY_OPT_DEFAULT_$method=($(cat "$_RESTY_CONF_DIR/resty" 2>/dev/null | sed 's/^ *//' \
                           | grep "^$method" | cut -b $((${#method}+2))-))"
         done
-        echo resty file handle
     else
-        echo No Resty file is here
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-           eval "_RESTY_OPT_HOST_$method=()"
+           eval "export _RESTY_OPT_DEFAULT_$method=()"
         done
     fi
     if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
-        echo Host file is here
-        cat $_RESTY_CONF_DIR/$domain
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-            eval "_RESTY_OPT_HOST_$method=( \"\${_RESTY_OPT_HOST_$method[@]}\" $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
-                          | grep "^$method" | cut -b $((${#method}+2))-) )"
-            echo "_RESTY_OPT_HOST_$method=( \"\${_RESTY_OPT_HOST_$method[@]}\" $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
-                          | grep "^$method" | cut -b $((${#method}+2))-) )"
-            eval echo \$_RESTY_OPT_HOST_$method \${#_RESTY_OPT_HOST_$method}
-            eval echo \${(#)_RESTY_OPT_HOST_${method}[1]} 2: \${(#)_RESTY_OPT_HOST_${method}[2]}
+            eval "export _RESTY_OPT_HOST_$method=($(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+                          | grep "^$method" | cut -b $((${#method}+2))-))"
+        done
+    else
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+           eval "export _RESTY_OPT_HOST_$method=()"
         done
     fi
 }
@@ -154,8 +143,10 @@ HELP
     local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose dry_run
 
+    eval "local -a resty_default_arg; resty_default_arg=(\${_RESTY_OPT_DEFAULT_$method[@]})"
     eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
     for opt in "$@"; do all_opts+=("$opt") ; done
+    all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")
 
     for opt in "${all_opts[@]}"; do
