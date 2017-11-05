@@ -65,7 +65,7 @@ Here are some shell package manager that are supported:
 
 ## Usage
 
-      source resty [-W] [remote]              # load functions into shell
+      source resty [-W] [remote] [OPTIONS]    # load functions into shell
       resty [-v]                              # prints current request URI base
       resty <remote> [OPTIONS]                # sets the base request URI
 
