@@ -62,10 +62,8 @@ function resty-compute-host-option () {
     local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
     if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
-            local cmd
-            cmd="export _RESTY_OPT_HOST_$method=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
+            eval "export _RESTY_OPT_HOST_$method=( $(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null | sed 's/^ *//' \
                           | grep "^$method" | cut -b $((${#method}+2))-) )"
-            eval "$cmd"
         done
     else
         for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
