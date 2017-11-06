@@ -145,8 +145,8 @@ HELP
     local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose dry_run
 
-    eval "local -a resty_default_arg; resty_default_arg=(\"\${_RESTY_OPT_DEFAULT_$method[@]}\")"
-    eval "local -a host_arg; host_arg=(\"\${_RESTY_OPT_HOST_$method[@]}\")"
+    eval "local -a resty_default_arg; resty_default_arg=(\${_RESTY_OPT_DEFAULT_$method[@]})"
+    eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
     for opt in "$@"; do all_opts+=("$opt") ; done
     all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")
@@ -219,18 +219,18 @@ HELP
         raw="yes"
     fi
     if [ "$dry_run" = "yes" ] ; then
-        eval "echo 'curl -sLv \$curl_opt \"\$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\" $(
-        printf '%s ' "${curlopt_file[@]}") $(printf '"%s" ' "${curlopt_cmd[@]}") \"$_path\$query\"'"
+        eval "echo 'curl -sLv $curl_opt '"'$body'"' -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\" $(\
+        [ -n "$curlopt_file" ] && printf '%s ' "${curlopt_file[@]}") $(\
+        [ -n "$curlopt_cmd" ] && printf '"%s" ' "${curlopt_cmd[@]}") \"$_path$query\"'"
         return 0
     fi
-    printf '"%s" ' "${_RESTY_OPT_HOST_GET[@]}"
-    printf '"%s" ' "${curlopt_cmd[@]}"
+
     # Launch command and retrieved streams
     local res out err ret
-    res=$( ( ( (eval "curl -sLv \$curl_opt \"\$body\" -X $method \
+    res=$( ( ( (eval "curl -sLv $curl_opt '$body' -X $method \
               -b \"$cookies/$domain\" -c \"$cookies/$domain\" \
-              $(printf '"%s" ' "${curlopt_file[@]}") \
-              $(printf '"%s" ' "${curlopt_cmd[@]}") \"$_path\$query\"" \
+              $([ -n "$curlopt_file" ] && printf '"%s" ' "${curlopt_file[@]}") \
+              $([ -n "$curlopt_cmd" ] && printf '"%s" ' "${curlopt_cmd[@]}") \"$_path$query\"" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
