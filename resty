@@ -254,7 +254,9 @@ HELP
 
     if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" 1>&2
-        return "$ret"
+        echo $ret
+        echo $err
+        return $ret
     else
         [ -n "$out" ] && echo "$out"
         return 0
