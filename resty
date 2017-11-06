@@ -145,8 +145,8 @@ HELP
     local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose dry_run
 
-    eval "local -a resty_default_arg; resty_default_arg=(\${_RESTY_OPT_DEFAULT_$method[@]})"
-    eval "local -a host_arg; host_arg=(\${_RESTY_OPT_HOST_$method[@]})"
+    eval "local -a resty_default_arg; resty_default_arg=(\"\${_RESTY_OPT_DEFAULT_$method[@]}\")"
+    eval "local -a host_arg; host_arg=(\"\${_RESTY_OPT_HOST_$method[@]}\")"
     for opt in "$@"; do all_opts+=("$opt") ; done
     all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")
@@ -223,7 +223,8 @@ HELP
         printf '%s ' "${curlopt_file[@]}") $(printf '"%s" ' "${curlopt_cmd[@]}") \"$_path\$query\"'"
         return 0
     fi
-
+    printf '"%s" ' "${_RESTY_OPT_HOST_GET[@]}"
+    printf '"%s" ' "${curlopt_cmd[@]}"
     # Launch command and retrieved streams
     local res out err ret
     res=$( ( ( (eval "curl -sLv \$curl_opt \"\$body\" -X $method \
