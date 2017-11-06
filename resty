@@ -57,7 +57,7 @@ HELP
 
     case "$url" in
 	http://*|https://*)
-	    _resty_opts=$(printf '%q ' "${args[@]}")
+	    if [ -n "$args" ]; then _resty_opts=$(printf "%q " ${args[@]});else _resty_opts=""; fi
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
@@ -142,16 +142,17 @@ HELP
         [[ $# -gt 0 ]] && shift
     fi
 
-    local -a all_opts curlopt_cmd curlopt_file
+    local -a all_opts curlopt_cmd
     local raw query vimedit quote maybe_query verbose dry_run
 
     local -a resty_default_arg host_arg;
     for i in $(eval echo "\${_RESTY_OPT_DEFAULT_$method}") ; do resty_default_arg+=("$i") ; done
     for i in $(eval echo "\${_RESTY_OPT_HOST_$method}") ; do host_arg+=("$i") ; done
 
-    for opt in "$@"; do all_opts+=("$opt") ; done
+    for opt in "$@"; do all_opts+=($(printf '%q' "$opt")) ; done
     all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")
+    if [ -n "$_resty_opts" ] ; then all_opts+=("${_resty_opts[@]}") ; fi #then all_opts+=("$(printf "'%q' " "${_resty_opts[@]}")") ; fi
 
     for opt in "${all_opts[@]}"; do
         if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
@@ -196,7 +197,7 @@ HELP
     [ -z "$_path" ] && local _path;
     _path="${_RESTY_HOST//\*/$_RESTY_PATH}"
 
-    eval "curlopt_file=(${_resty_opts[*]})"  # TODO: rename or change
+
     if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat the empty? body
         if [ ! -t 0 ] ; then # retrieve what stdin hold
            body="@-"
