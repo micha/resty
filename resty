@@ -219,15 +219,17 @@ HELP
         raw="yes"
     fi
     if [ "$dry_run" = "yes" ] ; then
-        eval echo "curl -sLv $curl_opt \"$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\"  \"${curlopt_file[@]}\" \"${curlopt_cmd[@]}\" \"$_path$query\""
+        eval "echo 'curl -sLv \$curl_opt \"\$body\" -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\" $(
+        printf '%s ' "${curlopt_file[@]}") $(printf '"%s" ' "${curlopt_cmd[@]}") \"$_path\$query\"'"
         return 0
     fi
 
     # Launch command and retrieved streams
     local res out err ret
-    res=$( ( ( (curl -sLv $curl_opt "$body" -X $method \
-              -b "$cookies/$domain" -c "$cookies/$domain" \
-              "${curlopt_file[@]}" "${curlopt_cmd[@]}" "$_path$query" \
+    res=$( ( ( (eval "curl -sLv \$curl_opt \"\$body\" -X $method \
+              -b \"$cookies/$domain\" -c \"$cookies/$domain\" \
+              $(printf '"%s" ' "${curlopt_file[@]}") \
+              $(printf '"%s" ' "${curlopt_cmd[@]}") \"$_path\$query\"" \
         |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
         |sed 's/^/ERR /' && echo) 2>&1)
     out=$(sed '/^OUT /s/^....//p; d' <<< "$res" )
