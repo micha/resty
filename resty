@@ -145,8 +145,8 @@ HELP
     local -a all_opts curlopt_cmd curlopt_file
     local raw query vimedit quote maybe_query verbose dry_run
 
-    eval "local -a resty_default_arg;  for i in \"\${_RESTY_OPT_DEFAULT_$method}\"; do resty_default_arg+=(\"\$i\"); done"
-    eval "local -a host_arg; for i in \"\${_RESTY_OPT_HOST_$method}\"; do host_arg+=(\"\$i\") ; done"
+    eval "local -a resty_default_arg;  for i in \${_RESTY_OPT_DEFAULT_$method}; do resty_default_arg+=(\"\$i\"); done"
+    eval "local -a host_arg; for i in \${_RESTY_OPT_HOST_$method}; do host_arg+=(\"\$i\") ; done"
     for opt in "$@"; do all_opts+=("$opt") ; done
     all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")

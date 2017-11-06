@@ -180,8 +180,8 @@ describe "Resty"
             GET "/echo?a=b" -v --dry-run
             POST /echo "{\"a\": \"b\"}" --dry-run
             output=$(GET "/echo?a=b" -v 2> /tmp/resty-resetopt-error)
-            echo $erroroutput
             erroroutput=$(< /tmp/resty-resetopt-error)
+            echo $erroroutput
             assert equal "$output" 'get\n{"a":"b"}'
             assert grep "$erroroutput" "Accept:\ text/plain"
 
