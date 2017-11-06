@@ -32,7 +32,6 @@ function resty() {
 
     local args j; args=() j=1
     for i in "$@"; do
-        echo i $i
         args[j]="$i" && j=$((j + 1))
         if [[ $i =~ ^-h\|--help$ ]] ; then
             cat <<HELP
@@ -58,7 +57,7 @@ HELP
 
     case "$url" in
 	http://*|https://*)
-	    if [ -n "$args" ]; then _resty_opts=$(printf "%q " ${args[@]});else _resty_opts=""; fi
+	    if [ -n "${args[@]}" ]; then _resty_opts=$(printf "%q " ${args[@]});else _resty_opts=""; fi
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
