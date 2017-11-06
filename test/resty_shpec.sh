@@ -177,7 +177,9 @@ describe "Resty"
             assert equal "$_RESTY_OPT_HOST_POST" "--json"
         end
         it "are used when performing a query"
+            GET "/echo?a=b" -v --dry-run
             output=$(GET "/echo?a=b" -v 2> /tmp/resty-resetopt-error)
+            echo $erroroutput
             erroroutput=$(< /tmp/resty-resetopt-error)
             assert equal "$output" 'get\n{"a":"b"}'
             assert grep "$erroroutput" "Accept:\ text/plain"
