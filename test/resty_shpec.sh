@@ -128,6 +128,7 @@ describe "Resty"
         end
 
         it "POST with extra header and basic auth, data in message body"
+        POST /echo -u "user:secret" -H "Accept: application/json" --dry-run
             output=$(POST /echo -u "user:secret" -H "Accept: application/json" \
                      -v < test/data/simple.json 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
@@ -137,6 +138,7 @@ describe "Resty"
         end
 
         it "POST with extra header and basic auth, data in message body and --json option"
+            POST /echo --json  --dry-run < test/data/simple.json
             output=$(POST /echo -u "user:secret" --json \
                      -v < test/data/simple.json 2> /tmp/resty-getheader-error)
             erroroutput=$(< /tmp/resty-getheader-error)
@@ -150,6 +152,7 @@ describe "Resty"
     describe "Resty Global options"
         it "Setting new options"
             resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
+            GET /echo -v --dry-run
             output=$(GET /echo -v 2> /tmp/resty-newopt-error)
             erroroutput=$(< /tmp/resty-newopt-error)
             assert equal "$output" "get"

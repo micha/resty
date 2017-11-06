@@ -32,6 +32,7 @@ function resty() {
 
     local args j; args=() j=1
     for i in "$@"; do
+        echo i $i
         args[j]="$i" && j=$((j + 1))
         if [[ $i =~ ^-h\|--help$ ]] ; then
             cat <<HELP
@@ -223,7 +224,6 @@ HELP
     fi
     local cmd
     cmd=(curl -sLv $curl_opt $(printf "%q" "$body") -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\" "$(\
-        [ -n "$curlopt_file" ] && printf '%s ' ${curlopt_file[@]})" "$(\
         [ -n "$curlopt_cmd" ] && printf '%s '  ${curlopt_cmd[@]})" \"$_path$query\")
     if [ "$dry_run" = "yes" ] ; then
         echo "${cmd[@]}"
