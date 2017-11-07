@@ -27,4 +27,4 @@ Hello There.
 
 References
 
-1.http://github.com/micha/resty
+http://github.com/micha/resty

@@ -248,9 +248,9 @@ HELP
     fi
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
-    if  [[ ! "$display" =~ ^lynx\|elinks$ ]] ; then
+    if  [[ "$display" =~ ^lynx\|elinks$ ]] ; then
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
-                    -e "$(cat <<'PERL'
+                                -e "$(cat <<'PERL'
             @a=<>;
             $s=0;
             foreach (reverse(@a)) {
