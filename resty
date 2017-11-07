@@ -57,10 +57,7 @@ HELP
 
     case "$url" in
 	http://*|https://*)
-	    if [ -n "${args[@]}" ];
-	    then _resty_opts=$(printf "%q " "${args[@]}");
-	    else _resty_opts=""; fi
-	    echo _resty_opts $_resty_opts
+	    if [ "${#args[@]}" -ne 0 ]; then _resty_opts=$(printf "%q " "${args[@]}"); else _resty_opts=""; fi
 	    export _resty_opts
 	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
 	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
@@ -155,7 +152,7 @@ HELP
     for opt in "$@"; do all_opts+=($(printf '%q' "$opt")) ; done
     all_opts+=("${resty_default_arg[@]}")
     all_opts+=("${host_arg[@]}")
-    if [ -n "${_resty_opts[@]}" ] ; then all_opts+=("${_resty_opts[@]}") ; fi
+    if [ "${#_resty_opts[@]}" -ne 0 ] ; then all_opts+=("${_resty_opts[@]}") ; fi
 
     for opt in "${all_opts[@]}"; do
         if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
