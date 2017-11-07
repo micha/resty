@@ -181,6 +181,27 @@ describe "Resty"
             assert no_grep "$erroroutput" "Accept:\ application/json"
         end
     end
+
+    describe "Preserve Path Argument"
+        it "works by default"
+            GET /echo > /dev/null
+            assert equal "$_RESTY_PATH" "/echo"
+            output=$(GET)
+            assert equal "$output" "get"
+        end
+
+        it "can be disabled"
+            RESTY_NO_PRESERVE_PATH="yes"
+            _RESTY_PATH="" # reset RESTY_PATH
+            GET /echo > /dev/null
+            assert equal "$_RESTY_PATH" ""
+            output=$(GET 2>&1)
+            assert equal "$output" '{"statusCode":403,"error":"Forbidden"}'
+            RESTY_NO_PRESERVE_PATH="no"
+        end
+    end
+
+
     describe "Host defined Options"
         it "are setted at resty when host match"
             XDG_CONFIG_HOME=./test/test-data
