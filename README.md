@@ -294,7 +294,10 @@ is reset.
 
 *Resty* supports a *per-host/per-method configuration* file to help you with
 frequently used curl options. Each host (including the port) can have its
-own configuration file in the `~/.resty_ directory`. The file format is
+own configuration file in the `~/.resty` directory. 
+A special host `resty` is used to define *default* options for all the hosts.
+
+The file format is
 
       GET [arg] [arg] ...
       PUT [arg] [arg] ...
@@ -305,6 +308,9 @@ own configuration file in the `~/.resty_ directory`. The file format is
 Where the `arg`s are curl command line arguments. Each line can specify
 arguments for that HTTP verb only, and all lines are optional.
 
+These config files are loaded each time you run the `resty` command.
+
+#### Example
 So, suppose you find yourself using the same curl options over and over. You
 can save them in a file and resty will pass them to curl for you. Say this
 is a frequent pattern for you:
@@ -318,7 +324,7 @@ is a frequent pattern for you:
       ...
 
 It's annoying to add the `-H` and `-u` options to curl all the time. So
-create a file `~/.resty/localhost:8080_`, like this:
+create a file `~/.resty/localhost:8080`, like this:
 
 _~/.resty/localhost:8080_
 
