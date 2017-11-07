@@ -161,9 +161,10 @@ The HTTP verbs (`OPTIONS`, `HEAD`, `GET`, `POST`, `PUT`, `PATCH`, and `DELETE`)
 first argument is always an optional URI path. This path must always start with a
 `/` character. If the path parameter is not provided on the command line, resty
 will just use the last path it was provided with. This "last path" is stored in an
-environment variable (`$_resty_path`), so each terminal basically has its
+environment variable (`$_RESTY_PATH`), so each terminal basically has its
 own "last path".
 
+This feature can be disabled with the following flag `RESTY_NO_PRESERVE_PATH=true`.
 
 ### URL Encoding Of Path Parameter
 
