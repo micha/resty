@@ -1,4 +1,4 @@
-#
+#  -*-  mode: sh -*-
 # resty - A tiny command line REST interface for bash and zsh.
 #
 # Fork me on github:
@@ -8,149 +8,332 @@
 #   Micha Niskin <micha@thinkminimo.com>
 #   Copyright 2009, no rights reserved.
 #
+# Maintener:
+#   Adriean Khisbe <adriean.khisbe@live.fr>
+#
 
-export _resty_host=""
-export _resty_path=""
-export _resty_nohistory=""
+
+export _RESTY_HOST=""
+export _RESTY_PATH=""
+export _RESTY_NO_HISTORY=""
+export _RESTY_H2T="$( (exec 2>&-; (which lynx >/dev/null && echo "lynx -stdin -dump") \
+			  || which html2text || which cat) |tail -n 1)"
+export _RESTY_EDITOR=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)    # editor default
+
+export _RESTY_DATA_DIR _RESTY_CONF_DIR
+
 
 function resty() {
-  local confdir datadir host cookies method h2t editor domain _path opt dat res ret out err verbose raw i j d tmpf args2 wantdata vimedit quote query maybe_query dry
-  local -a curlopt
-  local -a curlopt2
+    local url; url="$1"; shift
+    if [ -n "$url" ] && [[ "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ $url ]] ; then
+        resty-call $url "$@"
+        return
+    fi
 
-  if [ -n "$XDG_CONFIG_HOME" ]; then
-    confdir="$XDG_CONFIG_HOME/resty"
-    datadir="$XDG_DATA_HOME/resty"
-  else
-    confdir="$HOME/.resty"
-    datadir="$confdir"
-  fi
-  mkdir -p "$confdir"
-  host="$datadir/host"
-  cookies="$datadir/c"
-  method="$1"; [[ $# -gt 0 ]] && shift
-  h2t=$( (exec 2>&-; (which lynx >/dev/null && echo lynx -stdin -dump) \
-                || which html2text || which cat) |tail -n 1)
-  editor=$( (exec 2>&-; which "$EDITOR" || which vim || echo "vi") |tail -n 1)
+    local args j; args=() j=1
+    for i in "$@"; do
+        args[j]="$i" && j=$((j + 1))
+        if [[ $i =~ ^-h\|--help$ ]] ; then
+            cat <<HELP
+resty [host] [options]:
 
-  [ "${method#P}" != "$method" ] || [ "$method" = "TRACE" ] && wantdata="yes"
+      Set the host and default options to provided values
+HELP
+            -resty-help-options
+            return 0
+        fi
+    done
 
-  [ -d "$cookies" ] || (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
-  [ -n "$1" ] && [ "${1#/}" != "$1" ] \
-    && _path="$1" && [[ $# -gt 0 ]] && shift
-  [ "$1" = "${1#-}" ] && dat="$1" && [[ $# -gt 0 ]] && shift
+    if [ -n "$XDG_CONFIG_HOME" ]; then
+        _RESTY_CONF_DIR="$XDG_CONFIG_HOME/resty"
+        _RESTY_DATA_DIR="$XDG_DATA_HOME/resty"
+    else
+        _RESTY_CONF_DIR="$HOME/.resty"
+        _RESTY_DATA_DIR="$_RESTY_CONF_DIR"
+    fi
+    mkdir -p "$_RESTY_CONF_DIR"
 
-  j=1
-  for i in "$@"; do
-    [ -n "$maybe_query" ] && [ -z "$query" ] && query="?$i" && continue
-    ([ "$i" = "--verbose" ] || echo "$i" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
-      && verbose="yes" && continue
-    [ "$i" = "-V" ] && vimedit="yes" && continue
-    [ "$i" = "--dry-run" ] && dry="yes" && continue
-    [ "$i" = "-Z" ] && raw="yes" && continue
-    curlopt[j]="$i" && j=$((j + 1))
-  done
+    local host; host="$_RESTY_DATA_DIR/host"
 
-  [ -z "$quote" ] && _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
+    case "$url" in
+	http://*|https://*)
+	    if [ "${#args[@]}" -ne 0 ]; then _RESTY_OPTS=$(printf "%q " "${args[@]}"|sed 's:[[:space:]]*$::'); else _RESTY_OPTS=""; fi
+	    export _RESTY_OPTS
+	    echo "$url" |grep '\*' >/dev/null || url="${url}*"
+	    (echo "$url" |tee "${_RESTY_NO_HISTORY:-$host}") |cat 1>&2 \
+		&& export _RESTY_HOST="$url"
+	    ;;
+	*)
+	    resty "http://$url" "${args[@]}"
+	    return
+	    ;;
+    esac
 
-  [ "$method" = "HEAD" ] || [ "$method" = "OPTIONS" ] && raw="yes"
-  [ -z "$_resty_host" ] && _resty_host=$(cat "$host" 2>/dev/null)
-  [ "$method" = "-v" ] && echo "$_resty_host $_resty_opts" && return
-  [ -z "$method" ] && echo "$_resty_host" && return
-  [ -n "$_path" ] && _resty_path=$_path
-  domain=$(echo -n "$_resty_host" \
-    |perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
-  _path="${_resty_host//\*/$_resty_path}"
+    resty-compute-host-option
+}
 
-  case "$method" in
-    HEAD|OPTIONS|GET|DELETE|POST|PUT|PATCH|TRACE)
-      eval "curlopt2=(${_resty_opts[*]})"
-      dat=$( ( [ "$wantdata" = "yes" ] \
-        && ( ( [ -n "$dat" ] && echo "$dat") \
-        || ([ ! -t 0 ] && echo "@-") ) ) || echo)
-      if [ "$wantdata" = "yes" ] && [ "$vimedit" = "yes" ]; then
-        tmpf=$(mktemp /tmp/resty.XXXXXX)
-        [ -t 0 ] || cat > $tmpf
-        (exec < /dev/tty; "$editor" $tmpf)
-        dat=$(cat $tmpf)
-        rm -f $tmpf
-      fi
-      [ -n "$dat" ] && [ "$dat" != "@-" ] && [[ $# -gt 0 ]] && shift
-      [ "$1" = "-Z" ] && raw="yes" && [[ $# -gt 0 ]] && shift
-      [ -n "$dat" ] && opt="--data-binary"
-      [ "$method" = "HEAD" ] && opt="-I" && raw="yes"
+function resty-compute-host-option () {
+    # note: extract a function so it can be manually called if edited file
+    local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
+    if [[ -f "$_RESTY_CONF_DIR/resty" ]] ; then
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+            eval "export _RESTY_OPT_DEFAULT_$method; _RESTY_OPT_DEFAULT_$method=\"$(cat "$_RESTY_CONF_DIR/resty" 2>/dev/null\
+                          | sed 's/^ *//' \
+                          | grep "^$method" | cut -b $((${#method}+2))-)\""
+        done
+    else
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+            eval "export _RESTY_OPT_DEFAULT_$method; _RESTY_OPT_DEFAULT_$method=\"\""
+        done
+    fi
+    if [[ -f "$_RESTY_CONF_DIR/$domain" ]] ; then
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+            eval "export _RESTY_OPT_HOST_$method; _RESTY_OPT_HOST_$method=\"$(cat "$_RESTY_CONF_DIR/$domain" 2>/dev/null\
+                        | sed 's/^ *//' \
+                        | grep "^$method" | cut -b $((${#method}+2))-)\""
+        done
+    else
+        for method in HEAD OPTIONS GET PATCH POST PUT TRACE DELETE ; do
+           eval "export _RESTY_OPT_HOST_$method; _RESTY_OPT_HOST_$method=''"
+        done
+    fi
+}
 
-      [ -f "$confdir/$domain" ] && eval "args2=( $(cat "$confdir/$domain" 2>/dev/null |sed 's/^ *//' |grep "^$method" |cut -b $((${#method}+2))-) )"
-      [ "$dry" = "yes" ] && echo "curl -sLv $opt \"$dat\" -X $method -b "$cookies/$domain" -c "$cookies/$domain" \"${args2[@]}\" \"${curlopt2[@]}\" \"${curlopt[@]}\" \"$_path$query\"" && return 0
-      # TODO: refactor function
-      res=$( ( ( (curl -sLv $opt "$dat" -X $method \
-              -b "$cookies/$domain" -c "$cookies/$domain" \
-              "${args2[@]}" "${curlopt2[@]}" "${curlopt[@]}" "$_path$query" \
-        |sed 's/^/OUT /' && echo) 3>&2 2>&1 1>&3) \
-        |sed 's/^/ERR /' && echo) 2>&1)
-      out=$(echo "$res" |sed '/^OUT /s/^....//p; d')
-      err=$(echo "$res" |sed '/^ERR /s/^....//p; d')
-      ret=$(echo "$err" |sed \
-        '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' \
-        | tail -n1)
-      [ -n "$err" ] && [ -n "$verbose" ] && echo "$err" 1>&2
-      echo "$err" | grep -i '^< \s*Content-Type:  *text/html' >/dev/null \
-        && [ -z "$raw" ] && d=$h2t || d=cat
-      [ -n "$out" ] && out=$(echo "$out" |eval "$d")
-      [ "$d" != "${d##lynx}" ] && out=$(echo "$out" |perl -e "\$host='$(echo "$_resty_host" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
-      if [ "$ret" != "2" ]; then
+function resty-call() {
+    if [ $# = 0 ] ; then echo "resty-call need args" >&2; return 1; fi
+
+    local method; method="$1"; shift
+    if [[ ! "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ $method ]] ; then # this is not good
+        echo "First arg must be an HTTP verb, '$method' isn't" >&2
+        return 1
+    fi
+    for opt in "$@"; do # print help if requested
+        if [[ $opt =~ ^-h\|--help$ ]] ; then
+            cat <<HELP
+$method [path] [options]:
+
+      Perform a $method request to host $_RESTY_HOST with path and options.
+HELP
+            -resty-help-options
+            return 0
+        fi
+    done
+
+    local _path __path
+
+    local host="$_RESTY_DATA_DIR/host"
+    local cookies="$_RESTY_DATA_DIR/c"
+
+    local h2t="$_RESTY_H2T"
+    local editor="$_RESTY_EDITOR"
+    if [[ "POST PUT TRACE PATCH DELETE" =~ $method ]]; then local hasbody; hasbody="yes" ;fi
+
+    if [ -d "$cookies" ] ; then # retrieve cookie
+	    (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
+    fi
+
+    if [[ "$1" =~ ^/ ]] ; then # retrieve path
+        _path="$1"
+        shift
+    fi
+    local body
+    if [[ ! "$1" =~ ^- ]] ; then # retrieve data
+         body="$1"
+        [[ $# -gt 0 ]] && shift
+    fi
+
+    local -a all_opts curlopt_cmd
+    local raw query vimedit quote maybe_query verbose dry_run
+
+    local -a resty_default_arg host_arg;
+    for i in $(eval echo "\${_RESTY_OPT_DEFAULT_$method}") ; do resty_default_arg+=("$i") ; done
+    for i in $(eval echo "\${_RESTY_OPT_HOST_$method}") ; do host_arg+=("$i") ; done
+
+    for opt in "$@"; do all_opts+=($(printf '%q' "$opt")) ; done
+    all_opts+=("${resty_default_arg[@]}")
+    all_opts+=("${host_arg[@]}")
+    if [ "${#_RESTY_OPTS[@]}" -ne 0 ] ; then all_opts+=("${_RESTY_OPTS[@]}") ; fi
+
+    for opt in "${all_opts[@]}"; do
+        if [ -n "$maybe_query" ] && [ -z "$query" ] ; then query="?$opt"; continue; fi
+
+        case $opt in
+            --verbose|-v) verbose="yes";;
+            # TODO; try adapt ; echo "$opt" | grep '^-[a-zA-Z]*v[a-zA-Z]*$' >/dev/null) \
+            -V) vimedit="yes" ;;
+            -Z) raw="yes" ;;
+            -W) ;;
+            -Q) quote="yes" ;;
+            -q) maybe_query="yes" ;;
+            --dry-run) dry_run="yes";;
+            --json) curlopt_cmd+=("-H 'Accept: application/json'" "-H 'Content-Type: application/json'") ;;
+            --xml) curlopt_cmd+=("-H 'Accept: application/xml'" "-H 'Content-Type: application/xml'") ;;
+            *) curlopt_cmd+=("$opt")
+        esac
+    done
+
+    if [ -z "$quote" ]; then # replace special char with codes
+	    _path=$(echo "$_path"|sed 's/%/%25/g;s/\[/%5B/g;s/\]/%5D/g;s/|/%7C/g;s/\$/%24/g;s/&/%26/g;s/+/%2B/g;s/,/%2C/g;s/:/%3A/g;s/;/%3B/g;s/=/%3D/g;s/?/%3F/g;s/@/%40/g;s/ /%20/g;s/#/%23/g;s/{/%7B/g;s/}/%7D/g;s/\\/%5C/g;s/\^/%5E/g;s/~/%7E/g;s/`/%60/g')
+    fi
+
+    if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
+
+    if [ "$RESTY_NO_PRESERVE_PATH" != "true" ]&&[ "$RESTY_NO_PRESERVE_PATH" != "yes" ]; then
+        __path="${_path:-${_RESTY_PATH}}"
+        _RESTY_PATH="${__path}"
+    else
+        __path=$_path
+    fi
+
+    local domain; domain=$(echo -n "$_RESTY_HOST" | perl -ane '/^https?:\/\/([^\/\*]+)/; print $1')
+    _path="${_RESTY_HOST//\*/$__path}"
+
+    if [ "$hasbody" = "yes" ] && [ -z "$body" ]; then # treat when no body provided as arg
+        if [ ! -t 0 ] ; then # retrieve what stdin hold if stdin open
+           body="@-"
+        else
+           body=""
+        fi
+    fi
+
+    if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
+        local tmpf; tmpf=$(mktemp /tmp/resty.XXXXXX)
+        [ -t 0 ] || cat > "$tmpf"
+        (exec < /dev/tty; "$editor" "$tmpf")
+        body=$(cat "$tmpf")
+        rm -f "$tmpf"
+    fi
+
+    if [ -n "$body" ] ; then curl_opt="--data-binary" ;fi
+    if [ "$method" = "OPTIONS" ] ; then raw="yes" ; fi
+    if [ "$method" = "HEAD" ] ; then
+        curl_opt="-I"
+        raw="yes"
+    fi
+
+    # Forge command and display it if dry-run
+    local cmd
+    cmd=(curl -sLv $curl_opt $(printf "%q" "$body") -X $method  -b \"$cookies/$domain\" -c \"$cookies/$domain\" "$(\
+        [ -n "$curlopt_cmd" ] && printf '%s ' ${curlopt_cmd[@]})"\"$_path$query\")
+    if [ "$dry_run" = "yes" ] ; then
+        echo "${cmd[@]}"
+        return 0
+    fi
+
+    # Launch command and retrieved streams
+    local res out err ret _status outf errf
+    outf=$(mktemp) errf=$(mktemp)
+    eval "${cmd[@]}" > "$outf" 2> "$errf"
+    _status=$?; out="$(cat "$outf")"; err="$(cat "$errf")"; rm -f "$outf" "$errf"
+    ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
+
+    if [ "$_status" -ne "0" ]; then echo "$err" >&2 ; return $_status ; fi
+
+    if [ -n "$err" ] && [ -n "$verbose" ]; then echo "$err" 1>&2 ; fi
+
+    # post process for display
+    local display
+    if [ -z "$raw" ] && grep -i '^< \s*Content-Type:  *text/html' >/dev/null <<< "$err"
+    then display=$h2t
+    else display=cat
+    fi
+    if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
+
+    if [[ "$display" =~ ^lynx ]] || [[ "$display" =~ ^elinks ]] ; then
+        out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
+                                -e "$(cat <<'PERL'
+            @a=<>;
+            $s=0;
+            foreach (reverse(@a)) {
+                if ($_ =~ /^References$/) { $s++; }
+                unless ($s>0) {
+                    s/^\s+[0-9]+\. //;
+                    s/^file:\/\/localhost/$host/;
+                }
+                push(@ret,$_);
+            }
+            print(join("",reverse(@ret)))
+PERL
+            )")
+    fi
+
+    if [ "$ret" != "2" ]; then
         [ -n "$out" ] && echo "$out" 1>&2
         return $ret
-      else
+    else
         [ -n "$out" ] && echo "$out"
-	return 0
-      fi
-      ;;
-    http://*|https://*)
-      _resty_opts=$(printf '%q ' "${curlopt[@]}")
-      export _resty_opts
-      echo "$method" |grep '\*' >/dev/null || method="${method}*"
-      (echo "$method" |tee "${_resty_nohistory:-$host}") |cat 1>&2 \
-        && _resty_host="$method"
-      ;;
-    *)
-      resty "http://$method" "${curlopt[@]}"
-      ;;
-  esac
+        return 0
+    fi
+
 }
 
-function HEAD() {
-  resty HEAD "$@"
+function resty-load-alias(){
+    alias HEAD=resty-head OPTIONS=resty-options GET=resty-get POST=resty-post PUT=resty-put
+    alias TRACE=resty-trace PATCH=resty-patch DELETE=resty-delete
+    # maybe add option?
 }
 
-function OPTIONS() {
-  resty OPTIONS "$@"
+resty-load-alias # Loaded by default. §maybe: Latter do an option (opt-in or opt-out)
+
+function resty-unload-alias(){
+    unalias HEAD OPTIONS GET POST PUT TRACE PATCH DELETE
 }
 
-function GET() {
-  resty GET "$@"
+function resty-head() {
+    resty-call HEAD "$@"
 }
 
-function POST() {
-  resty POST "$@"
+function resty-options() {
+    resty-call OPTIONS "$@"
 }
 
-function PUT() {
-  resty PUT "$@"
+function resty-get() {
+    resty-call GET "$@"
 }
 
-function PATCH() {
-  resty PATCH "$@"
+function resty-post() {
+    resty-call POST "$@"
 }
 
-function DELETE() {
-  resty DELETE "$@"
+function resty-put() {
+    resty-call PUT "$@"
 }
 
-function TRACE() {
-  resty TRACE "$@"
+function resty-patch() {
+    resty-call PATCH "$@"
 }
 
-[ "$1" = "-W" ] && export _resty_nohistory="/dev/null" && [[ $# -gt 0 ]] && shift
+function resty-delete() {
+    resty-call DELETE "$@"
+}
+
+function resty-trace() {
+    resty-call TRACE "$@"
+}
+
+function -resty-help-options () {
+cat <<HELP
+
+      Options:
+
+      -Q            Don't URL encode the path.
+      -q <query>    Send query string with the path. A '?' is prepended to
+                    <query> and concatenated onto the <path>.
+      -W            Don't write to history file (only when sourcing script).
+      -V            Edit the input data interactively in 'vi'. (PUT, PATCH,
+                    and POST requests only, with data piped to stdin.)
+      -Z            Raw output. This disables any processing of HTML in the
+                    response.
+      -v            Verbose output. When used with the resty command itself
+                    this prints the saved curl options along with the current
+                    URI base. Otherwise this is passed to curl for verbose
+                    curl output.
+      --dry-run     Just output the curl command.
+      <curl opt>    Any curl options will be passed down to curl.
+HELP
+}
+
+# With -W option, does not write to history file
+[ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# -gt 0 ]] && shift
 
 resty "$@" >/dev/null 2>&1

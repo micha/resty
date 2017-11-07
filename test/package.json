@@ -1,0 +1,34 @@
+{
+  "name": "resty-server-test",
+  "version": "0.1.0",
+  "description": "Server Test for resty",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "lab test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/micha/resty.git"
+  },
+  "keywords": [
+    "test"
+  ],
+  "author": "Adriean Khisbe <adriean.khisbe@live.fr> (https://github.com/AdrieanKhisbe/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/micha/resty/issues"
+  },
+  "homepage": "https://github.com/micha/resty#readme",
+  "dependencies": {
+    "hapi": "^16.1.1",
+    "inert": "^4.2.0",
+    "joi": "^10.4.1"
+  },
+  "devDependencies": {
+    "code": "^4.0.0",
+    "lab": "^13.0.1"
+  }
+}

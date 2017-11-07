@@ -2,3 +2,6 @@
 *.swo
 *~
 .DS_Store
+
+test/node_modules
+.idea
