@@ -248,9 +248,22 @@ HELP
     fi
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
-    if  [[ ! "$display" =~ ^lynx\|elinks$ ]] ; then # perlicize to make it more readable
+    if  [[ ! "$display" =~ ^lynx\|elinks$ ]] ; then
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
-                    -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
+                    -e "$(cat <<'PERL'
+            @a=<>;
+            $s=0;
+            foreach (reverse(@a)) {
+                if ($_ =~ /^References$/) { $s++; }
+                unless ($s>0) {
+                    s/^\s+[0-9]+\. //;
+                    s/^file:\/\/localhost/$host/;
+                }
+                push(@ret,$_);
+            }
+            print(join("",reverse(@ret)))
+PERL
+            )")
     fi
 
     if [ "$ret" != "2" ]; then
