@@ -248,9 +248,7 @@ HELP
     fi
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
-
-    # §todo: also filter elinks and co
-    if  [[ ! "lynx" =~ $display ]] ; then # perlicize to make it more readable
+    if  [[ ! "$display" =~ ^lynx\|elinks$ ]] ; then # perlicize to make it more readable
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
                     -e '@a=<>; $s=0; foreach (reverse(@a)) { if ($_ =~ /^References$/) { $s++; } unless ($s>0) { s/^\s+[0-9]+\. //; s/^file:\/\/localhost/$host/; } push(@ret,$_); } print(join("",reverse(@ret)))')
     fi
