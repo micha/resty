@@ -112,6 +112,21 @@ describe "Resty"
         end
     end
 
+    describe "Curl Failures"
+        it "are reported to the user"
+            stub_command curl "echo '* Connected to mysite.com (64.136.20.67) port 443 (#0)
+* Server aborted the SSL handshake
+* Closing connection 0' >&2; return 2"
+            output=$(GET /simple.html -Z 2>&1)
+            assert unequal $? 0
+            assert equal "$output" "* Connected to mysite.com (64.136.20.67) port 443 (#0)
+* Server aborted the SSL handshake
+* Closing connection 0"
+            unstub_command curl
+
+        end
+    end
+
     describe "Options"
          it "GET with headers"
             output=$(GET /echo -v 2> /tmp/resty-getheader-error)
