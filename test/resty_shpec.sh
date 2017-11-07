@@ -186,6 +186,16 @@ describe "Resty"
             assert grep "$erroroutput" "Content-Type:\ application/json"
             assert grep "$erroroutput" "Accept:\ application/json"
         end
+        it "are setted at resty with host match and defaults and config are merged"
+            XDG_CONFIG_HOME=./test/test-data
+            resty localhost:4004 -u "user:secret with space" 2> /dev/null
+            assert equal "$_RESTY_OPT_DEFAULT_GET" "-Q"
+            assert equal "${_RESTY_OPT_HOST_GET[*]}" "-H 'Accept: text/plain'"
+            assert equal "$_RESTY_OPT_HOST_POST" "--json"
+            assert equal "$_RESTY_OPTS" "-u user:secret\\ with\\ space"
+            query="$(GET "/echo?a=b" --dry-run)"
+            assert equal "$query" "curl -sLv '' -X GET -b \"/resty/c/localhost:4004\" -c \"/resty/c/localhost:4004\" -H 'Accept: text/plain' -u user:secret\\ with\\ space \"http://localhost:4004/echo?a=b\""
+        end
         it "are unsetted at resty when no host match"
             resty localhost:4005 2> /dev/null
             assert equal "$_RESTY_OPT_DEFAULT_GET" "-Q"
