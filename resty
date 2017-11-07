@@ -179,15 +179,6 @@ HELP
     if [[ "HEAD OPTIONS" =~ $method ]] ; then raw="yes" ; fi
     if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
 
-    if [ "$method" = "-v" ] ; then # ?? # FIXME kill or convert
-        echo "$_RESTY_HOST $_RESTY_OPTS"
-        return
-    fi
-    if [ -z "$method" ] ; then # return since no method
-        echo "$_RESTY_HOST"
-        return
-    fi
-
     if [[ ! "$RESTY_NO_PRESERVE_PATH" =~ ^true\|yes$ ]]; then
         __path="${_path:-${_RESTY_PATH}}"
         _RESTY_PATH="${__path}"
