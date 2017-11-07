@@ -151,7 +151,7 @@ describe "Resty"
 
     describe "Resty Global options"
         it "Setting new options"
-            resty localhost:4004 -u "user:secret" -H "Accept: application/json" 2> /dev/null
+            resty localhost:4004 -u "user:secret" -H "Accept: application/json" #2> /dev/null
             GET /echo -v --dry-run
             output=$(GET /echo -v 2> /tmp/resty-newopt-error)
             erroroutput=$(< /tmp/resty-newopt-error)
