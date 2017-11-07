@@ -178,7 +178,7 @@ HELP
 
     if [ -z "$_RESTY_HOST" ] ;then _RESTY_HOST=$(cat "$host" 2>/dev/null);fi
 
-    if [[ ! "$RESTY_NO_PRESERVE_PATH" =~ ^true\|yes$ ]]; then
+    if [ "$RESTY_NO_PRESERVE_PATH" != "true" ]&&[ "$RESTY_NO_PRESERVE_PATH" != "yes" ]; then
         __path="${_path:-${_RESTY_PATH}}"
         _RESTY_PATH="${__path}"
     else
@@ -239,7 +239,7 @@ HELP
     fi
     if [ -n "$out" ]; then out=$(echo "$out" | eval "$display") ; fi
 
-    if [[ "$display" =~ ^lynx\|^elinks ]] ; then
+    if [[ "$display" =~ ^lynx ]] || [[ "$display" =~ ^elinks ]] ; then
         out=$(echo "$out" |perl -e "\$host='$(echo "$_RESTY_HOST" |sed 's/^\(https*:\/\/[^\/*]*\).*$/\1/')';" \
                                 -e "$(cat <<'PERL'
             @a=<>;

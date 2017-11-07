@@ -196,7 +196,7 @@ describe "Resty"
             GET /echo > /dev/null
             assert equal "$_RESTY_PATH" ""
             output=$(GET 2>&1)
-            assert equal "$output" '{"statusCode":403,"error":"Forbidden"}'
+            assert grep "$output" '{"statusCode":403'
             RESTY_NO_PRESERVE_PATH="no"
         end
     end
