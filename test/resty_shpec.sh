@@ -8,7 +8,6 @@ describe "Resty"
            assert equal $? 0
         end
 
-
         it "can define a target"
             output=$(resty localhost:4004 2>&1)
             assert equal $? 0

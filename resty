@@ -24,7 +24,8 @@ export _RESTY_DATA_DIR _RESTY_CONF_DIR
 
 
 function resty() {
-    local url; url="$1"; shift
+
+    local url; url="$1"; [ -n "$1" ] && shift
     if [ -n "$url" ] && [[ "HEAD OPTIONS GET PATCH POST PUT TRACE DELETE" =~ $url ]] ; then
         resty-call $url "$@"
         return
