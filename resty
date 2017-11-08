@@ -198,7 +198,7 @@ HELP
     fi
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
-        local tmpf; tmpf=$(mktemp /tmp/resty.XXXXXX)
+        local tmpf; tmpf=$(mktemp)
         [ -t 0 ] || cat > "$tmpf"
         (exec < /dev/tty; "$editor" "$tmpf")
         body=$(cat "$tmpf")
