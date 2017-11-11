@@ -5,7 +5,7 @@ Resty
 [![Build Status](https://travis-ci.org/AdrieanKhisbe/resty.svg?branch=master)](https://travis-ci.org/AdrieanKhisbe/resty)
 [![GitHub license](https://img.shields.io/github/license/micha/resty.svg)](https://github.com/micha/resty/blob/master/MIT-LICENSE.txt)
 
-**Resty** is a tiny script wrapper for [curl](http://curl.haxx.se/).
+> **Resty** is a *tiny* script wrapper for [curl](http://curl.haxx.se/).
 
 It provides a simple, concise shell interface for interacting with
 [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) services.
