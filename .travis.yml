@@ -1,0 +1,51 @@
+# zsh shpec build draft
+language: sh
+env:
+  matrix:
+    - SHELL=bash
+    - SHELL=zsh
+os:
+  - linux
+  - osx
+
+install:
+  # install antigen
+  - curl -L git.io/antigen > ~/antigen.zsh
+  - echo "source ~/antigen.zsh; antigen bundle rylnd/shpec; antigen apply" > ~/.zshrc
+  - echo "setopt sh_word_split" > ~/.zshenv
+  - zsh ~/.zshrc
+  - sh -c "export BINDIR=$HOME ; `curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
+
+  - $HOME/.nvm/nvm.sh
+  - nvm install 6 && nvm use 6
+  - (cd test && npm install)
+
+  - curl --version
+  - lynx --version
+
+script:
+  - (cd test && node server.js &)
+  - sleep 1
+  - |
+        echo $SHELL && $SHELL --version
+        if [ "$SHELL" = "zsh" ]; then
+          echo "Run Zsh test"
+          ./.travis-test.zsh
+        elif [ "$SHELL" = "bash" ]; then
+          echo "Run Bash test"
+          $HOME/shpec
+        fi
+before_install:
+  - |
+      ([ "${TRAVIS_OS_NAME}" = "linux" ] && sudo apt-get install zsh lynx) || echo "osx, skipping apt-get"
+  - |
+      ([ "${TRAVIS_OS_NAME}" = "osx" ] && brew update && brew install zsh lynx curl) || echo "linux, skipping brew"
+
+
+cache:
+  apt: true
+  directories:
+    - $HOME/Library/Caches/Homebrew
+
+notifications:
+  email: false
