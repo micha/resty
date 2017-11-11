@@ -1,6 +1,7 @@
 Resty
 =====
 
+[![GitHub release](https://img.shields.io/github/release/micha/resty.svg)](https://github.com/micha/resty/releases)
 [![Build Status](https://travis-ci.org/AdrieanKhisbe/resty.svg?branch=master)](https://travis-ci.org/AdrieanKhisbe/resty)
 [![GitHub license](https://img.shields.io/github/license/micha/resty.svg)](https://github.com/micha/resty/blob/master/MIT-LICENSE.txt)
 
