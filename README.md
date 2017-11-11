@@ -62,6 +62,8 @@ Here are some shell package manager that are supported:
    then follow the instruction by adding `source ~/.bashrc.d/resty` to your `bashrc`
 - **Antigen** : with [`antigen`](https://github.com/zsh-users/antigen) for zsh, just add `antigen bundle micha/resty` in your `.zshrc`
 - **Zplug**: with [`zplug`](https://github.com/zplug/zplug) installed, just add `zplug micha/resty, use:'resty'` in your `.zshrc`
+- **Oh my Zsh**: clone the github repositery in the `plugins` directory of `ZSH_CUSTOM` and add `resty` to you `plugins` list
+
 
 ## Usage
 
@@ -295,7 +297,7 @@ is reset.
 
 *Resty* supports a *per-host/per-method configuration* file to help you with
 frequently used curl options. Each host (including the port) can have its
-own configuration file in the `~/.resty` directory. 
+own configuration file in the `~/.resty` directory.
 A special host `resty` is used to define *default* options for all the hosts.
 
 The file format is
