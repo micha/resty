@@ -130,7 +130,7 @@ HELP
     if [[ "POST PUT TRACE PATCH DELETE" =~ $method ]]; then local hasbody; hasbody="yes" ;fi
 
     if [ -d "$cookies" ] ; then # retrieve cookie
-	    (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
+	    (mkdir -p "$cookies"; echo "http://localhost*" >| "$host")
     fi
 
     if [[ "$1" =~ ^/ ]] ; then # retrieve path
@@ -199,7 +199,7 @@ HELP
 
     if [ "$hasbody" = "yes" ] && [ "$vimedit" = "yes" ]; then
         local tmpf; tmpf=$(mktemp)
-        [ -t 0 ] || cat > "$tmpf"
+        [ -t 0 ] || cat >| "$tmpf"
         (exec < /dev/tty; "$editor" "$tmpf")
         body=$(cat "$tmpf")
         rm -f "$tmpf"
@@ -224,7 +224,7 @@ HELP
     # Launch command and retrieved streams
     local res out err ret _status outf errf
     outf=$(mktemp) errf=$(mktemp)
-    eval "${cmd[@]}" > "$outf" 2> "$errf"
+    eval "${cmd[@]}" >| "$outf" 2>| "$errf"
     _status=$?; out="$(cat "$outf")"; err="$(cat "$errf")"; rm -f "$outf" "$errf"
     ret=$(sed '/^.*HTTP\/1\.[01] [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
 
