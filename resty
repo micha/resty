@@ -53,6 +53,7 @@ HELP
         _RESTY_DATA_DIR="$_RESTY_CONF_DIR"
     fi
     mkdir -p "$_RESTY_CONF_DIR"
+    mkdir -p "$_RESTY_CONF_DIR/c"
 
     local host; host="$_RESTY_DATA_DIR/host"
 
