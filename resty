@@ -53,6 +53,7 @@ HELP
         _RESTY_DATA_DIR="$_RESTY_CONF_DIR"
     fi
     mkdir -p "$_RESTY_CONF_DIR"
+    mkdir -p "$_RESTY_CONF_DIR/c"
 
     local host; host="$_RESTY_DATA_DIR/host"
 
@@ -128,10 +129,6 @@ HELP
     local h2t="$_RESTY_H2T"
     local editor="$_RESTY_EDITOR"
     if [[ "POST PUT TRACE PATCH DELETE" =~ $method ]]; then local hasbody; hasbody="yes" ;fi
-
-    if [ -d "$cookies" ] ; then # retrieve cookie
-	    (mkdir -p "$cookies"; echo "http://localhost*" > "$host")
-    fi
 
     if [[ "$1" =~ ^/ ]] ; then # retrieve path
         _path="$1"
