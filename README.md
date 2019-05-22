@@ -23,8 +23,6 @@ to easily provide your own options to be passed directly to `curl`, so even
 the most complex requests can be accomplished with the minimum amount of
 command line pain.
 
-[Here is a nice screencast showing resty in action](http://jpmens.net/2010/04/26/resty/) (by Jan-Piet Mens).
-
 ## Quick Start
 
 You have `curl`, right? Okay.
