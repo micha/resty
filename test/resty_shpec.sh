@@ -44,7 +44,7 @@ describe "Resty"
 
         it "should work in a subshell"
             exported_functions=$(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l)
-            assert equal "$exported_functions" "${#RESTY_FUNCTIONS}"
+            assert equal "$exported_functions" "${#RESTY_FUNCTIONS[@]}"
         end
 
     end
