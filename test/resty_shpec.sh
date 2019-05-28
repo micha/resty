@@ -42,10 +42,12 @@ describe "Resty"
             assert equal "$output" "hi there"
         end
 
-        it "should work in a subshell"
-            exported_functions=$(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l)
-            assert equal "$exported_functions" "${#RESTY_FUNCTIONS[@]}"
-        end
+        if [ "${SHELL}" == "bash" ]; then
+            it "should work in a subshell"
+                exported_functions=$(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l)
+                assert equal "$exported_functions" "${#RESTY_FUNCTIONS[@]}"
+            end
+        fi
 
     end
 
