@@ -339,7 +339,7 @@ HELP
 
 # Force functions to be exported to subshells if it is supported
 case "$SHELL" in
-    */bash)
+    */bash|bash)
         declare -fx \
             resty \
             resty-compute-host-option \
