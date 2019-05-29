@@ -44,7 +44,7 @@ describe "Resty"
 
         if [ "${SHELL}" == "bash" ]; then
             it "should work in a subshell"
-                exported_functions=$(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l)
+                exported_functions="$(printf "%d" $(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l))"
                 assert equal "$exported_functions" "${#RESTY_FUNCTIONS[@]}"
             end
         fi
