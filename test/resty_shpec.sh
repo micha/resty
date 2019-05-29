@@ -1,5 +1,21 @@
 [[ "$SHELL" == "bash" ]] && shopt -s expand_aliases # needed for bash
 
+RESTY_FUNCTIONS=()
+RESTY_FUNCTIONS+=(resty)
+RESTY_FUNCTIONS+=(resty-compute-host-option )
+RESTY_FUNCTIONS+=(resty-call)
+RESTY_FUNCTIONS+=(resty-load-alias)
+RESTY_FUNCTIONS+=(resty-unload-alias)
+RESTY_FUNCTIONS+=(resty-head)
+RESTY_FUNCTIONS+=(resty-options)
+RESTY_FUNCTIONS+=(resty-get)
+RESTY_FUNCTIONS+=(resty-post)
+RESTY_FUNCTIONS+=(resty-put)
+RESTY_FUNCTIONS+=(resty-patch)
+RESTY_FUNCTIONS+=(resty-delete)
+RESTY_FUNCTIONS+=(resty-trace)
+RESTY_FUNCTIONS+=(-resty-help-options )
+
 describe "Resty"
 
     describe "Basic"
@@ -25,6 +41,13 @@ describe "Resty"
             output=$(GET /simple.txt)
             assert equal "$output" "hi there"
         end
+
+        if [ "${SHELL}" == "bash" ]; then
+            it "should work in a subshell"
+                exported_functions="$(printf "%d" $(bash -c "declare -F | grep $(printf " -e %s" ${RESTY_FUNCTIONS})" | wc -l))"
+                assert equal "$exported_functions" "${#RESTY_FUNCTIONS[@]}"
+            end
+        fi
 
     end
 

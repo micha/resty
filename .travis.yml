@@ -16,6 +16,7 @@ install:
   - zsh ~/.zshrc
   - sh -c "export BINDIR=$HOME ; `curl -L https://raw.github.com/rylnd/shpec/master/install.sh`"
 
+  - chmod +x $HOME/.nvm/nvm.sh
   - $HOME/.nvm/nvm.sh
   - nvm install 6 && nvm use 6
   - (cd test && npm install)

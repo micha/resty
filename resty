@@ -337,4 +337,26 @@ HELP
 # With -W option, does not write to history file
 [ "$1" = "-W" ] && export _RESTY_NO_HISTORY="/dev/null" && [[ $# -gt 0 ]] && shift
 
+# Force functions to be exported to subshells if it is supported
+case "$SHELL" in
+    */bash|bash)
+        declare -fx \
+            resty \
+            resty-compute-host-option \
+            resty-call \
+            resty-load-alias \
+            resty-unload-alias \
+            resty-head \
+            resty-options \
+            resty-get \
+            resty-post \
+            resty-put \
+            resty-patch \
+            resty-delete \
+            resty-trace \
+            -resty-help-options 
+        ;;
+esac 
+
+
 resty "$@" >/dev/null 2>&1
