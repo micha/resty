@@ -143,7 +143,7 @@ HELP
         [[ $# -gt 0 ]] && shift
     fi
 
-    local -a all_opts curlopt_cmd
+    local -a all_opts curl_opt curlopt_cmd
     local raw query vimedit quote maybe_query verbose dry_run
 
     local -a resty_default_arg host_arg;
@@ -226,7 +226,7 @@ HELP
     outf=$(mktemp) errf=$(mktemp)
     eval "${cmd[@]}" >| "$outf" 2>| "$errf"
     _status=$?; out="$(cat "$outf")"; err="$(cat "$errf")"; rm -f "$outf" "$errf"
-    ret=$(sed '/^.*HTTP\/[12]\(\.[01]\)\? [0-9][0-9][0-9]/s/.*\([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
+    ret=$(sed '/^.*HTTP\/[12].*/s/.* \([0-9]\)[0-9][0-9].*/\1/p; d' <<< "$err" | tail -n1)
 
     if [ "$_status" -ne "0" ]; then echo "$err" >&2 ; return $_status ; fi
 
